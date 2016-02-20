@@ -6,7 +6,7 @@ __This project is built under Unity 5.1__ (the latest supported version for chro
 Other (less supported) linux distros can try [this one](http://download.unity3d.com/download_unity/unity-editor-installer-5.1.0f3+2015091501.sh).
 Windows has an installer [here](https://unity3d.com/unity/whats-new/unity-5.1.4).
 
-It is strongly reccomended that you copy this project, or make a branch.
+__Contributers:__ It is strongly reccomended that you make a copy of this project, or (even better) make a branch.
 Final commits can then be safely merged with the master, _keeping this
 version stable and uncorrupted for all to use_.
 
@@ -15,6 +15,6 @@ Try [this tutorial](https://unity3d.com/learn/tutorials/projects/roll-ball-tutor
 Then to learn 2D specifics, I suggest taking a peep at [these vids](https://unity3d.com/learn/tutorials/topics/2d-game-creation).
 It should not take you that long, it's just a tool. Try to have some fun with it!
 
-Please tell me if any of these links die, I'll preform CPR.
+Please tell me if any of these links die, I'll perform CPR.
 
 @Lukeslux
