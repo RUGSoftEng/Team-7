@@ -18,3 +18,11 @@ It should not take you that long, it's just a tool. Try to have some fun with it
 Please tell me if any of these links die, I'll perform CPR.
 
 @Lukeslux
+
+
+Installation commands on Ubuntu:
+
+sudo dpkg -i name_of_packet.deb
+sudo apt-get update && sudo apt-get install -f
+
+@ Sietze & Matteo
