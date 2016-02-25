@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class Letter : MonoBehaviour {
+public class Letter : NetworkBehaviour {
 	public GameObject charObject;
 	public GameObject background;
-	private TextMesh textMesh;
 	private BoxCollider2D boxCollider;
 	private SpriteRenderer sprite;
-	private bool taken;
+	public char character;
+	[SyncVar]
+	public bool taken;
 
 	// Initialisation.
 	public void Start () {
-		textMesh = charObject.GetComponent<TextMesh>();
 		boxCollider = this.GetComponent<BoxCollider2D>();
 		sprite = background.GetComponent<SpriteRenderer>();
 		setTaken(false);
@@ -22,23 +23,24 @@ public class Letter : MonoBehaviour {
 		if (HasClicked()) {
 			OnClick();
 		}
-	}
-	
-	public void setChar(char c) {
-		textMesh.text = ""+c;
-	}
-	
-	// Sets whether or not this Letter is taken.
-	public void setTaken(bool isTaken) {
-		if (isTaken) {
+		if (taken) {
 			sprite.color = new Color(.4f, .4f, .4f);
+			Vector3 loc = transform.localPosition;
+			loc.x += 0.1f;
+			transform.localPosition = loc;
 		} else {
 			sprite.color = new Color(1f, 1f, 1f);
 		}
+	}
+	
+	// Sets whether or not this Letter is taken.
+
+	public void setTaken(bool isTaken) {
 		this.taken = isTaken;
 	}
 	
 	// Called when this Letter has been clicked.
+
 	private void OnClick() {
 		setTaken(!taken);
 	}
