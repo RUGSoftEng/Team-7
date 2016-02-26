@@ -7,7 +7,7 @@ public class BtnSubmitScript : MonoBehaviour {
 	/* Move this function outside */
 	public int score = 0;
 	
-	const string ENGLISH_DICTIONARY_PATH = "../dictionary";
+	const string ENGLISH_DICTIONARY_PATH = "Assets/Dictionaries/english_dictionary";
 	
 	/* Move this function outside */
 	int CharacterValue(char c){
@@ -68,23 +68,26 @@ public class BtnSubmitScript : MonoBehaviour {
 	/* Move this function outside */
 	bool IsInDictionary(string submitted_word){
 		
-		if (!File.Exists(ENGLISH_DICTIONARY_PATH)) return false;
+        if (!File.Exists(ENGLISH_DICTIONARY_PATH))
+        {
+            Debug.Log("File not found");
+            return false;
+        }
 		
-		using(StreamReader dictionary = new StreamReader("../dictionary")){
+		using(StreamReader dictionary = new StreamReader(ENGLISH_DICTIONARY_PATH)){
 			
 			string line;
 			while ((line = dictionary.ReadLine()) != null)
-				if (line == submitted_word) return true;
+				if (line.ToUpper() == submitted_word) return true;
 			return false;
 			
 		}
+		
 	}
 		
 	public void OnClick(){
-		
-		Debug.Log("Hello");
-		
-		string submitted_word = "HELLO";//Recive the submited word
+
+		string submitted_word = "";//Recive the submited word
 		
 		if (IsInDictionary(submitted_word)){
 			UpdateScore(submitted_word);
