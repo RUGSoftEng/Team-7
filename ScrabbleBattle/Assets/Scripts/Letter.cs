@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using System;
 
 public class Letter : NetworkBehaviour {
 	public GameObject charObject;
@@ -10,9 +11,13 @@ public class Letter : NetworkBehaviour {
 	public char character;
 	[SyncVar]
 	public bool taken;
+    //eu
+    public WordManager sendDetailsForWord;
+    private int sent = 0;
+    //
 
-	// Initialisation.
-	public void Start () {
+    // Initialisation.
+    public void Start () {
 		boxCollider = this.GetComponent<BoxCollider2D>();
 		sprite = background.GetComponent<SpriteRenderer>();
 		setTaken(false);
@@ -30,20 +35,27 @@ public class Letter : NetworkBehaviour {
 			transform.localPosition = loc;
 		} else {
 			sprite.color = new Color(1f, 1f, 1f);
-		}
+        }
 	}
 	
 	// Sets whether or not this Letter is taken.
 
 	public void setTaken(bool isTaken) {
 		this.taken = isTaken;
-	}
+    }
 	
 	// Called when this Letter has been clicked.
 
 	private void OnClick() {
-		setTaken(!taken);
-	}
+        //eu
+        if (taken == false && sent == 0)
+        {
+            sent = 1;
+            sendDetailsForWord.createWord(gameObject);
+        }
+        //
+        setTaken(!taken);
+    }
 	
 	// Checks for a mouseclick, use this on PC.
 	private bool HasClicked() {
@@ -55,15 +67,18 @@ public class Letter : NetworkBehaviour {
 		}
 		return false;
 	}
-	
-	// Checks for a touch.
-	private bool HasTouched() {
-		foreach (Touch touch in Input.touches) {
-			Vector3 wp = Camera.main.ScreenToWorldPoint(touch.position);
-			if (boxCollider.OverlapPoint(wp) && touch.phase == TouchPhase.Ended) {
-				return true;
-			}
-		}
-		return false;
-	}
+
+    // Checks for a touch.
+    private bool HasTouched()
+    {
+        foreach (Touch touch in Input.touches)
+        {
+            Vector3 wp = Camera.main.ScreenToWorldPoint(touch.position);
+            if (boxCollider.OverlapPoint(wp) && touch.phase == TouchPhase.Ended)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
