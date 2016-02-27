@@ -4,12 +4,15 @@ using System.IO;
 
 public class BtnSubmitScript : MonoBehaviour {
 	
-	/* Move this function outside */
+	/** Gloabl score */
 	public int score = 0;
 	
+	/** Path of the english dictionary */
 	const string ENGLISH_DICTIONARY_PATH = "Assets/Dictionaries/english_dictionary";
 	
-	/* Move this function outside */
+	/** Score of every english letter, taken from the official rules of english game
+	 * @param c character to value 
+	 * @return the official value of the letter c */
 	int CharacterValue(char c){
 		
 		switch(c){
@@ -54,7 +57,7 @@ public class BtnSubmitScript : MonoBehaviour {
 		
 	}
 	
-	/* Move this function outside */
+	/** Update the global score, with the score of submitted_word */
 	void UpdateScore(string submitted_word){
 		
 		for (int i = 0; i < submitted_word.Length; i++) 
@@ -65,16 +68,19 @@ public class BtnSubmitScript : MonoBehaviour {
 	
 	
 	
-	/* Move this function outside */
-	bool IsInDictionary(string submitted_word){
+	/** Check if the world is in the own dictionary 
+	 *  @param submitted_word word to find in the dictionary 
+	 * 	@param DICTIONARY path of dictionary of the language of the word to searchun
+	 * 	@return true if the word exists in the dictionary, else return false */
+	bool IsInDictionary(string submitted_word, string DICTIONARY){
 		
-        if (!File.Exists(ENGLISH_DICTIONARY_PATH))
+        if (!File.Exists(DICTIONARY))
         {
             Debug.Log("File not found");
             return false;
         }
 		
-		using(StreamReader dictionary = new StreamReader(ENGLISH_DICTIONARY_PATH)){
+		using(StreamReader dictionary = new StreamReader(DICTIONARY)){
 			
 			string line;
 			while ((line = dictionary.ReadLine()) != null)
@@ -84,12 +90,13 @@ public class BtnSubmitScript : MonoBehaviour {
 		}
 		
 	}
-		
+	
+	/** Submit the word to check if exists in the dictionary */	
 	public void OnClick(){
 
 		string submitted_word = "";//Recive the submited word
 		
-		if (IsInDictionary(submitted_word)){
+		if (IsInDictionary(submitted_word, ENGLISH_DICTIONARY_PATH)){
 			UpdateScore(submitted_word);
 			/* We have to clear the used letter from the board */ 
 			
