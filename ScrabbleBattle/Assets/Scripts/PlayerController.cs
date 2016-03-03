@@ -7,7 +7,9 @@ public class PlayerController : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		CheckClicked();
+		if (isLocalPlayer) {
+			CheckClicked ();
+		}
 	}
 	
 	// Called on the server by the client.
@@ -30,11 +32,7 @@ public class PlayerController : NetworkBehaviour {
          
 			if( Physics.Raycast( ray, out hit, 100 ) ) {
 				string hitName = hit.transform.gameObject.name;
-				if (Network.isServer) {
-					SetTaken(name);
-				} else {
-					CmdSetTaken(hitName);
-				}
+				CmdSetTaken(hitName);
 			}
 		}
 	}
