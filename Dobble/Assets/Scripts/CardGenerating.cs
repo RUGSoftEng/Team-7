@@ -1,9 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // http://radiganengineering.com/2013/01/spot-it-howd-they-do-that/
 
@@ -14,7 +12,7 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             // constraint; prime
-            int p = 2;
+            int p = 1;
 
             int picturesPerCard = p + 1, numberOfCards = p * p + p + 1;
             int[,] cards = new int[numberOfCards, picturesPerCard];
