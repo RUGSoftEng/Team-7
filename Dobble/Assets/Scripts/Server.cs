@@ -7,21 +7,26 @@ using System.Collections.Generic;
 public class Server : MonoBehaviour {
 
 	public Card cardPrefab;
+	// should be 0, 1, 2 or (prime + 1)
+	public int symbolsPerCard;
 
-	int p = 7;
+	int numberOfCards;
 	int[][] cards;
 	int index = 0;
-	Card c;
+	Card card;
 	
 	void Start () {
-		(c = (Card) Instantiate (cardPrefab)).transform.SetParent(this.transform);
+		this.numberOfCards = this.symbolsPerCard * (this.symbolsPerCard - 1) + 1;
+		this.card = (Card)Instantiate (cardPrefab);
+		this.card.transform.SetParent(this.transform);
 		InitializeCards ();
 	}
 
 	void InitializeCards () {
-		int picturesPerCard = p + 1, numberOfCards = p * p + p + 1;
-		this.cards = new int[numberOfCards][];
-		for (int i = 0; i < numberOfCards; ++i) this.cards [i] = new int[picturesPerCard];
+		this.cards = new int[this.numberOfCards][];
+		if (this.symbolsPerCard < 1) return;
+		int p = this.symbolsPerCard - 1;
+		for (int i = 0; i < this.numberOfCards; ++i) this.cards [i] = new int[this.symbolsPerCard];
 		int minFactor = 2, boundMinFactor = Convert.ToInt32(Math.Sqrt(p));
 		while (minFactor <= boundMinFactor && p % minFactor != 0) ++minFactor;
 		if (minFactor > boundMinFactor) minFactor = p;
@@ -41,13 +46,16 @@ public class Server : MonoBehaviour {
 		for (int i = 0; i <= minFactor; ++i) this.cards[row][i] = p * p + i;
 	}
 
-	public int nextIndex() {
-		this.index = (this.index + 1) % cards.Length;
+	int NextIndex() {
+		this.index = ++this.index % cards.Length;
 		return this.index;
+	}
+
+	public int[] NextCard() {
+		return this.cards [NextIndex ()];
 	}
 	
 	void Update () {
-		c.setCard (cards [nextIndex ()]);
-		this.transform.Rotate(new Vector3(0, 0, UnityEngine.Random.value));
+		card.SetCard (cards [NextIndex ()]);
 	}
 }
