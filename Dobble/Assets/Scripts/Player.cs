@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.card = (Card)Instantiate (cardPrefab).Constructor(this.transform);
+		(this.card = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
 	}
 	
 	// Update is called once per frame
