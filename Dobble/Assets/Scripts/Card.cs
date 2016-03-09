@@ -7,15 +7,16 @@ using System;
 public class Card : MonoBehaviour {
 
 	public Symbol symbolPrefab;
-	public Sprite[] sprites;
 
-	private float radius;
+	public Sprite[] sprites;
+	private float[] scales;
+
 	private Symbol[] symbols; 
 
 	void Start () {
 
 		// hardcoded to 8
-		this.radius = 0.302593388348611302909204224934f;
+		float radius = 0.302593388348611302909204224934f;
 		Vector2[] coordinates = new Vector2[8] {
 			new Vector2(-0.302593388348611302909204224933f, -0.628341645367213738512227388956f),
 			new Vector2(0.302593388348611302909204224933f, -0.628341645367213738512227388956f),
@@ -28,19 +29,20 @@ public class Card : MonoBehaviour {
 		}; 
 
 		this.sprites = Resources.LoadAll<Sprite>("");
+		this.scales = new float[this.sprites.Length];
+		for (int i = 0; i < this.sprites.Length; ++i) {
+			Vector3 size = this.sprites[i].bounds.size;
+			this.scales[i] = radius*2/Mathf.Sqrt(size.x*size.x+size.y*size.y);
+		}
+
 		this.symbols = new Symbol[8];
-		Symbol s;
 		for (int i = 0; i < 8; ++i) {
-			s = (Symbol) Instantiate (symbolPrefab, coordinates[i], Quaternion.identity);
-			s.transform.SetParent(this.transform);
-			s.radius = radius;
-			s.sprites = sprites;
-			this.symbols[i] = s;
+			(this.symbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
 		}
 	}
 
 	public bool ContainsSymbol(int index) {
-		foreach (Symbol s in this.symbols) if (s.getIndex() == index) return true;
+		foreach (Symbol s in this.symbols) if (s.getSymbol() == index) return true;
 		return false;
 	}
 

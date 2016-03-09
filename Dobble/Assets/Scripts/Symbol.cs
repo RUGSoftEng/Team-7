@@ -4,26 +4,31 @@ using System;
 
 public class Symbol : MonoBehaviour {
 
-	private int index;
-	public float radius;
-	public Sprite[] sprites;
+	private int symbol;
+
+	private Sprite[] sprites;
+	private float[] scales;
+
 	private SpriteRenderer spriteRenderer;
-	
-	void Start () {
-		spriteRenderer = GetComponent<SpriteRenderer> ();
+
+	public void Constructor(Transform parent, Vector2 position, Sprite[] sprites, float[] scales) {
+		this.spriteRenderer = GetComponent<SpriteRenderer> ();
+
+		this.transform.SetParent (parent);
+		this.transform.position = position;
+		this.sprites = sprites;
+		this.scales = scales;
 	}
 
-	public int getIndex() {
-		return this.index;
+	public int getSymbol() {
+		return this.symbol;
 	}
 
-	public void SetSymbol(int index) {
-		this.index = index;
-		this.spriteRenderer.sprite = this.sprites[index];
-		Vector3 s = this.sprites[index].bounds.size;
-		float scale = 1.0f/Mathf.Sqrt (s.x*s.x + s.y*s.y)*this.radius*2;
-		this.transform.localScale = new Vector3(scale, scale, scale);
-		this.transform.eulerAngles = new Vector3(0, 0, UnityEngine.Random.value*360);
+	public void SetSymbol(int symbol) {
+		this.symbol = symbol;
+		this.spriteRenderer.sprite = this.sprites[symbol];
+		this.transform.localScale = Vector3.one*scales [symbol];
+		this.transform.eulerAngles = Vector3.forward*UnityEngine.Random.value*360;
 	}
 
 }
