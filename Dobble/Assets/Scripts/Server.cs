@@ -22,6 +22,7 @@ public class Server : MonoBehaviour {
 		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
 		InitializeCards ();
 		(this.c = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
+		this.c.transform.localPosition = new Vector3 (5, 0, 0);
 	}
 
 	// symbols per card should be 0, 1, 2 or (prime + 1)
@@ -76,9 +77,14 @@ public class Server : MonoBehaviour {
 	public int[] NextCard() {
 		return this.cards [NextSymbol ()];
 	}
+
+	public void setCard(int[] card) {
+		this.c.SetCard (card);
+		GetComponentInParent<Player> ().RpcUpdate (NextCard());
+	}
 	
 	void Update () {
 		// just for testing
-		c.SetCard (cards [NextSymbol ()]);
+		//c.SetCard (cards [NextSymbol ()]);
 	}
 }

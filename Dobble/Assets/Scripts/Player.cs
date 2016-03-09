@@ -1,27 +1,65 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class Player : MonoBehaviour {
+public class Player : NetworkBehaviour {
 
 	public Card cardPrefab;
+	public Server serverPrefab;
 
 	Card card;
+	Server server;
 
 	// Use this for initialization
 	void Start () {
-		(this.card = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetMouseButtonDown(0)) {
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, 100)) {
-				int id = hit.transform.gameObject.GetInstanceID();
+		(this.card = (Card)Instantiate (cardPrefab)).Constructor (this.transform);
+		if (isLocalPlayer) {
 
-				//this.card.SetCard (new int[] {0,3,2,4,6,7,8,2});
+			if (isServer) {
+				Debug.Log ("is server");
+				this.server = (Server)Instantiate (serverPrefab);
+				this.server.transform.SetParent (this.transform);
+				//this.server.transform.localPosition = Vector3.right*5;
 			}
 		}
+	}
+
+	[Command]
+	public void CmdUpdate(int symbol) {
+		if (isServer) {
+			Debug.Log ("cmdupdate called");
+			//this.GetComponentInChildren<Server>().setCard (new int[] {0,0,0,0,0,0,0,0});
+			GameObject.FindObjectOfType<Server> ().setCard (new int[] {0,0,0,0,0,0,0,0});
+		}
+	}
+
+	[ClientRpc]
+	public void RpcUpdate(int[] card) {
+		Debug.Log ("rpc update started");
+		Debug.Log (isClient);
+		if (isClient) {
+			this.card.SetCard (card);
+			Debug.Log ("rpc update succesful");
+		}
+	}
+
+	// Update is called once per frame
+	void Update () {
+		if (isLocalPlayer) {
+			if (Input.GetMouseButtonDown(0)) {
+				Debug.Log("clicked");
+				CmdUpdate(0);
+			}
+		}
+
+		//if (Input.GetMouseButtonDown(0)) {
+		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		//	RaycastHit hit;
+		//	if (Physics.Raycast(ray, out hit, 100)) {
+		//		int id = hit.transform.gameObject.GetInstanceID();
+		//
+		//		//this.card.SetCard (new int[] {0,3,2,4,6,7,8,2});
+		//	}
+		//}
 	}
 }
