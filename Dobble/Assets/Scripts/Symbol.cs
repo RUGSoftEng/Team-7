@@ -4,13 +4,18 @@ using System;
 
 public class Symbol : MonoBehaviour {
 
+	// the index to the current symbol
 	private int symbol;
 
+	// the sprites (images) of the respective symbols
 	private Sprite[] sprites;
+	// the scales of the respective sprites (to make it fit with the other sprites in a unit circle)
 	private float[] scales;
 
+	// quick reference to the sprite renderer
 	private SpriteRenderer spriteRenderer;
 
+	// constructor
 	public void Constructor(Transform parent, Vector2 position, Sprite[] sprites, float[] scales) {
 		this.spriteRenderer = GetComponent<SpriteRenderer> ();
 
@@ -20,10 +25,12 @@ public class Symbol : MonoBehaviour {
 		this.scales = scales;
 	}
 
+	// gets symbol
 	public int getSymbol() {
 		return this.symbol;
 	}
 
+	// sets symbol and random rotation
 	public void SetSymbol(int symbol) {
 		this.symbol = symbol;
 		this.spriteRenderer.sprite = this.sprites[symbol];

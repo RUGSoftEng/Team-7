@@ -7,21 +7,28 @@ using System.Collections.Generic;
 public class Server : MonoBehaviour {
 
 	public Card cardPrefab;
-	// should be 0, 1, 2 or (prime + 1)
+
+	// from outside initialized variable
 	public int symbolsPerCard;
 
+	// cards array where each row represents a card
 	int[][] cards;
-	int index = 0;
-	Card card;
+	// the index of the current card
+	int card = 0;
+	// reference to the card object of the server
+	Card c;
 	
 	void Start () {
 		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
 		InitializeCards ();
-		(this.card = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
+		(this.c = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
 	}
 
+	// symbols per card should be 0, 1, 2 or (prime + 1)
 	private bool IsLegalSymbolsPerCard() {
+
 		int symbolsPerCard = this.symbolsPerCard;
+
 		if (symbolsPerCard < 0) return false;
 		if (symbolsPerCard >= 0 && symbolsPerCard <= 4) return true;
 		int prime = symbolsPerCard - 1;
@@ -30,8 +37,11 @@ public class Server : MonoBehaviour {
 		return true;
 	}
 
+	// initializes cards array
 	private void InitializeCards () {
+
 		int symbolsPerCard = this.symbolsPerCard;
+
 		int prime = symbolsPerCard - 1;
 		int numberOfCards = prime * prime + prime + 1;
 		int[][] cards = new int[numberOfCards][];
@@ -56,16 +66,19 @@ public class Server : MonoBehaviour {
 		this.cards = cards;
 	}
 
-	int NextIndex() {
-		this.index = ++this.index % cards.Length;
-		return this.index;
+	// increments symbol and returns the symbol
+	private int NextSymbol() {
+		this.card = ++this.card % cards.Length;
+		return this.card;
 	}
 
+	// returns the next card
 	public int[] NextCard() {
-		return this.cards [NextIndex ()];
+		return this.cards [NextSymbol ()];
 	}
 	
 	void Update () {
-		card.SetCard (cards [NextIndex ()]);
+		// just for testing
+		c.SetCard (cards [NextSymbol ()]);
 	}
 }

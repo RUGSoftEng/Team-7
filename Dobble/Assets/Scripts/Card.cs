@@ -8,12 +8,14 @@ public class Card : MonoBehaviour {
 
 	public Symbol symbolPrefab;
 
+	// array of contained symbols
 	private Symbol[] symbols; 
 
+	// constructor
 	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
 
-		// hardcoded to 8
+		// hardcoded coordinates (in a unit circle) and radius for 8 symbols per picture
 		float radius = 0.302593388348611302909204224934f;
 		Vector2[] coordinates = new Vector2[8] {
 			new Vector2(-0.302593388348611302909204224933f, -0.628341645367213738512227388956f),
@@ -37,11 +39,13 @@ public class Card : MonoBehaviour {
 		for (int i = 0; i < 8; ++i) (this.symbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
 	}
 
+	// true if this card contains the symbol
 	public bool ContainsSymbol(int symbol) {
 		foreach (Symbol s in this.symbols) if (s.getSymbol() == symbol) return true;
 		return false;
 	}
 
+	// sets card and a random rotation
 	public void SetCard(int[] symbols) {
 		int symbol = 0;
 		foreach (Symbol s in this.symbols) {
