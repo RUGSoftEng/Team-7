@@ -33,6 +33,7 @@ public class Symbol : MonoBehaviour {
 	// sets symbol and random rotation
 	public void SetSymbol(int symbol) {
 		this.symbol = symbol;
+		this.name = ""+symbol;
 		this.spriteRenderer.sprite = this.sprites[symbol];
 		this.transform.localScale = Vector3.one*scales [symbol];
 		this.transform.eulerAngles = Vector3.forward*UnityEngine.Random.value*360;
