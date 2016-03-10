@@ -22,7 +22,7 @@ public class Server : MonoBehaviour {
 		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
 		InitializeCards ();
 		(this.c = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
-		this.c.transform.localPosition = new Vector3 (5, 0, 0);
+		this.c.transform.localPosition = new Vector3 (100, 0, 0);
 	}
 
 	public void Constructor(Transform parent) {

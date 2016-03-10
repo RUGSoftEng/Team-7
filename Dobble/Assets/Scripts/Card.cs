@@ -28,7 +28,7 @@ public class Card : MonoBehaviour {
 			new Vector2(0.000000000000000000000000000000f, 0.697406611651388697090795775067f)
 		}; 
 		
-		Sprite[] sprites = Resources.LoadAll<Sprite>("");
+		Sprite[] sprites = Resources.LoadAll<Sprite>("Symbols");
 		float[] scales = new float[sprites.Length];
 		for (int i = 0; i < sprites.Length; ++i) {
 			Vector3 size = sprites[i].bounds.size;
