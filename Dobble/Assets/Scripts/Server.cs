@@ -17,16 +17,15 @@ public class Server : MonoBehaviour {
 	int card = 0;
 	// reference to the card object of the server
 	Card c;
-	
-	void Start () {
-		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
-		InitializeCards ();
-		(this.c = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
-		this.c.transform.localPosition = new Vector3 (100, 0, 0);
-	}
 
 	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
+		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
+		InitializeCards ();
+		RandomizeArray (this.cards);
+		(this.c = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
+		this.c.SetCard (NextCard ());
+		this.c.transform.localPosition = new Vector3 (100, 0, 0);
 	}
 
 	// symbols per card should be 0, 1, 2 or (prime + 1)
@@ -71,6 +70,16 @@ public class Server : MonoBehaviour {
 		this.cards = cards;
 	}
 
+	private static void RandomizeArray(int[][] array) {
+		System.Random random = new System.Random ();
+		for (int i = array.Length - 1; i > 0; --i) {
+			int r = random.Next(0,i);
+			int[] tmp = array[i];
+			array[i] = array[r];
+			array[r] = tmp;
+		}
+	}
+
 	public bool ContainsSymbol(int symbol) {
 		return c.ContainsSymbol (symbol);
 	}
@@ -89,10 +98,5 @@ public class Server : MonoBehaviour {
 	public void setCard(int[] card) {
 		this.c.SetCard (card);
 		//GetComponentInParent<Player> ().RpcUpdate (NextCard());
-	}
-	
-	void Update () {
-		// just for testing
-		//c.SetCard (cards [NextSymbol ()]);
 	}
 }

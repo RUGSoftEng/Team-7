@@ -15,6 +15,7 @@ public class Card : MonoBehaviour {
 	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
 
+
 		// hardcoded coordinates (in a unit circle) and radius for 8 symbols per picture
 		float radius = 0.302593388348611302909204224934f;
 		Vector2[] coordinates = new Vector2[8] {
@@ -37,16 +38,6 @@ public class Card : MonoBehaviour {
 		
 		this.symbols = new Symbol[8];
 		for (int i = 0; i < 8; ++i) (this.symbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
-
-		// initialize
-		symbols [0].SetSymbol (0);
-		symbols [1].SetSymbol (1);
-		symbols [2].SetSymbol (2);
-		symbols [3].SetSymbol (3);
-		symbols [4].SetSymbol (4);
-		symbols [5].SetSymbol (5);
-		symbols [6].SetSymbol (6);
-		symbols [7].SetSymbol (49);
 
 	}
 

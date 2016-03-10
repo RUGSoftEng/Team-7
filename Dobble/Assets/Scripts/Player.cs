@@ -17,7 +17,14 @@ public class Player : NetworkBehaviour {
 				(this.server = (Server)Instantiate (serverPrefab)).Constructor(this.transform);
 			}
 			(this.card = (Card)Instantiate (cardPrefab)).Constructor (this.transform);
+			CmdInitialize((int) GetComponent<NetworkIdentity>().netId.Value);
 		}
+	}
+
+	[Command]
+	public void CmdInitialize(int networkIdentity) {
+		Server s = (Server)GameObject.FindObjectOfType<Server> ();
+		RpcUpdate (s.NextCard(), networkIdentity);
 	}
 
 	[Command]
