@@ -25,6 +25,10 @@ public class Server : MonoBehaviour {
 		this.c.transform.localPosition = new Vector3 (5, 0, 0);
 	}
 
+	public void Constructor(Transform parent) {
+		this.transform.SetParent (parent);
+	}
+
 	// symbols per card should be 0, 1, 2 or (prime + 1)
 	private bool IsLegalSymbolsPerCard() {
 
