@@ -67,6 +67,10 @@ public class Server : MonoBehaviour {
 		this.cards = cards;
 	}
 
+	public bool ContainsSymbol(int symbol) {
+		return c.ContainsSymbol (symbol);
+	}
+
 	// increments symbol and returns the symbol
 	private int NextSymbol() {
 		this.card = ++this.card % cards.Length;
@@ -80,7 +84,7 @@ public class Server : MonoBehaviour {
 
 	public void setCard(int[] card) {
 		this.c.SetCard (card);
-		GetComponentInParent<Player> ().RpcUpdate (NextCard());
+		//GetComponentInParent<Player> ().RpcUpdate (NextCard());
 	}
 	
 	void Update () {

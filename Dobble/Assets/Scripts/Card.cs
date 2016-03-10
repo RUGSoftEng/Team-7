@@ -37,12 +37,33 @@ public class Card : MonoBehaviour {
 		
 		this.symbols = new Symbol[8];
 		for (int i = 0; i < 8; ++i) (this.symbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
+
+		// initialize
+		symbols [0].SetSymbol (0);
+		symbols [1].SetSymbol (1);
+		symbols [2].SetSymbol (2);
+		symbols [3].SetSymbol (3);
+		symbols [4].SetSymbol (4);
+		symbols [5].SetSymbol (5);
+		symbols [6].SetSymbol (6);
+		symbols [7].SetSymbol (49);
+
 	}
 
 	// true if this card contains the symbol
 	public bool ContainsSymbol(int symbol) {
 		foreach (Symbol s in this.symbols) if (s.getSymbol() == symbol) return true;
 		return false;
+	}
+
+	public int[] GetCard() {
+		int[] c = new int[8];
+		int i = 0;
+		foreach (Symbol s in this.symbols) {
+			c[i] = s.getSymbol();
+			++i;
+		}
+		return c;
 	}
 
 	// sets card and a random rotation
