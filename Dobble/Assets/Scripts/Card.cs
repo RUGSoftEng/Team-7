@@ -15,19 +15,15 @@ public class Card : MonoBehaviour {
 	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
 
-
-		// hardcoded coordinates (in a unit circle) and radius for 8 symbols per picture
-		float radius = 0.302593388348611302909204224934f;
-		Vector2[] coordinates = new Vector2[8] {
-			new Vector2(-0.302593388348611302909204224933f, -0.628341645367213738512227388956f),
-			new Vector2(0.302593388348611302909204224933f, -0.628341645367213738512227388956f),
-			new Vector2(-0.679921171839088240043878874469f, -0.155187570571975671990838057814f),
-			new Vector2(0.679921171839088240043878874469f, -0.155187570571975671990838057814f),
-			new Vector2(0.000000000000000000000000000000f, 0.000000000000000000000000000000f),
-			new Vector2(-0.545254445070410775447749861103f, 0.434825910113495061957667559237f),
-			new Vector2(0.545254445070410775447749861103f, 0.434825910113495061957667559237f),
-			new Vector2(0.000000000000000000000000000000f, 0.697406611651388697090795775067f)
-		}; 
+		string[] lines = System.IO.File.ReadAllLines(@"Assets/Resources/Circle packings/8.txt");
+		float radius = float.Parse (lines [0]);
+		Vector2[] coordinates = new Vector2[8];
+		string[] line;
+		for (int i = 1; i < 8+1; ++i) {
+			line = lines[i].Split(' ');
+			Debug.Log(line[0] + " " + line[1]);
+			coordinates[i-1] = new Vector2(float.Parse(line[0]), float.Parse(line[1]));
+		}
 		
 		Sprite[] sprites = Resources.LoadAll<Sprite>("Symbols");
 		float[] scales = new float[sprites.Length];
