@@ -9,11 +9,11 @@ public class Card : MonoBehaviour {
 	public Symbol symbolPrefab;
 
 	// array of contained symbols
-	private Symbol[] symbols; 
+	private Symbol[] containedSymbols; 
+	
+	public void Constructor() {
 
-	// constructor
-	public void Constructor(Transform parent) {
-		this.transform.SetParent (parent);
+		//this.transform.SetParent (parent);
 
 		string[] lines = System.IO.File.ReadAllLines(@"Assets/Resources/Circle packings/8.txt");
 		float radius = float.Parse (lines [0]);
@@ -21,7 +21,6 @@ public class Card : MonoBehaviour {
 		string[] line;
 		for (int i = 1; i < 8+1; ++i) {
 			line = lines[i].Split(' ');
-			Debug.Log(line[0] + " " + line[1]);
 			coordinates[i-1] = new Vector2(float.Parse(line[0]), float.Parse(line[1]));
 		}
 		
@@ -32,21 +31,21 @@ public class Card : MonoBehaviour {
 			scales[i] = radius*2/Mathf.Sqrt(size.x*size.x+size.y*size.y);
 		}
 		
-		this.symbols = new Symbol[8];
-		for (int i = 0; i < 8; ++i) (this.symbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
+		this.containedSymbols = new Symbol[8];
+		for (int i = 0; i < 8; ++i) (this.containedSymbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
 
 	}
 
 	// true if this card contains the symbol
 	public bool ContainsSymbol(int symbol) {
-		foreach (Symbol s in this.symbols) if (s.getSymbol() == symbol) return true;
+		foreach (Symbol s in this.containedSymbols) if (s.getSymbol() == symbol) return true;
 		return false;
 	}
 
 	public int[] GetCard() {
 		int[] c = new int[8];
 		int i = 0;
-		foreach (Symbol s in this.symbols) {
+		foreach (Symbol s in this.containedSymbols) {
 			c[i] = s.getSymbol();
 			++i;
 		}
@@ -54,13 +53,16 @@ public class Card : MonoBehaviour {
 	}
 
 	// sets card and a random rotation
-	public void SetCard(int[] symbols) {
+	public void SetCard(int[] card) {
 		int symbol = 0;
-		foreach (Symbol s in this.symbols) {
-			s.SetSymbol(symbols[symbol]);
+		foreach (Symbol s in this.containedSymbols) {
+			s.SetSymbol(card[symbol]);
 			++symbol;
 		}
+
+		// apply a random rotation to the card
 		this.transform.eulerAngles = Vector3.forward*UnityEngine.Random.value*360;
+
 	}
 
 }

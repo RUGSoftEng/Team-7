@@ -16,7 +16,8 @@ public class Player : NetworkBehaviour {
 			if (isServer) {
 				(this.server = (Server)Instantiate (serverPrefab)).Constructor(this.transform);
 			}
-			(this.card = (Card)Instantiate (cardPrefab)).Constructor (this.transform);
+			(this.card = (Card)Instantiate (cardPrefab)).Constructor ();
+			this.card.transform.SetParent(this.transform);
 			CmdInitialize((int) GetComponent<NetworkIdentity>().netId.Value);
 		}
 	}
@@ -47,15 +48,13 @@ public class Player : NetworkBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (isLocalPlayer) {
-			if (Input.GetMouseButtonDown(0)) {
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit, 100)) {
-					int id = 0;
-					if (int.TryParse(hit.transform.gameObject.name, out id)) {
-						CmdUpdate(this.card.GetCard(), id, (int) GetComponent<NetworkIdentity>().netId.Value);
-					}
+		if (isLocalPlayer && Input.GetMouseButtonDown(0)) {
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit, 100)) {
+				int symbol = 0;
+				if (int.TryParse(hit.transform.gameObject.name, out symbol)) {
+					CmdUpdate(this.card.GetCard(), symbol, (int) GetComponent<NetworkIdentity>().netId.Value);
 				}
 			}
 		}
