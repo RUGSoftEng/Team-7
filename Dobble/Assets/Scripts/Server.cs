@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Server : MonoBehaviour {
 
@@ -10,23 +11,67 @@ public class Server : MonoBehaviour {
 
 	// from outside initialized variable
 	public int symbolsPerCard;
-
+	
+	// Number of cards in the game.
+	public int totalCards;
 	// cards array where each row represents a card
 	int[][] cards;
 	// the index of the current card
 	int card = 0;
 	// reference to the card object of the server
 	Card c;
-	
-	void Start () {
-		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
-		InitializeCards ();
-		(this.c = (Card)Instantiate (cardPrefab)).Constructor(this.transform);
-		this.c.transform.localPosition = new Vector3 (100, 0, 0);
-	}
 
+	// Players in the game.
+	Player[] players;
+
+	private bool isGameOver = false;
+	
 	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
+		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
+		InitializeCards ();
+		RandomizeArray (this.cards);
+		(this.c = (Card)Instantiate (cardPrefab)).Constructor();
+		this.c.transform.SetParent (this.transform);
+		this.c.SetCard (NextCard ());
+		this.c.transform.localPosition = new Vector3 (100, 0, 0);
+	}
+	
+	public void Update() {
+		divideCards();
+		int winner = checkWinner();
+		if (isGameOver) {
+			GameObject.Find("WinningText").GetComponent<Text>().text = "WOW! "+players[winner].name+" WINS!";
+			c.gameObject.SetActive(false);
+		}  else {
+			GameObject.Find("WinningText").GetComponent<Text>().text = "";
+			c.gameObject.SetActive(true);
+		}
+	}
+	
+	// Devide the number of cards.
+	private void divideCards() {
+		Player[] foundPlayers = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
+		if (players == null || (players.Length != foundPlayers.Length)) {
+			players = foundPlayers;
+			int cardsPerPlayer = totalCards/players.Length;
+			for (int i=0; i<players.Length; i++) {
+				players[i].cardcount = cardsPerPlayer;
+			}
+		}
+	}
+	
+	private int checkWinner() {
+		if (players != null) {
+			for (int i=0; i<players.Length; i++) {
+				if (players[i].cardcount == 0) {
+					this.isGameOver = true;
+					return i;
+				}
+			}
+		}
+		this.isGameOver = false;
+		return -1;
 	}
 
 	// symbols per card should be 0, 1, 2 or (prime + 1)
@@ -71,6 +116,16 @@ public class Server : MonoBehaviour {
 		this.cards = cards;
 	}
 
+	private static void RandomizeArray(int[][] array) {
+		System.Random random = new System.Random ();
+		for (int i = array.Length - 1; i > 0; --i) {
+			int r = random.Next(0,i);
+			int[] tmp = array[i];
+			array[i] = array[r];
+			array[r] = tmp;
+		}
+	}
+
 	public bool ContainsSymbol(int symbol) {
 		return c.ContainsSymbol (symbol);
 	}
@@ -89,10 +144,5 @@ public class Server : MonoBehaviour {
 	public void setCard(int[] card) {
 		this.c.SetCard (card);
 		//GetComponentInParent<Player> ().RpcUpdate (NextCard());
-	}
-	
-	void Update () {
-		// just for testing
-		//c.SetCard (cards [NextSymbol ()]);
 	}
 }
