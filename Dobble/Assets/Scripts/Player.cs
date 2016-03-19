@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System.IO;
 
 public class Player : NetworkBehaviour {
 
@@ -11,11 +12,13 @@ public class Player : NetworkBehaviour {
 	public string name;
 	[SyncVar]
 	public int cardcount;
+	public FileInfo NameFile;
 	Card card;
 	Server server;
 
 	// Use this for initialization
 	void Start () {
+		NameFile = new FileInfo(Application.persistentDataPath +  "\\" + "NameSave.txt");
 		if (isLocalPlayer) {
 			if (isServer) {
 				(this.server = (Server)Instantiate (serverPrefab)).Constructor(this.transform);
@@ -46,7 +49,7 @@ public class Player : NetworkBehaviour {
 	public void CmdInitialize(int networkIdentity) {
 		Server s = (Server)GameObject.FindObjectOfType<Server> ();
 		RpcUpdate (s.NextCard(), networkIdentity);
-		this.name = GenName();
+		this.name = LoadName();
 	}
 
 	[Command]
@@ -85,4 +88,16 @@ public class Player : NetworkBehaviour {
 			}
 		}
 	}
+
+	string LoadName(){
+		if (NameFile.Exists){
+			StreamReader r = File.OpenText(Application.persistentDataPath + "\\" + "NameSave.txt");
+     		string info = r.ReadToEnd();
+     		r.Close();
+     		return info;
+     	} else {
+     		return GenName();
+     	}
+	}
+
 }
