@@ -38,7 +38,7 @@ public class Deck : MonoBehaviour {
 	}
 	
 	public void Update() {
-		divideCards();
+		//divideCards();
 		int winner = checkWinner();
 		if (!this.CompareTag("MasterDeck"))
 			if (isGameOver) {

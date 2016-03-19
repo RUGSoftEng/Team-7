@@ -1,0 +1,63 @@
+Initialize engine version: 5.1.0f3 (ec70b008569d)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 10.1]
+    Renderer: Intel(R) HD Graphics (ID=0x106)
+    Vendor:   Intel
+    VRAM:     816 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.421 seconds
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initializing input.
+XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
+<RI> Input initialized.
+<RI> Initialized touch support.
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\vox\Documents\GitHub\Team-7\Dobble\ss_Data\Managed\System.dll (this message is harmless)
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.766322 ms
+The AnimationClip 'SearchingAnimation' used by the Animation component 'SearchingBar' must be marked as Legacy.
+ 
+(Filename:  Line: 1901)
+
+Default clip could not be found in attached animations list.
+ 
+(Filename:  Line: 400)
+
+Activating Cast Remote Display.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 65)
+
+Disabling the CastRemoteDisplayManager because the platform is not Android or iOS, and no simulator is found.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 65)
+
+Coroutine couldn't be started because the the game object 'CastListDialog' is inactive!
+ 
+(Filename:  Line: 804)
+
+
+Unloading 2 unused Assets to reduce memory usage. Loaded Objects now: 1586.
+Total: 2.795025 ms (FindLiveObjects: 0.088948 ms CreateObjectMapping: 0.321581 ms MarkObjects: 2.361916 ms  DeleteObjects: 0.019842 ms)
+
+Log: connection {1} has been disconnected by timeout; address {::ffff:127.0.0.1:52040}
+Deactivating Cast Remote Display.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 65)
+
