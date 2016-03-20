@@ -11,6 +11,7 @@ public class Card : MonoBehaviour {
 	// Array of contained symbols
 	private Symbol[] containedSymbols; 
 	
+	// Creates a new card gameobject with symbols placed on it.
 	public void Constructor() {
 		// Noted as strings, as these will eventually be read from a file.
 		string[] lines = {"0.302593388349",
@@ -47,6 +48,7 @@ public class Card : MonoBehaviour {
 		return false;
 	}
 
+	// Translates this card into its abstract representative.
 	public int[] GetCard() {
 		int[] c = new int[8];
 		int i = 0;

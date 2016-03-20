@@ -24,6 +24,7 @@ public class Deck : MonoBehaviour {
 
 	private bool isGameOver = false;
 	
+	// New deck is created.
 	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
 		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
@@ -37,6 +38,7 @@ public class Deck : MonoBehaviour {
 		this.topCard.transform.localPosition = new Vector3 (100, 0, 0);
 	}
 	
+	// Every frame, check if somebody won, divide cards for new players.
 	public void Update() {
 		divideCards();
 		int winner = checkWinner();
@@ -61,6 +63,7 @@ public class Deck : MonoBehaviour {
 		}
 	}
 	
+	// Checks if somebody won, if so: it's gameover.
 	private int checkWinner() {
 		if (players != null) {
 			for (int i=0; i<players.Length; i++) {
@@ -116,6 +119,7 @@ public class Deck : MonoBehaviour {
 		this.cards = cards;
 	}
 
+	// Shuffles cards.
 	static void RandomizeArray(int[][] array) {
 		System.Random random = new System.Random ();
 		for (int i = array.Length - 1; i > 0; --i) {
