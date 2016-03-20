@@ -27,27 +27,29 @@ public class Deck : MonoBehaviour {
 
 	private bool isGameOver = false;
 	
-	public void Constructor() {
-		if (!IsLegalSymbolsPerCard (this.symbolsPerCard)) Debug.LogError ("Invalid symbols per card.");
-		InitializeCards (this.symbolsPerCard);
+	public void Constructor(Transform parent) {
+		this.transform.SetParent (parent);
+		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
+
+		InitializeCards ();
 		RandomizeArray (this.cards);
+
 		(this.topCard = (Card)Instantiate (cardPrefab)).Constructor();
-		this.topCard.transform.SetParent (this.transform);		
-		this.topCard.transform.localPosition = topcardloc;
-		this.SetNextCard ();
+		this.topCard.transform.SetParent (this.transform);
+		this.topCard.SetCard (NextCard ());
+		this.topCard.transform.localPosition = new Vector3 (100, 0, 0); // why is this hardcoded?
 	}
 	
 	public void Update() {
-		//divideCards();
+		divideCards();
 		int winner = checkWinner();
-		if (!this.CompareTag("MasterDeck"))
-			if (isGameOver) {
-				GameObject.Find("WinningText").GetComponent<Text>().text = "WOW! "+players[winner].name+" WINS!";
-				this.gameObject.SetActive(false);
-			}  else {
-				GameObject.Find("WinningText").GetComponent<Text>().text = "";
-				this.gameObject.SetActive(true);
-			}
+		if (isGameOver) {
+			GameObject.Find("WinningText").GetComponent<Text>().text = "WOW! "+players[winner].name+" WINS!";
+			topCard.gameObject.SetActive(false);
+		}  else {
+			GameObject.Find("WinningText").GetComponent<Text>().text = "";
+			topCard.gameObject.SetActive(true);
+		}
 	}
 	
 	// Devide the number of cards.
@@ -76,10 +78,13 @@ public class Deck : MonoBehaviour {
 	}
 
 	// symbols per card should be 0, 1, 2 or (prime + 1)
-	bool IsLegalSymbolsPerCard(int num) {
-		if (num < 0) return false;
-		if (num >= 0 && num <= 4) return true;
-		int prime = num - 1;
+	private bool IsLegalSymbolsPerCard() {
+		
+		int symbolsPerCard = this.symbolsPerCard;
+		
+		if (symbolsPerCard < 0) return false;
+		if (symbolsPerCard >= 0 && symbolsPerCard <= 4) return true;
+		int prime = symbolsPerCard - 1;
 		if (prime % 2 == 0) return false;
 		for (int i = 3; i * i <= prime; i += 2) if (prime % i == 0) return false;
 		return true;
@@ -87,7 +92,8 @@ public class Deck : MonoBehaviour {
 
 
 	// initializes cards array
-	void InitializeCards (int symbolsPerCard) {
+	void InitializeCards () {
+		int symbolsPerCard = this.symbolsPerCard;
 		int prime = symbolsPerCard - 1;
 		int numberOfCards = prime * prime + prime + 1;
 		int[][] cards = new int[numberOfCards][];

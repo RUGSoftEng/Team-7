@@ -7,6 +7,8 @@ using System.IO;
 public class Player : NetworkBehaviour {
 	
 	public Deck deckPrefab;
+	public Card cardPrefab;
+	Card card;
 	Deck deck;
 
 	[SyncVar]
@@ -16,16 +18,16 @@ public class Player : NetworkBehaviour {
 	public int cardcount;
 
 	public FileInfo NameFile;
+	private bool initialized = false;
 
 	// Use this for initialization
 	void Start () {
-		if (isLocalPlayer) {
-			if (!isServer) {
-				GameObject.FindWithTag("MasterDeck").SetActive(false);
-			}
-			(this.deck = (Deck)Instantiate (deckPrefab)).Constructor();
-			this.deck.transform.SetParent (this.transform);	
-			this.name = "LocalPlayer";
+		if (isLocalPlayer) {			
+			(this.card = (Card)Instantiate (cardPrefab)).Constructor ();
+			this.card.transform.SetParent(this.transform);
+			if (isServer) {
+				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform);
+			} 
 		}
 	}
 	
@@ -45,29 +47,6 @@ public class Player : NetworkBehaviour {
 		return str;
 	}
 	
-	[ClientRpc]
-	public void RpcUpdate(int networkIdentity) {
-		UpdatePlayerCard (networkIdentity);
-	}
-	
-	void UpdatePlayerCard(int networkIdentity) {
-		if (isLocalPlayer ) {
-			if (this.netId.Value == networkIdentity) {
-				this.deck.SetNextCard();
-			}
-		}
-	}
-	
-	[Command]
-	public void CmdUpdate(int[] card, int symbol, int networkIdentity) {
-		Deck mdeck = GameObject.FindWithTag("MasterDeck").GetComponent<Deck>();
-		if (mdeck.ContainsSymbol(symbol)) {
-			mdeck.SetTopCard(card);
-			UpdatePlayerCard(networkIdentity);
-			RpcUpdate(networkIdentity);
-		}
-	}
-
 	string LoadName(){
 		if (NameFile.Exists){
 			StreamReader r = File.OpenText(Application.persistentDataPath + "\\" + "NameSave.txt");
@@ -79,11 +58,48 @@ public class Player : NetworkBehaviour {
      	}
 	}
 	
+	[Command]
+	public void CmdInitialize(uint networkIdentity) {
+		Deck deck = (Deck)GameObject.FindObjectOfType<Deck> ();
+		RpcUpdate (deck.NextCard(), networkIdentity);
+		this.name = GenName();
+	}
+
+	void UpdatePlayerCard (int[] card, uint networkIdentity) {
+		if (isLocalPlayer ) {
+			if (this.netId.Value == networkIdentity) {
+				this.card.SetCard (card);
+			}
+		}
+	}
+
+	[ClientRpc]
+	public void RpcUpdate(int[] card, uint networkIdentity) {
+		UpdatePlayerCard (card, networkIdentity);
+	}
+
+	[Command]
+	public void CmdUpdate(int[] card, int symbol, uint networkIdentity) {
+		Deck deck = (Deck)GameObject.FindObjectOfType<Deck> ();
+		if (deck.ContainsSymbol(symbol)) {
+			deck.SetTopCard(card);
+			UpdatePlayerCard(deck.NextCard(), this.netId.Value);
+			RpcUpdate(deck.NextCard(), networkIdentity);
+			this.cardcount = Mathf.Max(0,cardcount-1);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (isLocalPlayer){
-			cardcount = 10;
-			this.deck.gameObject.SetActive(cardcount!=0);
+			if (!initialized) {
+				if (isServer) {
+					UpdatePlayerCard(deck.NextCard(), this.netId.Value);
+				}
+				CmdInitialize(this.netId.Value);
+				initialized = true;
+			}
+			card.gameObject.SetActive(cardcount!=0);
 			GameObject.Find("UsernameText").GetComponent<Text>().text = "Hello, "+name+"!";
 			if (Input.GetMouseButtonDown(0)) {
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -91,7 +107,7 @@ public class Player : NetworkBehaviour {
 				if (Physics.Raycast(ray, out hit, 100)) {
 					int symbol = 0;
 					if (int.TryParse(hit.transform.gameObject.name, out symbol)) {
-						CmdUpdate(this.deck.GetTopCard(), symbol, (int) GetComponent<NetworkIdentity>().netId.Value);
+						CmdUpdate(this.card.GetCard(), symbol, this.netId.Value);
 					}
 				}
 			}
