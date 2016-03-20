@@ -20,7 +20,6 @@ public class Player : NetworkBehaviour {
 	public FileInfo NameFile;
 	private bool initialized = false;
 
-	// Use this for initialization
 	void Start () {
 		if (isLocalPlayer) {			
 			(this.card = (Card)Instantiate (cardPrefab)).Constructor ();
@@ -48,9 +47,10 @@ public class Player : NetworkBehaviour {
 	}
 	
 	string LoadName(){
+		NameFile = new FileInfo(Application.persistentDataPath +  "\\" + "NameSave.txt");
 		if (NameFile.Exists){
 			StreamReader r = File.OpenText(Application.persistentDataPath + "\\" + "NameSave.txt");
-     		string info = r.ReadToEnd();
+     		string info = r.ReadLine();
      		r.Close();
      		return info;
      	} else {
@@ -59,10 +59,10 @@ public class Player : NetworkBehaviour {
 	}
 	
 	[Command]
-	public void CmdInitialize(uint networkIdentity) {
+	public void CmdInitialize(uint networkIdentity, string name) {
 		Deck deck = (Deck)GameObject.FindObjectOfType<Deck> ();
 		RpcUpdate (deck.NextCard(), networkIdentity);
-		this.name = GenName();
+		this.name = name;
 	}
 
 	void UpdatePlayerCard (int[] card, uint networkIdentity) {
@@ -96,11 +96,11 @@ public class Player : NetworkBehaviour {
 				if (isServer) {
 					UpdatePlayerCard(deck.NextCard(), this.netId.Value);
 				}
-				CmdInitialize(this.netId.Value);
+				CmdInitialize(this.netId.Value, LoadName());
 				initialized = true;
 			}
 			card.gameObject.SetActive(cardcount!=0);
-			GameObject.Find("UsernameText").GetComponent<Text>().text = "Hello, "+name+"!";
+			GameObject.Find("UsernameText").GetComponent<Text>().text = name;
 			if (Input.GetMouseButtonDown(0)) {
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;

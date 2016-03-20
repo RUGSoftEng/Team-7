@@ -8,9 +8,9 @@ using UnityEngine.UI;
 public class Deck : MonoBehaviour {
 
 	public Card cardPrefab;
-	// from outside initialized variables
 	public int symbolsPerCard;
 	public Vector3 topcardloc;
+	public int totalCards;
 	
 	// cards array where each row represents a card
 	int[][] cards;
@@ -18,9 +18,6 @@ public class Deck : MonoBehaviour {
 	int card_idx = 0;
 	// reference to top card (currently visible) object of the deck
 	Card topCard;
-	
-	// Number of cards in the game.
-	public int totalCards;
 
 	// Players in the game.
 	Player[] players;
@@ -37,14 +34,14 @@ public class Deck : MonoBehaviour {
 		(this.topCard = (Card)Instantiate (cardPrefab)).Constructor();
 		this.topCard.transform.SetParent (this.transform);
 		this.topCard.SetCard (NextCard ());
-		this.topCard.transform.localPosition = new Vector3 (100, 0, 0); // why is this hardcoded?
+		this.topCard.transform.localPosition = new Vector3 (100, 0, 0);
 	}
 	
 	public void Update() {
 		divideCards();
 		int winner = checkWinner();
 		if (isGameOver) {
-			GameObject.Find("WinningText").GetComponent<Text>().text = "WOW! "+players[winner].name+" WINS!";
+			GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].name+" WINS!";
 			topCard.gameObject.SetActive(false);
 		}  else {
 			GameObject.Find("WinningText").GetComponent<Text>().text = "";

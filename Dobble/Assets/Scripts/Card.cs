@@ -8,14 +8,20 @@ public class Card : MonoBehaviour {
 
 	public Symbol symbolPrefab;
 
-	// array of contained symbols
+	// Array of contained symbols
 	private Symbol[] containedSymbols; 
 	
 	public void Constructor() {
-
-		//this.transform.SetParent (parent);
-
-		string[] lines = System.IO.File.ReadAllLines(@"Assets/Resources/Circle packings/8.txt");
+		// Noted as strings, as these will eventually be read from a file.
+		string[] lines = {"0.302593388349",
+						  "-0.302593388348611302909204224933 -0.628341645367213738512227388956",
+						  "0.302593388348611302909204224933 -0.628341645367213738512227388956",
+						  "-0.679921171839088240043878874469 -0.155187570571975671990838057814",
+						  "0.679921171839088240043878874469 -0.155187570571975671990838057814",
+						  "0.000000000000000000000000000000 0.000000000000000000000000000000",
+						  "-0.545254445070410775447749861103 0.434825910113495061957667559237",
+						  "0.545254445070410775447749861103 0.434825910113495061957667559237",
+						  "0.000000000000000000000000000000 0.697406611651388697090795775067"};
 		float radius = float.Parse (lines [0]);
 		Vector2[] coordinates = new Vector2[8];
 		string[] line;
@@ -33,7 +39,6 @@ public class Card : MonoBehaviour {
 		
 		this.containedSymbols = new Symbol[8];
 		for (int i = 0; i < 8; ++i) (this.containedSymbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
-
 	}
 
 	// true if this card contains the symbol
