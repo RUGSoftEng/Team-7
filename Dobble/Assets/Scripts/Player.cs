@@ -17,7 +17,7 @@ public class Player : NetworkBehaviour {
 	[SyncVar]
 	public int cardcount;
 
-	public FileInfo NameFile;
+	private AudioClip voiceSound;
 	private bool initialized = false;
 
 	void Start () {
@@ -26,7 +26,9 @@ public class Player : NetworkBehaviour {
 			this.card.transform.SetParent(this.transform);
 			if (isServer) {
 				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform);
-			} 
+			}
+			int curAnimal = PlayerPrefs.GetInt("animal");
+			this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+curAnimal);
 		}
 	}
 	
@@ -44,6 +46,7 @@ public class Player : NetworkBehaviour {
 	void UpdatePlayerCard (int[] card, uint networkIdentity) {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity) {
+				AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
 				this.card.SetCard (card);
 			}
 		}
