@@ -3,15 +3,15 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour {
 
-	// The skin to use for the menu.
-	public GUISkin menuSkin;
 	// Menu size in percentage (1=100%).
 	public float menuWidth = 1f, menuHeight=1f, offsetTop=0f, logoScale=1f;
 	
+	private GUISkin menuSkin;
 	private Texture logo;
 	
 	public void Start() {
 		this.logo = Resources.Load<Texture>("Menu/logo");
+		this.menuSkin = Resources.Load<GUISkin>("Menu/MainMenu");
 	}
 	
 	// Start hosting a new game, go to lobby.
@@ -29,8 +29,9 @@ public class MainMenu : MonoBehaviour {
 	
 	// Customize player (name, animal, etc.).
 	private void Customize() {
-		// TODO: Add proper code!
-		Debug.Log("Customize!");
+		this.enabled = false;
+		SettingsMenu menu = this.gameObject.AddComponent<SettingsMenu>();
+		menu.SetPrevious(this);
 	}
 	
 	// Returns wether or not a local game is being hosted.
@@ -59,6 +60,5 @@ public class MainMenu : MonoBehaviour {
 			Customize();
 		}
 		GUILayout.EndArea();
-
     }
 }

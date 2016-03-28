@@ -30,32 +30,8 @@ public class Player : NetworkBehaviour {
 		}
 	}
 	
-	string GenName() {
-		const int minLen = 2;
-		const int maxLen = 12;
-		const string consonants = "QWRTYPSDFGHJKLZXCVBNM";
-		const string vowels		= "EUIA";
-		string str = "";
-		for (int i=0; i<Random.Range(minLen,maxLen); i++) {
-			if (Random.Range(0,2) == 0) {
-				str += consonants[Random.Range(0,consonants.Length)];
-			} else {
-				str += vowels[Random.Range(0,vowels.Length)];
-			}
-		}
-		return str;
-	}
-	
 	string LoadName(){
-		NameFile = new FileInfo(Application.persistentDataPath +  "\\" + "NameSave.txt");
-		if (NameFile.Exists){
-			StreamReader r = File.OpenText(Application.persistentDataPath + "\\" + "NameSave.txt");
-     		string info = r.ReadLine();
-     		r.Close();
-     		return info;
-     	} else {
-     		return GenName();
-     	}
+		return PlayerPrefs.GetString("name");
 	}
 	
 	[Command]
