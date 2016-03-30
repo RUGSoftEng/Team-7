@@ -4,7 +4,7 @@ using System.Collections;
 public class SettingsMenu : MonoBehaviour {
 
 	// Menu size in percentage (1=100%).
-	public float menuWidth = 0.4f, menuHeight=0.95f, offsetTop=0f, iconScale=0.4f;
+	public float menuWidth = 0.4f, menuHeight=0.67f, offsetTop=0.15f, iconScale=0.4f;
 
 	private GUISkin menuSkin;
 	private MonoBehaviour previous;
@@ -47,6 +47,7 @@ public class SettingsMenu : MonoBehaviour {
 		int width = (int)(Screen.width*menuWidth);
 		int height = (int)(Screen.height*menuHeight);
 		int offTop = (int)(Screen.height*offsetTop);
+		int buttonHeight = height/4;
 		Texture icon = animalSprites[curAnimal].texture;
 		int iconWidth   =  (int)(((float)(width*iconScale)/icon.width)*icon.width);
 		int iconHeight  =  (int)(((float)(width*iconScale)/icon.width)*icon.height);
@@ -54,14 +55,14 @@ public class SettingsMenu : MonoBehaviour {
         GUILayout.BeginArea(new Rect(Screen.width/2-width/2, Screen.height/2-height/2+offTop, width, height));
         playerName = GUILayout.TextField(playerName, 25);
 		GUILayout.FlexibleSpace();
-		if (GUILayout.Button("Next one!")) {
+		if (GUILayout.Button("Next one!", GUILayout.Height(buttonHeight))) {
 			ChangeAnimal(1);
 		}
-		if (GUILayout.Button("Go back!")) {
+		if (GUILayout.Button("Go back!", GUILayout.Height(buttonHeight))) {
 			ChangeAnimal(-1);
 		}
 		string animalName = animalSprites[curAnimal].name;
-		if (GUILayout.Button("Yeah! "+animalName+"s!")) {
+		if (GUILayout.Button("Yeah! "+animalName+"s!", GUILayout.Height(buttonHeight))) {
 			SafeSettings();
 			GoBack();
 		}
