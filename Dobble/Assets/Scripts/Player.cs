@@ -28,7 +28,8 @@ public class Player : NetworkBehaviour {
 				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform);
 			}
 			int curAnimal = PlayerPrefs.GetInt("animal");
-			this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+curAnimal);
+			string animalName = Resources.LoadAll<Texture>("Animals")[curAnimal].name;
+			this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+animalName);
 		}
 	}
 	

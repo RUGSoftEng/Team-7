@@ -9,6 +9,7 @@ public class SettingsMenu : MonoBehaviour {
 	private GUISkin menuSkin;
 	private MonoBehaviour previous;
 	private Sprite[] animalSprites;
+	private AudioClip[] cries;
 	private Texture arrowIcon, arrowFlippedIcon;
 	private int curAnimal;
 	private string playerName;
@@ -16,6 +17,7 @@ public class SettingsMenu : MonoBehaviour {
 	public void Start() {
 		this.menuSkin = Resources.Load<GUISkin>("Menu/MainMenu");
 		animalSprites = Resources.LoadAll<Sprite>("Animals");
+		cries = Resources.LoadAll<AudioClip>("AnimalSounds");
 		arrowIcon = Resources.Load<Texture>("Menu/arrow");
 		arrowFlippedIcon = Resources.Load<Texture>("Menu/arrow-flipped");
 		this.curAnimal = PlayerPrefs.GetInt("animal");
@@ -36,6 +38,7 @@ public class SettingsMenu : MonoBehaviour {
 	private int ChangeAnimal(int step){
 		this.curAnimal += step;
 		this.curAnimal = (int) Mathf.Repeat(curAnimal, animalSprites.Length);
+		AudioSource.PlayClipAtPoint(cries[curAnimal], new Vector3(0,0,0));
 		return curAnimal;
 	}
 	
