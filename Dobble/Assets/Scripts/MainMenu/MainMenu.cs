@@ -14,6 +14,12 @@ public class MainMenu : MonoBehaviour {
 		this.menuSkin = Resources.Load<GUISkin>("Menu/MainMenu");
 	}
 	
+	public void Update () {
+     if (Input.GetKey(KeyCode.Escape) && Application.platform == RuntimePlatform.Android) {
+			Application.Quit();
+		}
+	}
+	
 	// Start hosting a new game, go to lobby.
 	private void Host() {
 		// TODO: Add proper code!
@@ -46,7 +52,7 @@ public class MainMenu : MonoBehaviour {
 		int offTop = (int)(Screen.height*offsetTop);
 		int logoWidth   =  (int)(((float)(width*logoScale)/logo.width)*logo.width);
 		int logoHeight  =  (int)(((float)(width*logoScale)/logo.width)*logo.height);
-		int buttonHeight = height/3;
+		int buttonHeight = height/4;
 		GUI.DrawTexture(new Rect(Screen.width/2-logoWidth/2,15,logoWidth, logoHeight), logo);
         GUILayout.BeginArea(new Rect(Screen.width/2-width/2, Screen.height/2-height/2+offTop, width, height));
         GUILayout.FlexibleSpace();
@@ -61,6 +67,9 @@ public class MainMenu : MonoBehaviour {
 		}
 		if (GUILayout.Button("Customize", GUILayout.Height(buttonHeight))) {
 			Customize();
+		}
+		if (GUILayout.Button("Exit", GUILayout.Height(buttonHeight))) {
+			Application.Quit();
 		}
 		GUILayout.EndArea();
     }
