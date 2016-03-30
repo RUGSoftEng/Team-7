@@ -156,4 +156,8 @@ public class Deck : MonoBehaviour {
 	public int[] GetTopCard() {
 		return this.topCard.GetCard ();
 	}
+	
+	public bool IsGameOver() {
+		return this.isGameOver;
+	}
 }
