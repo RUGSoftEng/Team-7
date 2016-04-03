@@ -2,7 +2,9 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using System.IO;
+using System.Timers;
+using System.IO;/**/
+
 
 public class Player : NetworkBehaviour {
 	
@@ -10,16 +12,22 @@ public class Player : NetworkBehaviour {
 	public Card cardPrefab;
 	Card card;
 	Deck deck;
-
+	
 	[SyncVar]
 	public string name;
-
+	
 	[SyncVar]
 	public int cardcount;
-
+	
 	private AudioClip voiceSound;
+	private AudioClip errorSound;
 	private bool initialized = false;
-
+	
+	private const int TIME_PENALTY = 2;
+	private const string ERROR_SOUND_PATH = "GameSounds/errorSound"; 
+	
+	private bool isPenalized = false;
+	
 	void Start () {
 		if (isLocalPlayer) {			
 			(this.card = (Card)Instantiate (cardPrefab)).Constructor ();
@@ -30,6 +38,7 @@ public class Player : NetworkBehaviour {
 			int curAnimal = PlayerPrefs.GetInt("animal");
 			string animalName = Resources.LoadAll<Texture>("Animals")[curAnimal].name;
 			this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+animalName);
+			this.errorSound = Resources.Load<AudioClip>(ERROR_SOUND_PATH);
 		}
 	}
 	
@@ -43,7 +52,7 @@ public class Player : NetworkBehaviour {
 		RpcUpdate (deck.NextCard(), networkIdentity);
 		this.name = name;
 	}
-
+	
 	void UpdatePlayerCard (int[] card, uint networkIdentity) {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity) {
@@ -52,23 +61,43 @@ public class Player : NetworkBehaviour {
 			}
 		}
 	}
-
+	
 	[ClientRpc]
 	public void RpcUpdate(int[] card, uint networkIdentity) {
 		UpdatePlayerCard (card, networkIdentity);
 	}
-
+	
+	[ClientRpc]
+	public void RpcPenalty(uint networkIdentity) {
+		if (isLocalPlayer) {
+			if (this.netId.Value == networkIdentity) {
+				AudioSource.PlayClipAtPoint (errorSound, new Vector3 (0, 0, 0));
+				StartCoroutine (StartCountDownPenalty ());
+			}
+		}
+	}
+	
+	IEnumerator StartCountDownPenalty()
+	{
+		this.isPenalized = true;
+		yield return new WaitForSeconds(TIME_PENALTY);
+		this.isPenalized = false;
+	}
+	
 	[Command]
 	public void CmdUpdate(int[] card, int symbol, uint networkIdentity) {
 		Deck deck = (Deck)GameObject.FindObjectOfType<Deck> ();
-		if (deck.ContainsSymbol(symbol)) {
-			deck.SetTopCard(card);
-			UpdatePlayerCard(deck.NextCard(), this.netId.Value);
-			RpcUpdate(deck.NextCard(), networkIdentity);
-			this.cardcount = Mathf.Max(0,cardcount-1);
+		if (deck.ContainsSymbol (symbol)) {
+			deck.SetTopCard (card);
+			UpdatePlayerCard (deck.NextCard (), this.netId.Value);
+			RpcUpdate (deck.NextCard (), networkIdentity);
+			this.cardcount = Mathf.Max (0, cardcount - 1);
+		} else {
+			RpcPenalty(networkIdentity);
 		}
 	}
-
+	
+	
 	// Update is called once per frame
 	void Update () {
 		if (isLocalPlayer){
@@ -86,7 +115,8 @@ public class Player : NetworkBehaviour {
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit, 100)) {
 					int symbol = 0;
-					if (int.TryParse(hit.transform.gameObject.name, out symbol)) {
+					if (int.TryParse(hit.transform.gameObject.name, out symbol) &&
+					    !this.isPenalized) {
 						CmdUpdate(this.card.GetCard(), symbol, this.netId.Value);
 					}
 				}
