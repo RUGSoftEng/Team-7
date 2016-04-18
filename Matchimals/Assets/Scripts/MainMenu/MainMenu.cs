@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 public class MainMenu : MonoBehaviour {
@@ -8,10 +9,12 @@ public class MainMenu : MonoBehaviour {
 	
 	private GUISkin menuSkin;
 	private Texture logo;
+    public string hostIP;
 	
 	public void Start() {
 		this.logo = Resources.Load<Texture>("Menu/logo");
 		this.menuSkin = Resources.Load<GUISkin>("Menu/MainMenu");
+        this.hostIP = null;
 	}
 	
 	public void Update () {
@@ -24,13 +27,15 @@ public class MainMenu : MonoBehaviour {
 	private void Host() {
 		// TODO: Add proper code!
 		Debug.Log("Host!");
-		Application.LoadLevel ("LobbyScene"); // Filler for now, to make the game playable with this menu.
+        GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
+        gameDiscovery.StartHosting();
 	}
 	
 	// Join a local game, go to lobby.
 	private void Join() {
-		// TODO: Add proper code!
 		Debug.Log("Join!");
+        NetworkManager.singleton.networkAddress = hostIP;
+        NetworkManager.singleton.StartClient();
 	}
 	
 	// Customize player (name, animal, etc.).
@@ -42,7 +47,7 @@ public class MainMenu : MonoBehaviour {
 	
 	// Returns wether or not a local game is being hosted.
 	private bool isGameHosted() {
-		return false; // TODO: Add proper code!
+        return hostIP != null; // TODO: Add proper code!
 	}
 	
 	public void OnGUI () {
@@ -72,5 +77,10 @@ public class MainMenu : MonoBehaviour {
 			Application.Quit();
 		}
 		GUILayout.EndArea();
+    }
+
+    public void SetHostIP(string ip)
+    {
+        this.hostIP = ip;
     }
 }
