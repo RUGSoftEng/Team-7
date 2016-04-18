@@ -15,15 +15,13 @@ public class GameDiscovery : NetworkDiscovery {
 	}
 	
 	// Called everytime a host is found.
-    public override void OnReceivedBroadcast(string fromAddress, string data)
-    {
+    public override void OnReceivedBroadcast(string fromAddress, string data) {
         Debug.Log("I am not lone! :D");
         menu.SetHostIP(fromAddress);
     }
 
     // Starts broadcasting as a Server.
-    public void StartHosting()
-    {
+    public void StartHosting() {
         this.StopBroadcast();
         this.StartAsServer();
     }
