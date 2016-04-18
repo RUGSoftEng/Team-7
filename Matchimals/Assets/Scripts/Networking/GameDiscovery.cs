@@ -16,7 +16,6 @@ public class GameDiscovery : NetworkDiscovery {
 	
 	// Called everytime a host is found.
     public override void OnReceivedBroadcast(string fromAddress, string data) {
-        Debug.Log("I am not lone! :D");
         menu.SetHostIP(fromAddress);
     }
 
