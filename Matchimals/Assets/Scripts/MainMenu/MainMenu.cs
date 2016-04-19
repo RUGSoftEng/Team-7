@@ -25,28 +25,33 @@ public class MainMenu : MonoBehaviour {
 	
 	// Start hosting a new game, go to lobby.
 	private void Host() {
-		// TODO: Add proper code!
 		Debug.Log("Host!");
         GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
         gameDiscovery.StartHosting();
-	}
+        NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
+        networkManager.StartServer();
+        GotoMenu<Lobby>();
+    }
 	
 	// Join a local game, go to lobby.
 	private void Join() {
 		Debug.Log("Join!");
-        NetworkManager.singleton.networkAddress = hostIP;
-        NetworkManager.singleton.StartClient();
-	}
-	
-	// Customize player (name, animal, etc.).
-	private void Customize() {
-		this.enabled = false;
-		SettingsMenu menu = this.gameObject.AddComponent<SettingsMenu>();
-		menu.SetPrevious(this);
-	}
-	
-	// Returns wether or not a local game is being hosted.
-	private bool isGameHosted() {
+        NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
+        networkManager.networkAddress = hostIP;
+        networkManager.StartClient();
+        GotoMenu<Lobby>();
+    }
+
+    // Customize player (name, animal, etc.).
+    private void GotoMenu<E>() where E : Returnable
+    {
+        this.enabled = false;
+        E menu = this.gameObject.AddComponent<E>();
+        menu.SetPrevious(this);
+    }
+
+    // Returns wether or not a local game is being hosted.
+    private bool isGameHosted() {
         return hostIP != null; // TODO: Add proper code!
 	}
 	
@@ -71,7 +76,7 @@ public class MainMenu : MonoBehaviour {
 			}
 		}
 		if (GUILayout.Button("Customize", GUILayout.Height(buttonHeight))) {
-			Customize();
+			GotoMenu<SettingsMenu>();
 		}
 		if (GUILayout.Button("Exit", GUILayout.Height(buttonHeight))) {
 			Application.Quit();

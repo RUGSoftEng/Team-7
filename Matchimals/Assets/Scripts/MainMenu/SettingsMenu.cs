@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SettingsMenu : MonoBehaviour {
+public class SettingsMenu : Returnable {
 
 	// Menu size in percentage (1=100%).
 	public float menuWidth = 0.55f, menuHeight=0.67f, offsetTop=0.15f, iconScale=0.4f;
 
 	private GUISkin menuSkin;
-	private MonoBehaviour previous;
 	private Sprite[] animalSprites;
 	private AudioClip[] cries;
 	private Texture arrowIcon, arrowFlippedIcon;
@@ -24,11 +23,6 @@ public class SettingsMenu : MonoBehaviour {
 		this.playerName = PlayerPrefs.GetString("name");
 	}
 	
-	// Set the caller of this script, so we can move back to it.
-	public void SetPrevious(MonoBehaviour previous) {
-			this.previous = previous;
-	}
-	
 	private void SafeSettings() {
 		PlayerPrefs.SetInt("animal", curAnimal);
 		PlayerPrefs.SetString("name", playerName);
@@ -40,12 +34,6 @@ public class SettingsMenu : MonoBehaviour {
 		this.curAnimal = (int) Mathf.Repeat(curAnimal, animalSprites.Length);
 		AudioSource.PlayClipAtPoint(cries[curAnimal], new Vector3(0,0,0));
 		return curAnimal;
-	}
-	
-	private void GoBack() {
-		this.enabled = false;
-		previous.enabled = true;
-		Destroy(this);
 	}
 	
 	public void OnGUI () {

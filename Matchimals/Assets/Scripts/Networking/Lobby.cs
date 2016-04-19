@@ -3,7 +3,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Lobby : MonoBehaviour {
+public class Lobby : Returnable {
 	private GUISkin menuSkin;
 	
 	public void Start() {
@@ -16,7 +16,8 @@ public class Lobby : MonoBehaviour {
 		
 		Player[] players = getPlayers();
 		foreach (Player player in players) {
-			//Draw the waiting players.
+            //Draw the waiting players.
+            Debug.Log("Player!");
 		}
 		//Draw the ready button.
 	}
