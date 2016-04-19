@@ -13,14 +13,20 @@ public class Lobby : Returnable {
 	// Draws the GUI.
 	public void OnGUI () {
 		GUI.skin = menuSkin;
-		
-		Player[] players = getPlayers();
+
+        //GUILayout.BeginArea();
+        Player[] players = getPlayers();
 		foreach (Player player in players) {
             //Draw the waiting players.
             Debug.Log("Player!");
 		}
-		//Draw the ready button.
-	}
+
+        //Draw the ready button.
+        if (GUILayout.Button("Let's Party!", GUILayout.Height(100))) {
+            //Go to the main game.
+        }
+        GUILayout.EndArea();
+    }
 	
 	private Player[] getPlayers() {
 		return GameObject.FindObjectsOfType(typeof(Player)) as Player[];
