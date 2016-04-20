@@ -2,19 +2,17 @@
 using UnityEngine.Networking;
 using System.Collections;
 
-public class MainMenu : MonoBehaviour {
+public class MainMenu : Menu {
 
 	// Menu size in percentage (1=100%).
 	public float menuWidth = 1f, menuHeight=1f, logoScale=1f, offsetTop=0f;
-	
-	private GUISkin menuSkin;
 	private Texture logo;
     public string hostIP;
 	
-	public void Start() {
+	public new void Start() {
 		this.logo = Resources.Load<Texture>("Menu/logo");
-		this.menuSkin = Resources.Load<GUISkin>("Menu/MainMenu");
         this.hostIP = null;
+        base.Start();
 	}
 	
 	public void Update () {
@@ -23,31 +21,12 @@ public class MainMenu : MonoBehaviour {
 		}
 	}
 	
-	// Start hosting a new game, go to lobby.
-	private void Host() {
-		Debug.Log("Host!");
-        GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
-        gameDiscovery.StartHosting();
-        NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
-        networkManager.StartServer();
-        GotoMenu<Lobby>();
-    }
-	
 	// Join a local game, go to lobby.
 	private void Join() {
-		Debug.Log("Join!");
         NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
         networkManager.networkAddress = hostIP;
         networkManager.StartClient();
         GotoMenu<Lobby>();
-    }
-
-    // Customize player (name, animal, etc.).
-    private void GotoMenu<E>() where E : Returnable
-    {
-        this.enabled = false;
-        E menu = this.gameObject.AddComponent<E>();
-        menu.SetPrevious(this);
     }
 
     // Returns wether or not a local game is being hosted.
@@ -72,8 +51,8 @@ public class MainMenu : MonoBehaviour {
 			}
 		} else {
 			if (GUILayout.Button("Host Party", GUILayout.Height(buttonHeight))) {
-				Host();
-			}
+                GotoMenu<CastConnector>();
+            }
 		}
 		if (GUILayout.Button("Customize", GUILayout.Height(buttonHeight))) {
 			GotoMenu<SettingsMenu>();

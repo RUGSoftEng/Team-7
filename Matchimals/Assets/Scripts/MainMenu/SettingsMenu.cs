@@ -6,21 +6,20 @@ public class SettingsMenu : Returnable {
 	// Menu size in percentage (1=100%).
 	public float menuWidth = 0.55f, menuHeight=0.67f, offsetTop=0.15f, iconScale=0.4f;
 
-	private GUISkin menuSkin;
 	private Sprite[] animalSprites;
 	private AudioClip[] cries;
 	private Texture arrowIcon, arrowFlippedIcon;
 	private int curAnimal;
 	private string playerName;
 	
-	public void Start() {
-		this.menuSkin = Resources.Load<GUISkin>("Menu/MainMenu");
+	public new void Start() {
 		animalSprites = Resources.LoadAll<Sprite>("Animals");
 		cries = Resources.LoadAll<AudioClip>("AnimalSounds");
 		arrowIcon = Resources.Load<Texture>("Menu/arrow");
 		arrowFlippedIcon = Resources.Load<Texture>("Menu/arrow-flipped");
 		this.curAnimal = PlayerPrefs.GetInt("animal");
 		this.playerName = PlayerPrefs.GetString("name");
+        base.Start();
 	}
 	
 	private void SafeSettings() {
