@@ -49,9 +49,7 @@ public class Lobby : Returnable {
 		
 	}
 
-    public new void GoBack()
-    {
-        Debug.Log("Sup");
+    public new void GoBack() {
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.StopHost();
         GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;

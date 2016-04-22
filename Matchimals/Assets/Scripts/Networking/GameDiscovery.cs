@@ -8,7 +8,6 @@ public class GameDiscovery : NetworkDiscovery {
     public void Start() {
         this.menu = GameObject.FindObjectOfType(typeof(MainMenu)) as MainMenu;
         Debug.Assert(menu != null);
-        this.Initialize();
         StartListening();
     }
 
@@ -20,16 +19,15 @@ public class GameDiscovery : NetworkDiscovery {
     // Starts broadcasting as a Server.
     public void StartHosting() {
         Reset();
-        this.StartAsServer();
         this.Initialize();
+        this.StartAsServer();
     }
 
     // Stops broadcasting as a Server and starts searching again.
     public void StartListening() {
-        Debug.Log("Hoiman");
         Reset();
-        this.StartAsClient();
         this.Initialize();
+        this.StartAsClient();
     }
 
     private void Reset() {
