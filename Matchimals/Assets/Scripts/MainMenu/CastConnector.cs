@@ -23,7 +23,7 @@ public class CastConnector : Returnable {
             Destroy(castSearchAnimation);
             GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
             gameDiscovery.StartHosting();
-            NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
+            GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
             networkManager.StartHost();
             GotoMenu<Lobby>();
         }

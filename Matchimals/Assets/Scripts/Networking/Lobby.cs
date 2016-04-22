@@ -56,7 +56,7 @@ public class Lobby : Returnable {
 
     protected new void GoBack()
     {
-        NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
+        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.StopHost();
         GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
         gameDiscovery.StartListening();

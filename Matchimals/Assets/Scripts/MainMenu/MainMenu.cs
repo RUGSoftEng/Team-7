@@ -23,7 +23,7 @@ public class MainMenu : Menu {
 	
 	// Join a local game, go to lobby.
 	private void Join() {
-        NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
+        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.networkAddress = hostIP;
         networkManager.StartClient();
         GotoMenu<Lobby>();
