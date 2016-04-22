@@ -8,6 +8,7 @@ public class GameDiscovery : NetworkDiscovery {
     public void Start() {
         this.menu = GameObject.FindObjectOfType(typeof(MainMenu)) as MainMenu;
         Debug.Assert(menu != null);
+        this.Initialize();
         StartListening();
     }
 
@@ -31,8 +32,6 @@ public class GameDiscovery : NetworkDiscovery {
     private void Reset() {
         if (this.running) {
             this.StopBroadcast();
-        } else {
-            this.Initialize();
         }
     }
 }
