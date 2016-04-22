@@ -7,16 +7,13 @@ using UnityEngine.SceneManagement;
 
 public class Lobby : Returnable {
     private GameObject[] menuEffects;
-	
-    public void Update() {
-        NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
-        if (!networkManager.isNetworkActive) {
-            GoBack();
-        }
+
+    public void OnDisconnectedFromServer(NetworkDisconnection info) {
+        Debug.Log("HM");
     }
 
-	// Draws the GUI.
-	public void OnGUI () {
+    // Draws the GUI.
+    public void OnGUI () {
 		GUI.skin = menuSkin;
 
         int padding = 120;
