@@ -26,6 +26,7 @@ public class GameDiscovery : NetworkDiscovery {
 
     // Stops broadcasting as a Server and starts searching again.
     public void StartListening() {
+        Debug.Log("Hoiman");
         Reset();
         this.StartAsClient();
         this.Initialize();

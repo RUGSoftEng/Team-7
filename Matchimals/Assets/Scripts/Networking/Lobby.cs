@@ -6,11 +6,6 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class Lobby : Returnable {
-    private GameObject[] menuEffects;
-
-    public void OnDisconnectedFromServer(NetworkDisconnection info) {
-        Debug.Log("HM");
-    }
 
     // Draws the GUI.
     public void OnGUI () {
@@ -56,6 +51,7 @@ public class Lobby : Returnable {
 
     public new void GoBack()
     {
+        Debug.Log("Sup");
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.StopHost();
         GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
