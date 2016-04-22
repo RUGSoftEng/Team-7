@@ -21,12 +21,14 @@ public class GameDiscovery : NetworkDiscovery {
     public void StartHosting() {
         Reset();
         this.StartAsServer();
+        this.Initialize();
     }
 
     // Stops broadcasting as a Server and starts searching again.
     public void StartListening() {
         Reset();
         this.StartAsClient();
+        this.Initialize();
     }
 
     private void Reset() {
