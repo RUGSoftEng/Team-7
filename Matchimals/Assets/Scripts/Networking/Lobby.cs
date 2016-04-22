@@ -54,7 +54,7 @@ public class Lobby : Returnable {
 		
 	}
 
-    protected new void GoBack()
+    public new void GoBack()
     {
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.StopHost();

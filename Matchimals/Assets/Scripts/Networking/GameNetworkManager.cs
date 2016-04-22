@@ -5,11 +5,9 @@ using System.Collections;
 public class GameNetworkManager : NetworkManager {
     
     public override void OnClientDisconnect(NetworkConnection conn) {
-        Debug.Log("Doe");
-    }
-
-    public override void OnClientConnect(NetworkConnection conn)
-    {
-        Debug.Log("Moi");
+        Lobby lobby = Lobby.FindObjectOfType<Lobby>() as Lobby;
+        if (lobby != null) {
+            lobby.GoBack();
+        }
     }
 }
