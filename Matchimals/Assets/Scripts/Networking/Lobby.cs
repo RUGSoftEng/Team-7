@@ -8,6 +8,13 @@ using UnityEngine.SceneManagement;
 public class Lobby : Returnable {
     private GameObject[] menuEffects;
 	
+    public void Update() {
+        NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
+        if (!networkManager.isNetworkActive) {
+            Debug.Log("POEP");
+        }
+    }
+
 	// Draws the GUI.
 	public void OnGUI () {
 		GUI.skin = menuSkin;
@@ -53,7 +60,7 @@ public class Lobby : Returnable {
     protected new void GoBack()
     {
         NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
-        networkManager.StopServer();
+        networkManager.StopHost();
         GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
         gameDiscovery.StartListening();
         base.GoBack();

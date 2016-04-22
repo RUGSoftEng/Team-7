@@ -24,7 +24,7 @@ public class CastConnector : Returnable {
             GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
             gameDiscovery.StartHosting();
             NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
-            networkManager.StartServer();
+            networkManager.StartHost();
             GotoMenu<Lobby>();
         }
     }
@@ -49,7 +49,7 @@ public class CastConnector : Returnable {
 
     private bool IsCastConnected() {
         // TODO: Write proper implementation.
-        return false;
+        return !false;
     }
 
     // Go to a returnable menu, but pass the parent menu.
