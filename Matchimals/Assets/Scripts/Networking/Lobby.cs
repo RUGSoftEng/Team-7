@@ -11,7 +11,7 @@ public class Lobby : Returnable {
     public void Update() {
         NetworkManager networkManager = GameObject.FindObjectOfType<NetworkManager>() as NetworkManager;
         if (!networkManager.isNetworkActive) {
-            Debug.Log("POEP");
+            GoBack();
         }
     }
 
