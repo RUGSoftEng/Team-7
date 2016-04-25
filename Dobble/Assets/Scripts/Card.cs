@@ -52,6 +52,20 @@ public class Card : MonoBehaviour {
 		return false;
 	}
 
+	//Makes the given symbol zoom in and out
+	public void Zoom(int symbol){
+		foreach (Symbol s in this.containedSymbols) if (s.getSymbol() == symbol) {
+			s.ZoomIn(symbol);
+		}
+	}
+
+	//Resets the symbol zoom properties
+	public void ResetZoom(int symbol){
+		foreach (Symbol s in this.containedSymbols) if (s.getSymbol() == symbol) {
+			s.ResetZoom(symbol);
+		}
+	}
+
 	// Translates this card into its abstract representative.
 	public int[] GetCard() {
 		int[] c = new int[8];

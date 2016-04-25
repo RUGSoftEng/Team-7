@@ -142,6 +142,14 @@ public class Deck : MonoBehaviour {
 		this.card_idx = ++this.card_idx % cards.Length;
 		return this.card_idx;
 	}
+
+	public void Zoom(int symbol){
+		topCard.Zoom(symbol);
+	}
+
+	public void ResetZoom(int symbol){
+		topCard.ResetZoom(symbol);
+	}
 	
 	public bool ContainsSymbol(int symbol) {
 		return topCard.ContainsSymbol (symbol);

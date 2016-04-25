@@ -41,4 +41,18 @@ public class Symbol : MonoBehaviour {
 		this.transform.eulerAngles = Vector3.forward*UnityEngine.Random.value*360;
 	}
 
+		//uses a cosine to zoom in and out of the current symbol
+	public void ZoomIn(int symbol) {
+		this.count+=0.1F;
+		if(count < Mathf.PI*2){
+			this.transform.localScale = Vector3.one*scales [symbol] * (-Mathf.Cos(count)+2);
+		}
+	}
+
+	//Reset this symbol its zoom properties
+	public void ResetZoom(int symbol){
+		this.count=0.0f;
+		this.transform.localScale = Vector3.one*scales [symbol];
+	}
+
 }
