@@ -29,6 +29,9 @@ public class Player : NetworkBehaviour {
 	Card[] bgStack;
 	private AudioClip voiceSound;
 	private AudioClip errorSound;
+
+	private int selectSymbol;
+	private bool correctSymbol = false;
 	
 	private const int TIME_PENALTY = 2;
 	private const string ERROR_SOUND_PATH = "GameSounds/errorSound"; 
