@@ -39,7 +39,11 @@ public class Card : MonoBehaviour {
 		}
 		
 		this.containedSymbols = new Symbol[8];
-		for (int i = 0; i < 8; ++i) (this.containedSymbols[i] = (Symbol) Instantiate (symbolPrefab)).Constructor(this.transform, coordinates[i], sprites, scales);
+		for (int i = 0; i < 8; ++i) {
+			(this.containedSymbols [i] = (Symbol)Instantiate (symbolPrefab))
+										.Constructor (this.transform, coordinates [i], sprites, scales);
+			this.containedSymbols[i].transform.SetParent(this.transform);		
+		}
 	}
 
 	// true if this card contains the symbol

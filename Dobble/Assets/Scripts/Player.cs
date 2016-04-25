@@ -15,23 +15,31 @@ public class Player : NetworkBehaviour {
 	
 	[SyncVar]
 	public string name;
+
+	[SyncVar]
+	int[][] cardStack;
 	
 	[SyncVar]
-	public int cardcount;
-	
+	int cardcount;
+	public int cardCount {
+		get {return cardcount;}
+		set {cardcount = value;}
+	}
+
+	Card[] bgStack;
 	private AudioClip voiceSound;
 	private AudioClip errorSound;
-	private bool initialized = false;
 	
 	private const int TIME_PENALTY = 2;
 	private const string ERROR_SOUND_PATH = "GameSounds/errorSound"; 
 	
 	private bool isPenalized = false;
-	
+
 	void Start () {
 		if (isLocalPlayer) {			
 			(this.card = (Card)Instantiate (cardPrefab)).Constructor ();
 			this.card.transform.SetParent(this.transform);
+
 			if (isServer) {
 				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform);
 			}
@@ -46,27 +54,16 @@ public class Player : NetworkBehaviour {
 		return PlayerPrefs.GetString("name");
 	}
 	
-	[Command]
-	public void CmdInitialize(uint networkIdentity, string name) {
-		Deck deck = (Deck)GameObject.FindObjectOfType<Deck> ();
-		RpcUpdate (deck.NextCard(), networkIdentity);
-		this.name = name;
-	}
-	
-	void UpdatePlayerCard (int[] card, uint networkIdentity) {
+	[ClientRpc]
+	public void RpcUpdate(uint networkIdentity) {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity) {
 				AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
-				this.card.SetCard (card);
-			}
+				this.card.SetCard (cardStack[cardcount-1]);
+			} 
 		}
 	}
-	
-	[ClientRpc]
-	public void RpcUpdate(int[] card, uint networkIdentity) {
-		UpdatePlayerCard (card, networkIdentity);
-	}
-	
+		
 	[ClientRpc]
 	public void RpcPenalty(uint networkIdentity) {
 		if (isLocalPlayer) {
@@ -86,41 +83,59 @@ public class Player : NetworkBehaviour {
 	
 	[Command]
 	public void CmdUpdate(int[] card, int symbol, uint networkIdentity) {
-		Deck deck = (Deck)GameObject.FindObjectOfType<Deck> ();
 		if (deck.ContainsSymbol (symbol)) {
 			deck.SetTopCard (card);
-			UpdatePlayerCard (deck.NextCard (), this.netId.Value);
-			RpcUpdate (deck.NextCard (), networkIdentity);
 			this.cardcount = Mathf.Max (0, cardcount - 1);
+			if (cardcount > 0) {
+				RpcUpdate (networkIdentity);
+			}
 		} else {
 			RpcPenalty(networkIdentity);
 		}
 	}
 	
-	
 	// Update is called once per frame
 	void Update () {
-		if (isLocalPlayer){
-			if (!initialized) {
-				if (isServer) {
-					UpdatePlayerCard(deck.NextCard(), this.netId.Value);
-				}
-				CmdInitialize(this.netId.Value, LoadName());
-				initialized = true;
-			}
-			card.gameObject.SetActive(cardcount!=0);
-			GameObject.Find("UsernameText").GetComponent<Text>().text = name;
-			if (Input.GetMouseButtonDown(0)) {
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		if (isLocalPlayer) {
+			card.gameObject.SetActive (cardcount != 0);
+			GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
+			if (Input.GetMouseButtonDown (0)) {
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit, 100)) {
+				if (Physics.Raycast (ray, out hit, 100)) {
 					int symbol = 0;
-					if (int.TryParse(hit.transform.gameObject.name, out symbol) &&
-					    !this.isPenalized) {
-						CmdUpdate(this.card.GetCard(), symbol, this.netId.Value);
+					if (int.TryParse (hit.transform.gameObject.name, out symbol) &&	!this.isPenalized) {
+						CmdUpdate (this.card.GetCard (), symbol, this.netId.Value);
 					}
 				}
 			}
 		}
 	}
+
+	public void initCardStack (int cardsPerPlayer, int symbolsPerCard) {
+		cardStack = new int[cardsPerPlayer][];
+		for (int j = 0; j < cardsPerPlayer; j++) {
+			cardStack[j] = new int[symbolsPerCard];
+		}
+		drawBGStack (cardsPerPlayer - 1);
+	}
+
+	void drawBGStack (int cardsNr) {
+		bgStack = new Card[cardsNr];
+		for (int i = 0; i < cardsNr  ; i++) {
+			(bgStack[i] = (Card)Instantiate (cardPrefab)).Constructor ();
+			bgStack[i].transform.SetParent(this.transform);
+			float z = (i + 1f)*0.1f;
+			bgStack[i].transform.localPosition = Random.insideUnitCircle*0.2f;				
+			bgStack[i].transform.localPosition += new Vector3(0, 0, z);
+		}
+	}
+
+	public void setCardAt (int idx, int[] card) {	
+		cardStack [idx] = card;
+		if (idx == cardCount - 1) {
+			this.card.SetCard (cardStack[cardCount-1]);
+		}
+	}
+
 }

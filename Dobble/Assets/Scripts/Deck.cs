@@ -10,8 +10,11 @@ public class Deck : MonoBehaviour {
 	public Card cardPrefab;
 	public int symbolsPerCard;
 	public Vector3 topcardloc;
-	public int totalCards;
-	
+	public int maxAmount;
+
+	// indicates the total number of cards according to the number of symbols per card
+	int numberOfCards;
+
 	// cards array where each row represents a card
 	int[][] cards;
 	// the index of the current card
@@ -23,7 +26,7 @@ public class Deck : MonoBehaviour {
 	Player[] players;
 
 	private bool isGameOver = false;
-	
+
 	// New deck is created.
 	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
@@ -36,11 +39,12 @@ public class Deck : MonoBehaviour {
 		this.topCard.transform.SetParent (this.transform);
 		this.topCard.SetCard (NextCard ());
 		this.topCard.transform.localPosition = new Vector3 (100, 0, 0);
+		
+		divideCards();
 	}
-	
+
 	// Every frame, check if somebody won, divide cards for new players.
 	public void Update() {
-		divideCards();
 		int winner = checkWinner();
 		if (isGameOver) {
 			GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].name+" WINS!";
@@ -51,34 +55,37 @@ public class Deck : MonoBehaviour {
 		}
 	}
 	
-	// Devide the number of cards.
-	private void divideCards() {
-		Player[] foundPlayers = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
-		if (players == null || (players.Length != foundPlayers.Length)) {
-			players = foundPlayers;
-			int cardsPerPlayer = totalCards/players.Length;
-			for (int i=0; i<players.Length; i++) {
-				players[i].cardcount = cardsPerPlayer;
+	// Devide the cards among players.
+	void divideCards() {
+		Player[] players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
+		int cardsPerPlayer = maxAmount;
+		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
+
+		for (int i = 0; i < players.Length; i++) {	
+			players[i].cardCount = cardsPerPlayer;
+			players[i].initCardStack(cardsPerPlayer, symbolsPerCard);
+
+			for (int j = 0; j < cardsPerPlayer; j++) {		
+				players[i].setCardAt(j, cards[i*cardsPerPlayer + j]);
 			}
 		}
 	}
 	
 	// Checks if somebody won, if so: it's gameover.
-	private int checkWinner() {
+	int checkWinner() {
 		if (players != null) {
 			for (int i=0; i<players.Length; i++) {
-				if (players[i].cardcount == 0) {
+				if (players[i].cardCount == 0) {
 					this.isGameOver = true;
 					return i;
 				}
 			}
 		}
-		this.isGameOver = false;
 		return -1;
 	}
 
 	// symbols per card should be 0, 1, 2 or (prime + 1)
-	private bool IsLegalSymbolsPerCard() {
+	bool IsLegalSymbolsPerCard() {
 		
 		int symbolsPerCard = this.symbolsPerCard;
 		
@@ -95,7 +102,7 @@ public class Deck : MonoBehaviour {
 	void InitializeCards () {
 		int symbolsPerCard = this.symbolsPerCard;
 		int prime = symbolsPerCard - 1;
-		int numberOfCards = prime * prime + prime + 1;
+		numberOfCards = prime * prime + prime + 1;
 		int[][] cards = new int[numberOfCards][];
 		
 		for (int i = 0; i < numberOfCards; ++i) cards [i] = new int[symbolsPerCard];

@@ -19,8 +19,10 @@ public class Symbol : MonoBehaviour {
 	public void Constructor(Transform parent, Vector2 position, Sprite[] sprites, float[] scales) {
 		this.spriteRenderer = GetComponent<SpriteRenderer> ();
 
+
 		this.transform.SetParent (parent);
 		this.transform.position = position;
+		this.transform.localPosition -= new Vector3 (0, 0, 0.00001f);
 		this.sprites = sprites;
 		this.scales = scales;
 	}
