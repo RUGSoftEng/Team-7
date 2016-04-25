@@ -12,6 +12,8 @@ public class MainMenu : Menu {
 	public new void Start() {
 		this.logo = Resources.Load<Texture>("Menu/logo");
         this.hostIP = null;
+        GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
+        gameDiscovery.StartListening();
         base.Start();
 	}
 	
@@ -24,7 +26,7 @@ public class MainMenu : Menu {
 	// Join a local game, go to lobby.
 	private void Join() {
         GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
-        gameDiscovery.StopBroadcast();
+        gameDiscovery.Die();
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.networkAddress = hostIP;
         networkManager.StartClient();
@@ -53,6 +55,8 @@ public class MainMenu : Menu {
 			}
 		} else {
 			if (GUILayout.Button("Host Party", GUILayout.Height(buttonHeight))) {
+                GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
+                gameDiscovery.Die();
                 GotoMenu<CastConnector>();
             }
 		}
