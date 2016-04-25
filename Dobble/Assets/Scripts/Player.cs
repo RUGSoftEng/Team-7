@@ -35,8 +35,11 @@ public class Player : NetworkBehaviour {
 	
 	private const int TIME_PENALTY = 2;
 	private const string ERROR_SOUND_PATH = "GameSounds/errorSound"; 
+	private const int ANIMATION_TIME = 1;
 	
 	private bool isPenalized = false;
+	private bool WaitingForAnimation = false;
+
 
 	void Start () {
 		if (isLocalPlayer) {			
@@ -86,12 +89,11 @@ public class Player : NetworkBehaviour {
 	
 	[Command]
 	public void CmdUpdate(int[] card, int symbol, uint networkIdentity) {
-		if (deck.ContainsSymbol (symbol)) {
-			deck.SetTopCard (card);
-			this.cardcount = Mathf.Max (0, cardcount - 1);
-			if (cardcount > 0) {
-				RpcUpdate (networkIdentity);
-			}
+		StartCoroutine(AnimateWait(card, networkIdentity));
+		correctSymbol = false;
+		selectSymbol = symbol;
+		if (deck.ContainsSymbol (symbol) && !WaitingForAnimation) {
+			correctSymbol = true;
 		} else {
 			RpcPenalty(networkIdentity);
 		}
@@ -100,17 +102,22 @@ public class Player : NetworkBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (isLocalPlayer) {
-			card.gameObject.SetActive (cardcount != 0);
-			GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
-			if (Input.GetMouseButtonDown (0)) {
-				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast (ray, out hit, 100)) {
-					int symbol = 0;
-					if (int.TryParse (hit.transform.gameObject.name, out symbol) &&	!this.isPenalized) {
-						CmdUpdate (this.card.GetCard (), symbol, this.netId.Value);
+			if (!WaitingForAnimation){
+				card.gameObject.SetActive (cardcount != 0);
+				GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
+				if (Input.GetMouseButtonDown (0)) {
+					Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+					RaycastHit hit;
+					if (Physics.Raycast (ray, out hit, 100)) {
+						int symbol = 0;
+						if (int.TryParse (hit.transform.gameObject.name, out symbol) &&	!this.isPenalized) {
+							CmdUpdate (this.card.GetCard (), symbol, this.netId.Value);
+						}
 					}
 				}
+			} else {
+				deck.Zoom(selectSymbol);
+				this.card.Zoom(selectSymbol);
 			}
 		}
 	}
@@ -140,5 +147,19 @@ public class Player : NetworkBehaviour {
 			this.card.SetCard (cardStack[cardCount-1]);
 		}
 	}
+
+	IEnumerator AnimateWait(int[] card, uint networkIdentity) {
+        WaitingForAnimation = true;
+        yield return new WaitForSeconds(ANIMATION_TIME);
+        this.card.ResetZoom(selectSymbol);
+        deck.ResetZoom(selectSymbol);
+        if (correctSymbol){
+        	deck.SetTopCard (card);
+			if (cardcount > 0) {
+				RpcUpdate (networkIdentity);
+			}
+		}
+        WaitingForAnimation = false;
+    }
 
 }
