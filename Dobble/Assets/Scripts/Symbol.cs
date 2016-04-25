@@ -15,6 +15,8 @@ public class Symbol : MonoBehaviour {
 	// quick reference to the sprite renderer
 	private SpriteRenderer spriteRenderer;
 
+	private float count=0.0F;
+
 	// constructor
 	public void Constructor(Transform parent, Vector2 position, Sprite[] sprites, float[] scales) {
 		this.spriteRenderer = GetComponent<SpriteRenderer> ();
