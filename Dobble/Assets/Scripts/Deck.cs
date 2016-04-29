@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Deck : MonoBehaviour {
 
 	public Card cardPrefab;
-	public int symbolsPerCard;
+	public int symbolsPerCard = 8;
 	public Vector3 topcardloc;
 	public int maxAmount;
 

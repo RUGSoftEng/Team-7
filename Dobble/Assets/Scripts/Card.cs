@@ -10,23 +10,22 @@ public class Card : MonoBehaviour {
 
 	// Array of contained symbols
 	private Symbol[] containedSymbols; 
+
+	private string[] lines;
+
+	private const int symbolsPerCard = 8;
 	
 	// Creates a new card gameobject with symbols placed on it.
 	public void Constructor() {
 		// Noted as strings, as these will eventually be read from a file.
-		string[] lines = {"0.302593388349",
-						  "-0.302593388348611302909204224933 -0.628341645367213738512227388956",
-						  "0.302593388348611302909204224933 -0.628341645367213738512227388956",
-						  "-0.679921171839088240043878874469 -0.155187570571975671990838057814",
-						  "0.679921171839088240043878874469 -0.155187570571975671990838057814",
-						  "0.000000000000000000000000000000 0.000000000000000000000000000000",
-						  "-0.545254445070410775447749861103 0.434825910113495061957667559237",
-						  "0.545254445070410775447749861103 0.434825910113495061957667559237",
-						  "0.000000000000000000000000000000 0.697406611651388697090795775067"};
+		Debug.Assert(symbolsPerCard==8||symbolsPerCard==6||symbolsPerCard==12);
+		TextAsset txt = (TextAsset)Resources.Load("Circle packings\\"+symbolsPerCard.ToString(), typeof(TextAsset)) as TextAsset;
+		string content = txt.text;
+		string[] lines = content.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 		float radius = float.Parse (lines [0]);
-		Vector2[] coordinates = new Vector2[8];
+		Vector2[] coordinates = new Vector2[symbolsPerCard];
 		string[] line;
-		for (int i = 1; i < 8+1; ++i) {
+		for (int i = 1; i < symbolsPerCard+1; ++i) {
 			line = lines[i].Split(' ');
 			coordinates[i-1] = new Vector2(float.Parse(line[0]), float.Parse(line[1]));
 		}
@@ -38,8 +37,8 @@ public class Card : MonoBehaviour {
 			scales[i] = radius*2/Mathf.Sqrt(size.x*size.x+size.y*size.y);
 		}
 		
-		this.containedSymbols = new Symbol[8];
-		for (int i = 0; i < 8; ++i) {
+		this.containedSymbols = new Symbol[symbolsPerCard];
+		for (int i = 0; i < symbolsPerCard; ++i) {
 			(this.containedSymbols [i] = (Symbol)Instantiate (symbolPrefab))
 										.Constructor (this.transform, coordinates [i], sprites, scales);
 			this.containedSymbols[i].transform.SetParent(this.transform);		
@@ -68,7 +67,7 @@ public class Card : MonoBehaviour {
 
 	// Translates this card into its abstract representative.
 	public int[] GetCard() {
-		int[] c = new int[8];
+		int[] c = new int[symbolsPerCard];
 		int i = 0;
 		foreach (Symbol s in this.containedSymbols) {
 			c[i] = s.getSymbol();

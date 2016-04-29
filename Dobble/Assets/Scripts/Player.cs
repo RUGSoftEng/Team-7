@@ -16,7 +16,7 @@ public class Player : NetworkBehaviour {
 	[SyncVar]
 	public string name;
 
-	[SyncVar]
+	//[SyncList]
 	int[][] cardStack;
 	
 	[SyncVar]
@@ -92,7 +92,8 @@ public class Player : NetworkBehaviour {
 		StartCoroutine(AnimateWait(card, networkIdentity));
 		correctSymbol = false;
 		selectSymbol = symbol;
-		if (deck.ContainsSymbol (symbol) && !WaitingForAnimation) {
+		print("test");
+		if (deck.ContainsSymbol (symbol)) {
 			correctSymbol = true;
 		} else {
 			RpcPenalty(networkIdentity);
