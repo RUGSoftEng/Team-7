@@ -39,12 +39,24 @@ public class LocalListener : MonoBehaviour {
         IPEndPoint ip = new IPEndPoint(IPAddress.Any, port);
         byte[] data = udp.EndReceive(ar, ref ip);
         string message = Encoding.ASCII.GetString(data);
-        if (message.Equals("Matchimals")) {
+        string hostIP = ip.Address.ToString();
+        if (message.Equals("Matchimals") && !hostIP.Equals(GetMyIP())) {
             menu.hostIP = ip.Address.ToString();
-        } else
-        {
+        } else {
             Debug.Log("Bitch");
         }
         Listen();
+    }
+
+    private string GetMyIP() {
+        IPHostEntry host;
+        string localIP = "?";
+        host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (IPAddress ip in host.AddressList) {
+            if (ip.AddressFamily.ToString() == "InterNetwork") {
+                localIP = ip.ToString();
+            }
+        }
+        return localIP;
     }
 }
