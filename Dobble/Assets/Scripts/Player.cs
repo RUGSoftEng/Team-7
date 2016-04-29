@@ -39,8 +39,8 @@ public class Player : NetworkBehaviour {
 	
 	private bool isPenalized = false;
 	private bool WaitingForAnimation = false;
-
-	private const int symbolsPerCard = 6;
+	//Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enouth symbols
+	private const int symbolsPerCard = 4;
 
 
 	void Start () {

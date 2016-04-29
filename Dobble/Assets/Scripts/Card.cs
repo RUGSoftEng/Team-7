@@ -19,7 +19,7 @@ public class Card : MonoBehaviour {
 	public void Constructor(int symbolsPerCard) {
 		this.symbolsPerCard = symbolsPerCard;
 		//checks if symbols per card are legal
-		Debug.Assert(symbolsPerCard==8||symbolsPerCard==6||symbolsPerCard==12);
+		Debug.Assert(symbolsPerCard==8||symbolsPerCard==6||symbolsPerCard==12||symbolsPerCard==4);
 		TextAsset txt = (TextAsset)Resources.Load("Circle packings\\"+symbolsPerCard.ToString(), typeof(TextAsset)) as TextAsset;
 		string content = txt.text;
 		string[] lines = content.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
@@ -28,6 +28,7 @@ public class Card : MonoBehaviour {
 		string[] line = new string[2];
 		for (int i = 1; i < symbolsPerCard+1; ++i) {
 			line = lines[i].Split(' ');
+			print(line[1]);
 			coordinates[i-1] = new Vector2(float.Parse(line[0]), float.Parse(line[1]));
 		}
 		
