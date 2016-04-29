@@ -3,7 +3,13 @@ using UnityEngine.Networking;
 using System.Collections;
 
 public class GameNetworkManager : NetworkManager {
-    
+
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        Debug.Log("Connected!");
+        base.OnClientConnect(conn);
+    }
+
     public override void OnClientDisconnect(NetworkConnection conn) {
         Lobby lobby = FindObjectOfType<Lobby>() as Lobby;
         if (lobby != null) {

@@ -18,14 +18,6 @@ public class Lobby : Returnable {
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
         Player[] players = GetPlayers();
 
-        // If connected to closed host.
-        if (players.Length == 0) {
-            Debug.Log("Fuck you");
-            MainMenu menu = FindObjectOfType<MainMenu>() as MainMenu;
-            Debug.Assert(menu != null);
-            menu.hostIP = null;
-            GoBack();
-        }
 		foreach (Player player in players) {
             //Draw the waiting players.
             //Debug.Log("Player!");
