@@ -21,9 +21,9 @@ public class CastConnector : Returnable {
         {
             // Start hosting and join lobby.
             Destroy(castSearchAnimation);
-            GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
-            gameDiscovery.StartHosting();
-            GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
+            LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
+            localGameFinder.StartBroadCasting();
+            GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
             networkManager.StartHost();
             GotoMenu<Lobby>();
         }
@@ -50,6 +50,12 @@ public class CastConnector : Returnable {
     private bool IsCastConnected() {
         // TODO: Write proper implementation.
         return !false;
+    }
+
+    public new void GoBack() {
+        LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
+        localGameFinder.StopBroadCasting();
+        base.GoBack();
     }
 
     // Go to a returnable menu, but pass the parent menu.

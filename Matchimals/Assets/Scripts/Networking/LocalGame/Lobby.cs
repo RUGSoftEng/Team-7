@@ -22,7 +22,7 @@ public class Lobby : Returnable {
             //Debug.Log("Player!");
 		}
         if (GUILayout.Button("Start Party!", GUILayout.Height(height/2))) {
-            SceneManager.LoadScene("GameScene");
+            StartGame();
         }
         if (GUILayout.Button("Cancel Party...", GUILayout.Height(height/2))) {
             GoBack();
@@ -31,7 +31,7 @@ public class Lobby : Returnable {
     }
 	
 	private Player[] GetPlayers() {
-		return GameObject.FindObjectsOfType(typeof(Player)) as Player[];
+        return GameObject.FindObjectsOfType<Player>();
 	}
 	
 	// Checks if all players are ready.
@@ -46,14 +46,14 @@ public class Lobby : Returnable {
 	
 	// Start the game with all the players in it.
 	private void StartGame() {
-		
-	}
+        SceneManager.LoadScene("GameScene");
+    }
 
     public new void GoBack() {
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.StopHost();
-        GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
-        gameDiscovery.StartListening();
+        LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
+        localGameFinder.StopBroadCasting();
         base.GoBack();
     }
 }

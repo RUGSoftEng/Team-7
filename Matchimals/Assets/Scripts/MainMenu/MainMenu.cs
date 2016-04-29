@@ -23,12 +23,14 @@ public class MainMenu : Menu {
 	
 	// Join a local game, go to lobby.
 	private void Join() {
-        GameDiscovery gameDiscovery = GameObject.FindObjectOfType<GameDiscovery>() as GameDiscovery;
-        gameDiscovery.StopBroadcast();
-        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
+        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
         networkManager.networkAddress = hostIP;
         networkManager.StartClient();
         GotoMenu<Lobby>();
+    }
+
+    private void Host() {
+        GotoMenu<CastConnector>();
     }
 
     // Returns wether or not a local game is being hosted.
@@ -53,7 +55,7 @@ public class MainMenu : Menu {
 			}
 		} else {
 			if (GUILayout.Button("Host Party", GUILayout.Height(buttonHeight))) {
-                GotoMenu<CastConnector>();
+                Host();
             }
 		}
 		if (GUILayout.Button("Customize", GUILayout.Height(buttonHeight))) {
