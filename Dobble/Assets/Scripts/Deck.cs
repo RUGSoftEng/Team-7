@@ -8,9 +8,11 @@ using UnityEngine.UI;
 public class Deck : MonoBehaviour {
 
 	public Card cardPrefab;
-	public int symbolsPerCard = 8;
+	
 	public Vector3 topcardloc;
 	public int maxAmount;
+
+	private int symbolsPerCard;
 
 	// indicates the total number of cards according to the number of symbols per card
 	int numberOfCards;
@@ -28,14 +30,15 @@ public class Deck : MonoBehaviour {
 	private bool isGameOver = false;
 
 	// New deck is created.
-	public void Constructor(Transform parent) {
+	public void Constructor(Transform parent, int symbolsPerCard) {
+		this.symbolsPerCard = symbolsPerCard;
 		this.transform.SetParent (parent);
 		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
 
 		InitializeCards ();
 		RandomizeArray (this.cards);
 
-		(this.topCard = (Card)Instantiate (cardPrefab)).Constructor();
+		(this.topCard = (Card)Instantiate (cardPrefab)).Constructor(symbolsPerCard);
 		this.topCard.transform.SetParent (this.transform);
 		this.topCard.SetCard (NextCard ());
 		this.topCard.transform.localPosition = new Vector3 (100, 0, 0);

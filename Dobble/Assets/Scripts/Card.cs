@@ -13,18 +13,19 @@ public class Card : MonoBehaviour {
 
 	private string[] lines;
 
-	private const int symbolsPerCard = 8;
+	private int symbolsPerCard;
 	
 	// Creates a new card gameobject with symbols placed on it.
-	public void Constructor() {
-		// Noted as strings, as these will eventually be read from a file.
+	public void Constructor(int symbolsPerCard) {
+		this.symbolsPerCard = symbolsPerCard;
+		//checks if symbols per card are legal
 		Debug.Assert(symbolsPerCard==8||symbolsPerCard==6||symbolsPerCard==12);
 		TextAsset txt = (TextAsset)Resources.Load("Circle packings\\"+symbolsPerCard.ToString(), typeof(TextAsset)) as TextAsset;
 		string content = txt.text;
 		string[] lines = content.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 		float radius = float.Parse (lines [0]);
 		Vector2[] coordinates = new Vector2[symbolsPerCard];
-		string[] line;
+		string[] line = new string[2];
 		for (int i = 1; i < symbolsPerCard+1; ++i) {
 			line = lines[i].Split(' ');
 			coordinates[i-1] = new Vector2(float.Parse(line[0]), float.Parse(line[1]));

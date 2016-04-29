@@ -40,14 +40,16 @@ public class Player : NetworkBehaviour {
 	private bool isPenalized = false;
 	private bool WaitingForAnimation = false;
 
+	private const int symbolsPerCard = 6;
+
 
 	void Start () {
 		if (isLocalPlayer) {			
-			(this.card = (Card)Instantiate (cardPrefab)).Constructor ();
+			(this.card = (Card)Instantiate (cardPrefab)).Constructor (symbolsPerCard);
 			this.card.transform.SetParent(this.transform);
 
 			if (isServer) {
-				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform);
+				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform,symbolsPerCard);
 			}
 			int curAnimal = PlayerPrefs.GetInt("animal");
 			string animalName = Resources.LoadAll<Texture>("Animals")[curAnimal].name;
@@ -92,7 +94,6 @@ public class Player : NetworkBehaviour {
 		StartCoroutine(AnimateWait(card, networkIdentity));
 		correctSymbol = false;
 		selectSymbol = symbol;
-		print("test");
 		if (deck.ContainsSymbol (symbol)) {
 			correctSymbol = true;
 		} else {
@@ -134,7 +135,7 @@ public class Player : NetworkBehaviour {
 	void drawBGStack (int cardsNr) {
 		bgStack = new Card[cardsNr];
 		for (int i = 0; i < cardsNr  ; i++) {
-			(bgStack[i] = (Card)Instantiate (cardPrefab)).Constructor ();
+			(bgStack[i] = (Card)Instantiate (cardPrefab)).Constructor (symbolsPerCard);
 			bgStack[i].transform.SetParent(this.transform);
 			float z = (i + 1f)*0.1f;
 			bgStack[i].transform.localPosition = Random.insideUnitCircle*0.2f;				
