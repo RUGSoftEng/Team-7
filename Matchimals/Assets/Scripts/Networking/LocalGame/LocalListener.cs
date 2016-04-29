@@ -42,8 +42,6 @@ public class LocalListener : MonoBehaviour {
         string hostIP = ip.Address.ToString();
         if (message.Equals("Matchimals") && !hostIP.Equals(GetMyIP())) {
             menu.hostIP = ip.Address.ToString();
-        } else {
-            Debug.Log("Bitch");
         }
         Listen();
     }
