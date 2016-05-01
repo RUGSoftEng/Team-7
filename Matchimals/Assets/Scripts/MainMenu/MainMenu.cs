@@ -21,6 +21,11 @@ public class MainMenu : Menu {
 		}
 	}
 	
+    // Called when the object is enabled.
+    public void OnEnable() {
+        this.hostIP = null;
+    }
+
 	// Join a local game, go to lobby.
 	private void Join() {
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();

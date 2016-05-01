@@ -6,6 +6,13 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class Lobby : Returnable {
+    public float connectionTestDelay = 1f, connectionTestRepeat = 0.5f;
+    private bool connected = false;
+
+    public new void Start() {
+        base.Start();
+        InvokeRepeating("CheckConnection", connectionTestDelay, connectionTestRepeat);
+    }
 
     // Draws the GUI.
     public void OnGUI () {
@@ -50,11 +57,26 @@ public class Lobby : Returnable {
         SceneManager.LoadScene("GameScene");
     }
 
-    public new void GoBack() {
+    // Checks if the clients/server is still connected, otherwise close the lobby.
+    private void CheckConnection() {
+        if (!IsConnected()) {
+            GoBack();
+        }
+    }
+
+    protected new void GoBack() {
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.StopHost();
         LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
         localGameFinder.StopBroadCasting();
         base.GoBack();
+    }
+
+    public bool IsConnected() {
+        return this.connected;
+    }
+
+    public void SetConnected(bool connected) {
+        this.connected = connected;
     }
 }
