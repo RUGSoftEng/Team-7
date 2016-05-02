@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -16,7 +16,6 @@ public class Player : NetworkBehaviour {
 	[SyncVar]
 	public string name;
 
-
 	int[][] cardStack;
 	
 	[SyncVar]
@@ -25,31 +24,23 @@ public class Player : NetworkBehaviour {
 		get {return cardcount;}
 		set {cardcount = value;}
 	}
-
+	
 	Card[] bgStack;
 	private AudioClip voiceSound;
 	private AudioClip errorSound;
-
-	private int selectSymbol;
-	private bool correctSymbol = false;
 	
 	private const int TIME_PENALTY = 2;
 	private const string ERROR_SOUND_PATH = "GameSounds/errorSound"; 
-	private const int ANIMATION_TIME = 1;
 	
 	private bool isPenalized = false;
-	private bool WaitingForAnimation = false;
-	//Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enouth symbols
-	private const int symbolsPerCard = 4;
-
-
+	
 	void Start () {
 		if (isLocalPlayer) {			
-			(this.card = (Card)Instantiate (cardPrefab)).Constructor (symbolsPerCard);
+			(this.card = (Card)Instantiate (cardPrefab)).Constructor ();
 			this.card.transform.SetParent(this.transform);
-
+			
 			if (isServer) {
-				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform,symbolsPerCard);
+				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform);
 			}
 			int curAnimal = PlayerPrefs.GetInt("animal");
 			string animalName = Resources.LoadAll<Texture>("Animals")[curAnimal].name;
@@ -71,7 +62,7 @@ public class Player : NetworkBehaviour {
 			} 
 		}
 	}
-		
+	
 	[ClientRpc]
 	public void RpcPenalty(uint networkIdentity) {
 		if (isLocalPlayer) {
@@ -91,11 +82,12 @@ public class Player : NetworkBehaviour {
 	
 	[Command]
 	public void CmdUpdate(int[] card, int symbol, uint networkIdentity) {
-		StartCoroutine(AnimateWait(card, networkIdentity));
-		correctSymbol = false;
-		selectSymbol = symbol;
 		if (deck.ContainsSymbol (symbol)) {
-			correctSymbol = true;
+			deck.SetTopCard (card);
+			this.cardcount = Mathf.Max (0, cardcount - 1);
+			if (cardcount > 0) {
+				RpcUpdate (networkIdentity);
+			}
 		} else {
 			RpcPenalty(networkIdentity);
 		}
@@ -104,30 +96,25 @@ public class Player : NetworkBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (isLocalPlayer) {
-			if (!WaitingForAnimation){
-				card.gameObject.SetActive (cardcount != 0);
-				GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
-				if (Input.GetMouseButtonDown (0)) {
-					Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-					RaycastHit hit;
-					if (Physics.Raycast (ray, out hit, 100)) {
-						int symbol = 0;
-						if (int.TryParse (hit.transform.gameObject.name, out symbol) &&	!this.isPenalized) {
-							CmdUpdate (this.card.GetCard (), symbol, this.netId.Value);
-						}
+			card.gameObject.SetActive (cardcount != 0);
+			GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
+			if (Input.GetMouseButtonDown (0)) {
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				RaycastHit hit;
+				if (Physics.Raycast (ray, out hit, 100)) {
+					int symbol = 0;
+					if (int.TryParse (hit.transform.gameObject.name, out symbol) &&	!this.isPenalized) {
+						CmdUpdate (this.card.GetCard (), symbol, this.netId.Value);
 					}
 				}
-			} else {
-				deck.Zoom(selectSymbol);
-				this.card.Zoom(selectSymbol);
 			}
 		}
 	}
-
+	
 	void drawBGStack (int cardsNr) {
 		bgStack = new Card[cardsNr];
 		for (int i = 0; i < cardsNr  ; i++) {
-			(bgStack[i] = (Card)Instantiate (cardPrefab)).Constructor (symbolsPerCard);
+			(bgStack[i] = (Card)Instantiate (cardPrefab)).Constructor ();
 			bgStack[i].transform.SetParent(this.transform);
 			float z = (i + 1f)*0.5f;
 			bgStack[i].transform.localPosition = Random.insideUnitCircle*0.2f;				
@@ -135,24 +122,10 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
-	IEnumerator AnimateWait(int[] card, uint networkIdentity) {
-        WaitingForAnimation = true;
-        yield return new WaitForSeconds(ANIMATION_TIME);
-        this.card.ResetZoom(selectSymbol);
-        deck.ResetZoom(selectSymbol);
-        if (correctSymbol){
-        	deck.SetTopCard (card);
-			this.cardcount = Mathf.Max (0, cardcount - 1);
-			if (cardcount > 0) {
-				RpcUpdate (networkIdentity);
-			}
-		}
-        WaitingForAnimation = false;
-    }
 	public void PassCards (int[][] cardBlock) {
 		RpcPassAllCards (cardBlock, this.netId.Value);
 	}
-	
+
 	[ClientRpc]
 	public void RpcPassAllCards (int [][] cardBlock, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {	

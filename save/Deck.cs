@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections;
@@ -6,46 +6,42 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class Deck : MonoBehaviour {
-
-	public Card cardPrefab;
 	
-	public Vector3 topcardloc;
+	public Card cardPrefab;
+	public int symbolsPerCard;
 	public int maxAmount;
-
-	private int symbolsPerCard;
-
+	
 	// indicates the total number of cards according to the number of symbols per card
 	int numberOfCards;
-
+	
 	// cards array where each row represents a card
 	int[][] cards;
 	// the index of the current card
 	int card_idx = 0;
 	// reference to top card (currently visible) object of the deck
 	Card topCard;
-
+	
 	// Players in the game.
 	Player[] players;
-
+	
 	private bool isGameOver = false;
-
+	
 	// New deck is created.
-	public void Constructor(Transform parent, int symbolsPerCard) {
-		this.symbolsPerCard = symbolsPerCard;
+	public void Constructor(Transform parent) {
 		this.transform.SetParent (parent);
 		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
-
+		
 		InitializeCards ();
 		RandomizeArray (this.cards);
-
-		(this.topCard = (Card)Instantiate (cardPrefab)).Constructor(symbolsPerCard);
+		
+		(this.topCard = (Card)Instantiate (cardPrefab)).Constructor();
 		this.topCard.transform.SetParent (this.transform);
 		this.topCard.SetCard (NextCard ());
 		this.topCard.transform.localPosition = new Vector3 (100, 0, 0);
 		
 		divideCards();
 	}
-
+	
 	// Every frame, check if somebody won, divide cards for new players.
 	public void Update() {
 		int winner = checkWinner();
@@ -64,7 +60,7 @@ public class Deck : MonoBehaviour {
 		Debug.Log ("there are: " + players.Length + "players");
 		int cardsPerPlayer = maxAmount;
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
-		
+
 		for (int i = 0; i < players.Length; i++) {				
 			players[i].cardCount = cardsPerPlayer;
 			int [][] cardBlock = new int[cardsPerPlayer*2][] ;
@@ -87,7 +83,7 @@ public class Deck : MonoBehaviour {
 		}
 		return -1;
 	}
-
+	
 	// symbols per card should be 0, 1, 2 or (prime + 1)
 	bool IsLegalSymbolsPerCard() {
 		
@@ -100,8 +96,8 @@ public class Deck : MonoBehaviour {
 		for (int i = 3; i * i <= prime; i += 2) if (prime % i == 0) return false;
 		return true;
 	}
-
-
+	
+	
 	// initializes cards array
 	void InitializeCards () {
 		int symbolsPerCard = this.symbolsPerCard;
@@ -129,7 +125,7 @@ public class Deck : MonoBehaviour {
 		for (int i = 0; i <= minFactor; ++i) cards[row][i] = prime * prime + i;
 		this.cards = cards;
 	}
-
+	
 	// Shuffles cards.
 	static void RandomizeArray(int[][] array) {
 		System.Random random = new System.Random ();
@@ -140,19 +136,11 @@ public class Deck : MonoBehaviour {
 			array[r] = tmp;
 		}
 	}
-
+	
 	// increments symbol and returns the symbol
 	int NextSymbol() {
 		this.card_idx = ++this.card_idx % cards.Length;
 		return this.card_idx;
-	}
-
-	public void Zoom(int symbol){
-		topCard.Zoom(symbol);
-	}
-
-	public void ResetZoom(int symbol){
-		topCard.ResetZoom(symbol);
 	}
 	
 	public bool ContainsSymbol(int symbol) {
