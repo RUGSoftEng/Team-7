@@ -158,6 +158,7 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer && netId == this.netId.Value) {	
 			this.cardStack = cardBlock;
 			this.card.SetCard (cardStack [this.cardCount - 1]);
+			drawBGStack (this.cardCount - 1);
 		}
 	}
 
