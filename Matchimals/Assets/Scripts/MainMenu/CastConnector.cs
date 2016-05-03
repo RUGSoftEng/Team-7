@@ -7,13 +7,16 @@ using Google.Cast.RemoteDisplay;
 
 public class CastConnector : Returnable {
 
+	public CastRemoteDisplayManager castDisplayManager;
     private GameObject castSearchAnimation;
 
     public new void Start() {
         base.Start();
         castSearchAnimation = Instantiate(Resources.Load("Menu/CastSearchAnimation", typeof(GameObject))) as GameObject;
-        castSearchAnimation.transform.localPosition = new Vector3(0, 0.25f, 6);
         Debug.Assert(castSearchAnimation != null);
+        castSearchAnimation.transform.localPosition = new Vector3(0, 0.25f, 6);
+        this.castDisplayManager = GameObject.FindObjectOfType<CastDisplayManager>();
+        Debug.Assert(castDisplayManager != null);
     }
 
     public void Update() {
