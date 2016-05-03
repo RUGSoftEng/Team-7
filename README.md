@@ -1,12 +1,11 @@
 # :boom: Team7 :boom:
 Google chromecast game development.
 
-__This project is built under Unity 5.1__ (the latest supported version for chromecast). You can download the ubuntu version
-[here](http://download.unity3d.com/download_unity/unity-editor-5.1.0f3+2015091501_amd64.deb).
-Other (less supported) linux distros can try [this one](http://download.unity3d.com/download_unity/unity-editor-installer-5.1.0f3+2015091501.sh).
-Windows has an installer [here](https://unity3d.com/unity/whats-new/unity-5.1.4).
+__This project is built under Unity 5.3.4__. You can find the linux version
+[here](http://forum.unity3d.com/threads/unity-on-linux-release-notes-and-known-issues.350256/).
+Windows and Mac have an installer [here](https://unity3d.com/get-unity/download/archive).
 
-__Contributers:__ It is strongly reccomended that you make a copy of this project, or (even better) make a branch.
+__Contributers:__ It is strongly recommended that you make a branch of this project when making changes,
 Final commits can then be safely merged with the master, _keeping this
 version stable and uncorrupted for all to use_.
 
@@ -19,9 +18,9 @@ Please tell me if any of these links die, I'll perform CPR.
 
 @Lukeslux
 
-
-Installation commands on Ubuntu:
-
+__P.S.:__
+__Installation commands on Ubuntu:__
+<BR />
 sudo dpkg -i name_of_packet.deb
 sudo apt-get update && sudo apt-get install -f
 
