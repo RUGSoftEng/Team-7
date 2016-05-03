@@ -39,7 +39,7 @@ public class Player : NetworkBehaviour {
 	
 	private bool isPenalized = false;
 	private bool WaitingForAnimation = false;
-	//Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enouth symbols
+	//Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enough symbols
 	private const int symbolsPerCard = 4;
 
 
@@ -67,6 +67,8 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity) {
 				AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
+				Card thrown = Instantiate (this.card);
+				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
 				this.card.SetCard (cardStack[cardcount-1]);
 			} 
 		}
