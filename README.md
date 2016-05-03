@@ -6,7 +6,7 @@ __This project is built under Unity 5.3.4__. You can find the linux version
 Windows and Mac have an installer [here](https://unity3d.com/get-unity/download/archive).
 
 __Contributers:__ It is strongly recommended that you make a branch of this project when making changes,
-Final commits can then be safely merged with the master, _keeping this
+final commits can then be safely merged with the master, _keeping this
 version stable and uncorrupted for all to use_.
 
 __New to unity?__
@@ -15,10 +15,10 @@ Then to learn 2D specifics, I suggest taking a peep at [these vids](https://unit
 It should not take you that long, it's just a tool. Try to have some fun with it!
 
 Please tell me if any of these links die, I'll perform CPR.
-
+<BR />
 @Lukeslux
 
-__P.S.:__
+__P.S.__
 __Installation commands on Ubuntu:__
 <BR />
 sudo dpkg -i name_of_packet.deb
