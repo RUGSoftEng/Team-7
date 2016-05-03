@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Google.Cast.RemoteDisplay;
 
 public class Lobby : Returnable {
     public float connectionTestDelay = 1f, connectionTestRepeat = 0.5f;
@@ -65,6 +66,10 @@ public class Lobby : Returnable {
     }
 
     protected new void GoBack() {
+        CastRemoteDisplayManager castDisplayManager = CastRemoteDisplayManager.GetInstance();
+        if (castDisplayManager.IsCasting()) {
+            castDisplayManager.StopRemoteDisplaySession();
+        }
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
         networkManager.StopHost();
         LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();

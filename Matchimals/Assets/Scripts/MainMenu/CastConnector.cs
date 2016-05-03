@@ -3,11 +3,13 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using Google.Cast.RemoteDisplay;
-
+using System.Collections.Generic;
 
 public class CastConnector : Returnable {
-
-	public CastRemoteDisplayManager castDisplayManager;
+    public float castConnectDelay = 0f, castConnectRepeat = 1f;
+    // The cast manager to use.
+	private CastRemoteDisplayManager castDisplayManager;
+    private IList<CastDevice> castDevices = new List<CastDevice>();
     private GameObject castSearchAnimation;
 
     public new void Start() {
@@ -15,25 +17,49 @@ public class CastConnector : Returnable {
         castSearchAnimation = Instantiate(Resources.Load("Menu/CastSearchAnimation", typeof(GameObject))) as GameObject;
         Debug.Assert(castSearchAnimation != null);
         castSearchAnimation.transform.localPosition = new Vector3(0, 0.25f, 6);
-        this.castDisplayManager = GameObject.FindObjectOfType<CastDisplayManager>();
-        Debug.Assert(castDisplayManager != null);
+
+        // Setup the castManager.
+        this.castDisplayManager = CastRemoteDisplayManager.GetInstance();
+        castDisplayManager.RemoteDisplaySessionStartEvent.AddListener(OnRemoteDisplaySessionStart);
+        castDisplayManager.RemoteDisplaySessionEndEvent  .AddListener(OnRemoteDisplaySessionEnd);
+        castDisplayManager.RemoteDisplayErrorEvent       .AddListener(OnRemoteDisplayError);
+        castDisplayManager.CastDevicesUpdatedEvent       .AddListener(OnCastDevicesUpdated);
+        this.castDevices = castDisplayManager.GetCastDevices();
+        InvokeRepeating("TryConnectCast", castConnectDelay, castConnectRepeat);
     }
 
-    public void Update() {
-        if (IsCastConnected())
-        {
-            // Start hosting and join lobby.
-            Destroy(castSearchAnimation);
-            LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
-            localGameFinder.StartBroadCasting();
-            GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
-            networkManager.StartHost();
-            GotoMenu<Lobby>();
+    private void TryConnectCast() {
+        if (castDevices.Count > 0 && !castDisplayManager.IsCasting()) {
+            CastDevice device = castDevices[0];
+            castDisplayManager.SelectCastDevice(device.DeviceId);
         }
     }
 
-	// Draws the GUI.
-	public void OnGUI () {
+    public void OnCastDevicesUpdated(CastRemoteDisplayManager manager) {
+        this.castDevices = manager.GetCastDevices();
+    }
+
+    public void OnRemoteDisplaySessionStart(CastRemoteDisplayManager manager) {
+        // Start hosting and join lobby.
+        Destroy(castSearchAnimation);
+        LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
+        localGameFinder.StartBroadCasting();
+        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
+        networkManager.StartHost();
+        GotoMenu<Lobby>();
+    }
+
+    public void OnRemoteDisplaySessionEnd(CastRemoteDisplayManager manager) {
+        GoBack();
+    }
+
+    public void OnRemoteDisplayError(CastRemoteDisplayManager manager) {
+        Debug.LogError("Casting failed: " + manager.GetLastError());
+        GoBack();
+    }
+
+    // Draws the GUI.
+    public void OnGUI () {
 		GUI.skin = menuSkin;
 
         int padding = 10;
@@ -44,24 +70,19 @@ public class CastConnector : Returnable {
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Cancel Party...", GUILayout.Height(buttonHeight))) {
-            Destroy(castSearchAnimation);
             GoBack();
         }
         GUILayout.EndArea();
     }
 
-    private bool IsCastConnected() {
-        // TODO: Write proper implementation.
-        return !false;
-    }
-
     public new void GoBack() {
+        Destroy(castSearchAnimation);
         LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
         localGameFinder.StopBroadCasting();
         base.GoBack();
     }
 
-    // Go to a returnable menu, but pass the parent menu.
+    // Go to a returnable menu, but pass our parent menu.
     protected new void GotoMenu<E>() where E : Returnable
     {
         Destroy(castSearchAnimation);
