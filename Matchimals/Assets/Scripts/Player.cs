@@ -12,6 +12,9 @@ public class Player : NetworkBehaviour {
 	public Card cardPrefab;
 	Card card;
 	Deck deck;
+
+    // Lobby member prefab.
+    public LobbyMember lobbyMemberPrefab;
 	
 	[SyncVar]
 	public string name;
@@ -58,7 +61,14 @@ public class Player : NetworkBehaviour {
             this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+animalName);
 			this.errorSound = Resources.Load<AudioClip>(ERROR_SOUND_PATH);
 		}
+        AddLobbyMember();
 	}
+
+    private void AddLobbyMember()
+    {
+        LobbyMember lobbyMember = (LobbyMember) Instantiate(lobbyMemberPrefab);
+        lobbyMember.BindPlayer(this);
+    }
 
     // Store and sync all network important player attributes.
     [Command]
