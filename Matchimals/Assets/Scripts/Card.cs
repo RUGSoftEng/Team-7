@@ -28,7 +28,6 @@ public class Card : MonoBehaviour {
 		string[] line = new string[2];
 		for (int i = 1; i < symbolsPerCard+1; ++i) {
 			line = lines[i].Split(' ');
-			print(line[1]);
 			coordinates[i-1] = new Vector2(float.Parse(line[0]), float.Parse(line[1]));
 		}
 		

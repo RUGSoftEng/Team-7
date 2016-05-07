@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Timers;
 using System.IO;/**/
-
+using UnityEngine.SceneManagement;
 
 public class Player : NetworkBehaviour {
 	
@@ -15,7 +15,8 @@ public class Player : NetworkBehaviour {
 	
 	[SyncVar]
 	public string name;
-
+    [SyncVar]
+    public string animalName;
 
 	int[][] cardStack;
 	
@@ -52,11 +53,22 @@ public class Player : NetworkBehaviour {
 				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform,symbolsPerCard);
 			}
 			int curAnimal = PlayerPrefs.GetInt("animal");
-			string animalName = Resources.LoadAll<Texture>("Animals")[curAnimal].name;
-			this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+animalName);
+            CmdInitPlayer(this.netId.Value, LoadName(), Resources.LoadAll<Texture>("Animals")[curAnimal].name);
+
+            this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+animalName);
 			this.errorSound = Resources.Load<AudioClip>(ERROR_SOUND_PATH);
 		}
 	}
+
+    // Store and sync all network important player attributes.
+    [Command]
+    public void CmdInitPlayer(uint networkIdentity, string name, string animalName)
+    {
+        if (this.netId.Value == networkIdentity) {
+            this.name = name;
+            this.animalName = animalName;
+        }
+    }
 	
 	string LoadName(){
 		return PlayerPrefs.GetString("name");
@@ -105,7 +117,7 @@ public class Player : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isLocalPlayer) {
+		if (isLocalPlayer && (SceneManager.GetActiveScene().name == "GameScene")) {
 			if (!WaitingForAnimation){
 				card.gameObject.SetActive (cardcount != 0);
 				GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
@@ -125,6 +137,7 @@ public class Player : NetworkBehaviour {
 			}
 		}
 	}
+
 
 	void drawBGStack (int cardsNr) {
 		bgStack = new Card[cardsNr];

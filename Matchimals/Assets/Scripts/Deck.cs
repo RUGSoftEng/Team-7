@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Deck : MonoBehaviour {
 
@@ -42,26 +43,35 @@ public class Deck : MonoBehaviour {
 		this.topCard.transform.SetParent (this.transform);
 		this.topCard.SetCard (NextCard ());
 		this.topCard.transform.localPosition = new Vector3 (100, 0, 0);
-		
-		divideCards();
 	}
 
-	// Every frame, check if somebody won, divide cards for new players.
-	public void Update() {
-		int winner = checkWinner();
-		if (isGameOver) {
-			GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].name+" WINS!";
-			topCard.gameObject.SetActive(false);
-		}  else {
-			GameObject.Find("WinningText").GetComponent<Text>().text = "";
-			topCard.gameObject.SetActive(true);
-		}
+    // When the game scene is loaded, this is triggered.
+    public void OnLevelWasLoaded(int level) {
+        if (SceneManager.GetActiveScene().name == "GameScene") {
+            divideCards();
+        }
+    }
+
+    // Every frame, check if somebody won, divide cards for new players.
+    public void Update() {
+        if (SceneManager.GetActiveScene().name == "GameScene") {
+            int winner = checkWinner();
+            if (isGameOver)
+            {
+                GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].name + " WINS!";
+                topCard.gameObject.SetActive(false);
+            }
+            else
+            {
+                GameObject.Find("WinningText").GetComponent<Text>().text = "";
+                topCard.gameObject.SetActive(true);
+            }
+        }
 	}
 	
 	// Devide the cards among players.
 	void divideCards() {
 		Player[] players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
-		Debug.Log ("there are: " + players.Length + "players");
 		int cardsPerPlayer = maxAmount;
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
 		
