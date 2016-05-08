@@ -92,6 +92,7 @@ public class Player : NetworkBehaviour {
 				Card thrown = Instantiate (this.card);
 				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
 				this.card.SetCard (cardStack[cardcount-1]);
+				Destroy(bgStack [cardCount - 1].gameObject);
 			} 
 		}
 	}
