@@ -24,7 +24,11 @@ public class Player : NetworkBehaviour {
 	int[][] cardStack;
 	
 	[SyncVar]
-	public int cardcount;
+	int cardcount;
+	public int cardCount {
+		get {return cardcount;}
+		set {cardcount = value;}
+	}
 
 	Card[] bgStack;
 	private AudioClip voiceSound;
@@ -87,7 +91,7 @@ public class Player : NetworkBehaviour {
 				Card thrown = Instantiate (this.card);
 				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
 				this.card.SetCard (cardStack[cardcount-1]);
-				Destroy(bgStack [cardcount - 1].gameObject);
+				Destroy(bgStack [cardCount - 1].gameObject);
 			} 
 		}
 	}
@@ -177,19 +181,9 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcPassAllCards (int [][] cardBlock, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {
-            Debug.Log("Jo, ik krijg al deze shit:"+cardBlock.Length);
-            this.cardcount = cardBlock.Length / 2;
-            Debug.Log("Cardcount:"+this.cardcount);
-            this.cardStack = cardBlock;
-            /*for (int i=0; i<cardcount; i++)
-            {
-                foreach (int symb in cardBlock[i])
-                {
-                    Debug.Log("symbol "+i+":"+symb);
-                }
-            }*/
-			this.card.SetCard (cardStack [this.cardcount - 1]);
-			drawBGStack (this.cardcount - 1);
+			this.cardStack = cardBlock;
+			this.card.SetCard (cardStack [this.cardCount - 1]);
+			drawBGStack (this.cardCount - 1);
 		}
 	}
 
