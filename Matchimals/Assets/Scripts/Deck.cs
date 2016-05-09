@@ -79,7 +79,7 @@ public class Deck : MonoBehaviour {
 		
 		for (int i = 0; i < players.Length; i++) {				
 			players[i].cardcount = cardsPerPlayer;
-			int [][] cardBlock = new int[cardsPerPlayer][] ;
+			int [][] cardBlock = new int[cardsPerPlayer*2][] ;
 			for (int j = 0; j < cardsPerPlayer; j++) {
 				cardBlock[j] = cards[i*cardsPerPlayer + j];
 			}
@@ -87,6 +87,7 @@ public class Deck : MonoBehaviour {
             {
                 Debug.Log("Card:"+cardBlock[k]);
             }
+            Debug.Log("Player"+i);
 			players[i].PassCards(cardBlock, this.symbolsPerCard, cardsPerPlayer);
 		}
 	}

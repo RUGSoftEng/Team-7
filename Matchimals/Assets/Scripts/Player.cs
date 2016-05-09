@@ -186,16 +186,17 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcPassAllCards (int [] cards, int symbolsPerCard, int cardsPerPlayer, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {
-            int[][] cardBlock = new int[cardsPerPlayer][];
+            this.cardcount = cardsPerPlayer;
+            cardStack = new int[cardsPerPlayer][];
             for (int i = 0; i < cardsPerPlayer; i++)
             {
-                cardBlock[i] = new int[symbolsPerCard];
+                cardStack[i] = new int[symbolsPerCard];
                 for (int j = 0; j < symbolsPerCard; j++)
                 {
-                    cardBlock[i][j] = cards[symbolsPerCard* i + j];
+                    cardStack[i][j] = cards[symbolsPerCard* i + j];
                 }
             }
-            this.cardStack = cardBlock;
+            Debug.Log("cardcount:" + cardcount);
 			this.card.SetCard (cardStack [this.cardcount - 1]);
 			drawBGStack (this.cardcount - 1);
 		}
