@@ -181,13 +181,13 @@ public class Player : NetworkBehaviour {
             this.cardcount = cardBlock.Length / 2;
             Debug.Log("Cardcount:"+this.cardcount);
             this.cardStack = cardBlock;
-            for (int i=0; i<cardcount; i++)
+            /*for (int i=0; i<cardcount; i++)
             {
                 foreach (int symb in cardBlock[i])
                 {
                     Debug.Log("symbol "+i+":"+symb);
                 }
-            }
+            }*/
 			this.card.SetCard (cardStack [this.cardcount - 1]);
 			drawBGStack (this.cardcount - 1);
 		}

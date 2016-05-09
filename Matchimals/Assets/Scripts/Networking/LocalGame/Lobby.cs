@@ -26,7 +26,6 @@ public class Lobby : Returnable {
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
 
         if (GUILayout.Button("Start Party!", GUILayout.Height(height/2))) {
-            StartGame();
             ThrowPlayersInGame();
         }
         if (GUILayout.Button("Cancel Party...", GUILayout.Height(height/2))) {
@@ -40,11 +39,6 @@ public class Lobby : Returnable {
             p.RpcGotoGame();
         }
 	}
-	
-	// Start the game with all the players in it.
-	private void StartGame() {
-        SceneManager.LoadScene("GameScene");
-    }
 
     // Checks if the clients/server is still connected, otherwise close the lobby.
     private void CheckConnection() {

@@ -84,10 +84,12 @@ public class Deck : MonoBehaviour {
 			}
             for (int j = 0; j < cardBlock.Length/2; j++)
             {
+                /*
                 foreach (int symb in cardBlock[j])
                 {
                     Debug.Log("Deck symbol " + j + ":" + symb);
                 }
+                */
             }
             players[i].PassCards(cardBlock);
 		}
