@@ -48,6 +48,7 @@ public class Deck : MonoBehaviour {
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
         if (SceneManager.GetActiveScene().name == "GameScene") {
+            Debug.Log("DIVIDE!");
             divideCards();
         }
     }
@@ -72,6 +73,7 @@ public class Deck : MonoBehaviour {
 	// Devide the cards among players.
 	void divideCards() {
 		Player[] players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
+        Debug.Log("Playercount:"+players.Length);
 		int cardsPerPlayer = maxAmount;
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
 		

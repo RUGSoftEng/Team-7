@@ -180,7 +180,8 @@ public class Player : NetworkBehaviour {
 	
 	[ClientRpc]
 	public void RpcPassAllCards (int [][] cardBlock, uint netId) {
-		if (isLocalPlayer && netId == this.netId.Value) {	
+		if (isLocalPlayer && netId == this.netId.Value) {
+            Debug.Log("Jo, ik krijg al deze shit:"+cardBlock.Length);
 			this.cardStack = cardBlock;
 			this.card.SetCard (cardStack [this.cardCount - 1]);
 			drawBGStack (this.cardCount - 1);
