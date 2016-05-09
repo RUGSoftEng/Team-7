@@ -61,7 +61,6 @@ public class Player : NetworkBehaviour {
             this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+animalName);
 			this.errorSound = Resources.Load<AudioClip>(ERROR_SOUND_PATH);
 		}
-        AddLobbyMember();
 	}
 
     private void AddLobbyMember()
@@ -77,6 +76,7 @@ public class Player : NetworkBehaviour {
         if (this.netId.Value == networkIdentity) {
             this.name = name;
             this.animalName = animalName;
+            AddLobbyMember();
         }
     }
 	
