@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Setup : MonoBehaviour {
 
@@ -7,6 +8,7 @@ public class Setup : MonoBehaviour {
 		if (!PlayerPrefs.HasKey("initialised")){
 			SetupPlayer();
 		}
+        SceneManager.LoadScene("MainMenuScene");
 	}
 	
 	string GenName() {

@@ -1,17 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LocalGameFinder : MonoBehaviour {
     private LocalBroadcaster broadcaster = null;
     private LocalListener listener = null;
+    private bool initialized = false;
 
     public void Start() {
         this.broadcaster = gameObject.AddComponent<LocalBroadcaster>();
         this.listener = gameObject.AddComponent<LocalListener>();
-        StartListening();
     }
 
-	public void StartBroadCasting() {
+    // When the game scene is loaded, this is triggered.
+    public void OnLevelWasLoaded(int level) {
+        if (!initialized && SceneManager.GetActiveScene().name == "MainMenuScene") {
+            StartListening();
+            initialized = true;
+        }
+    }
+
+    public void StartBroadCasting() {
         this.broadcaster.SetBroadcasting(true);
     }
 
@@ -27,18 +36,4 @@ public class LocalGameFinder : MonoBehaviour {
     public void StopListening() {
         this.listener.StopListening();
     }
-
-    /*
-    public void OnGUI() {
-        if (broadcaster.IsBroadcasting()) {
-            if (GUI.Button(new Rect(10, 10, 150, 100), "Stop broadcast")) {
-                StopBroadCasting();
-            }
-        } else {
-            if (GUI.Button(new Rect(10, 10, 150, 100), "Start broadcast"))
-            {
-                StartBroadCasting();
-            }
-        }
-    }*/
 }

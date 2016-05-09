@@ -80,7 +80,7 @@ public class Player : NetworkBehaviour {
 	public void RpcUpdate(uint networkIdentity) {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity && this.cardcount > 0) {
-                AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
+                //AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
 				Card thrown = GetTopCard();
 				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
                 this.cardcount = Mathf.Max(0, cardcount - 1);

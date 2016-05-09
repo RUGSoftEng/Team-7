@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameNetworkManager : NetworkManager {
 
@@ -11,7 +12,11 @@ public class GameNetworkManager : NetworkManager {
     }
 
     public override void OnClientDisconnect(NetworkConnection conn) {
-        GetLobby().SetConnected(false);
+        if (SceneManager.GetActiveScene().name == "MainMenuScene") {
+            GetLobby().SetConnected(false);
+        } else {
+            SceneManager.LoadScene("MainMenuScene");
+        }
         base.OnClientDisconnect(conn);
     }
 
