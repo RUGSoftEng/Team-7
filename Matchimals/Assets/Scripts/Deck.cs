@@ -73,16 +73,21 @@ public class Deck : MonoBehaviour {
 	// Devide the cards among players.
 	void divideCards() {
 		Player[] players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
+        Debug.Log("Playercount:"+players.Length);
 		int cardsPerPlayer = maxAmount;
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
 		
 		for (int i = 0; i < players.Length; i++) {				
 			players[i].cardcount = cardsPerPlayer;
-			int [][] cardBlock = new int[cardsPerPlayer*2][] ;
+			int [][] cardBlock = new int[cardsPerPlayer][] ;
 			for (int j = 0; j < cardsPerPlayer; j++) {
 				cardBlock[j] = cards[i*cardsPerPlayer + j];
 			}
-			players[i].PassCards(cardBlock);
+            for (int k=0; k<cardBlock.Length; k++)
+            {
+                Debug.Log("Card:"+cardBlock[k]);
+            }
+			players[i].PassCards(cardBlock, this.symbolsPerCard, cardsPerPlayer);
 		}
 	}
 	

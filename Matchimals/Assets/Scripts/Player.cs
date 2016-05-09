@@ -170,14 +170,32 @@ public class Player : NetworkBehaviour {
 		}
         WaitingForAnimation = false;
     }
-	public void PassCards (int[][] cardBlock) {
-		RpcPassAllCards (cardBlock, this.netId.Value);
+	public void PassCards (int[][] cardBlock, int symbolsPerCard, int cardsPerPlayer) {
+        // Convert it to a single array.
+        int[] cards = new int[cardsPerPlayer*symbolsPerCard];
+        for (int i=0; i<cardsPerPlayer; i++)
+        {
+            for (int j=0; j<symbolsPerCard; j++)
+            {
+                cards[symbolsPerCard * i + j] = cardBlock[i][j];
+            }
+        }
+		RpcPassAllCards (cards, symbolsPerCard, cardsPerPlayer, this.netId.Value);
 	}
 	
 	[ClientRpc]
-	public void RpcPassAllCards (int [][] cardBlock, uint netId) {
+	public void RpcPassAllCards (int [] cards, int symbolsPerCard, int cardsPerPlayer, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {
-			this.cardStack = cardBlock;
+            int[][] cardBlock = new int[cardsPerPlayer][];
+            for (int i = 0; i < cardsPerPlayer; i++)
+            {
+                cardBlock[i] = new int[symbolsPerCard];
+                for (int j = 0; j < symbolsPerCard; j++)
+                {
+                    cardBlock[i][j] = cards[symbolsPerCard* i + j];
+                }
+            }
+            this.cardStack = cardBlock;
 			this.card.SetCard (cardStack [this.cardcount - 1]);
 			drawBGStack (this.cardcount - 1);
 		}
