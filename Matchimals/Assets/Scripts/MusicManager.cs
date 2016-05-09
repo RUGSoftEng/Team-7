@@ -18,7 +18,7 @@ public class MusicManager : MonoBehaviour {
 	private bool IsBelowThreshold() {
 		Player[] players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
 		for (int i=0; i<players.Length; i++) {
-			int count = players[i].cardCount;
+			int count = players[i].cardcount;
 			if (count < panicThreshold && count > 0) {
 					return true;
 			}

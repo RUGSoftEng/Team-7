@@ -48,6 +48,7 @@ public class Deck : MonoBehaviour {
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
         if (SceneManager.GetActiveScene().name == "GameScene") {
+            Debug.Log("Divide!");
             divideCards();
         }
     }
@@ -76,7 +77,7 @@ public class Deck : MonoBehaviour {
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
 		
 		for (int i = 0; i < players.Length; i++) {				
-			players[i].cardCount = cardsPerPlayer;
+			players[i].cardcount = cardsPerPlayer;
 			int [][] cardBlock = new int[cardsPerPlayer*2][] ;
 			for (int j = 0; j < cardsPerPlayer; j++) {
 				cardBlock[j] = cards[i*cardsPerPlayer + j];
@@ -89,7 +90,7 @@ public class Deck : MonoBehaviour {
 	int checkWinner() {
 		if (players != null) {
 			for (int i=0; i<players.Length; i++) {
-				if (players[i].cardCount == 0) {
+				if (players[i].cardcount == 0) {
 					this.isGameOver = true;
 					return i;
 				}
