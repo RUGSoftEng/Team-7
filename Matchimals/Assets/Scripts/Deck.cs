@@ -189,7 +189,7 @@ public class Deck : MonoBehaviour {
 		Card copy = Instantiate (topCard);
 		copy.GetComponent<Transform> ().transform.position += Vector3.forward;
 		topCard.SetCard (card);
-		topCard.GetComponent<Move> ().Initialize (topCard.GetComponent<Transform> ().transform.position + Vector3.down * 5.0f + Vector3.back, topCard.GetComponent<Transform> ().transform.position + Vector3.back, 1.0f);
+		topCard.GetComponent<Move> ().Initialize (topCard.GetComponent<Transform> ().transform.position + Vector3.down * 5.0f + Vector3.back, new Vector3(100f, 0, topCard.GetComponent<Transform> ().transform.position.z) + Vector3.back, 1.0f);
 		Destroy (copy, 1.0f);
 	}
 	

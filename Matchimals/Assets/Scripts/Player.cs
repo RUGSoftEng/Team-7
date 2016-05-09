@@ -81,10 +81,11 @@ public class Player : NetworkBehaviour {
 	public void RpcUpdate(uint networkIdentity) {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity) {
-				AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
+                AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
 				Card thrown = Instantiate (this.card);
 				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
 				this.card.SetCard (cardStack[cardcount-1]);
+                Debug.Log("CardCount:"+cardcount+" bgStackSize:"+bgStack.Length);
 				Destroy(bgStack [cardcount - 1].gameObject);
 			} 
 		}
@@ -109,15 +110,20 @@ public class Player : NetworkBehaviour {
 	
 	[Command]
 	public void CmdUpdate(int[] card, int symbol, uint networkIdentity) {
-		StartCoroutine(AnimateWait(card, networkIdentity));
+		//StartCoroutine(AnimateWait(card, networkIdentity));
 		correctSymbol = false;
 		selectSymbol = symbol;
         Debug.Log("Symbol:"+symbol);
-        GameObject shit = deck.gameObject;
-        Debug.Log("Deck is Null:"+deck==null);
 		if (deck.ContainsSymbol (symbol)) {
-			correctSymbol = true;
-		} else {
+            Debug.Log("Right!");
+            deck.SetTopCard(card);
+            this.cardcount = Mathf.Max(0, cardcount - 1);
+            if (cardcount > 0)
+            {
+                RpcUpdate(networkIdentity);
+            }
+            //correctSymbol = true;
+        } else {
 			RpcPenalty(networkIdentity);
 		}
 	}
@@ -157,6 +163,7 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+    /*
 	IEnumerator AnimateWait(int[] card, uint networkIdentity) {
         WaitingForAnimation = true;
         yield return new WaitForSeconds(ANIMATION_TIME);
@@ -171,6 +178,7 @@ public class Player : NetworkBehaviour {
 		}
         WaitingForAnimation = false;
     }
+    */
 	public void PassCards (int[][] cardBlock, int symbolsPerCard, int cardsPerPlayer) {
         // Get the deck if server.
         if (isServer)

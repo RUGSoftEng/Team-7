@@ -24,10 +24,11 @@ public class Lobby : Returnable {
         int height = Screen.height - 2*padding;
 
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
-
-        if (GUILayout.Button("Start Party!", GUILayout.Height(height/2))) {
+        if (GUILayout.Button("Start Party!", GUILayout.Height(height / 2)))
+        {
             ThrowPlayersInGame();
         }
+        
         if (GUILayout.Button("Cancel Party...", GUILayout.Height(height/2))) {
             GoBack();
         }
