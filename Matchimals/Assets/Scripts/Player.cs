@@ -46,7 +46,6 @@ public class Player : NetworkBehaviour {
 	//Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enough symbols
 	private const int symbolsPerCard = 4;
 
-
 	void Start () {
 		if (isLocalPlayer) {			
 			(this.card = (Card)Instantiate (cardPrefab)).Constructor (symbolsPerCard);
@@ -187,5 +186,12 @@ public class Player : NetworkBehaviour {
 			drawBGStack (this.cardCount - 1);
 		}
 	}
+
+    [ClientRpc]
+    public void RpcGotoGame() {
+        if (isLocalPlayer) {
+            SceneManager.LoadScene("GameScene");
+        }
+    }
 
 }
