@@ -178,6 +178,7 @@ public class Player : NetworkBehaviour {
 	public void RpcPassAllCards (int [][] cardBlock, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {
             Debug.Log("Jo, ik krijg al deze shit:"+cardBlock.Length);
+            this.cardcount = cardBlock.Length / 2;
             Debug.Log("Cardcount:"+this.cardcount);
             this.cardStack = cardBlock;
 			this.card.SetCard (cardStack [this.cardcount - 1]);

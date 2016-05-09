@@ -78,7 +78,6 @@ public class Deck : MonoBehaviour {
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
 		
 		for (int i = 0; i < players.Length; i++) {				
-			players[i].cardcount = cardsPerPlayer;
 			int [][] cardBlock = new int[cardsPerPlayer*2][] ;
 			for (int j = 0; j < cardsPerPlayer; j++) {
 				cardBlock[j] = cards[i*cardsPerPlayer + j];
