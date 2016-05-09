@@ -84,8 +84,6 @@ public class Player : NetworkBehaviour {
 				Card thrown = GetTopCard();
 				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
                 this.cardcount = Mathf.Max(0, cardcount - 1);
-                Debug.Log("cards:"+cardcount);
-                Debug.Log("CardCount:"+cardcount+" bgStackSize:"+stack.Length);
 			} 
 		}
 	}
@@ -110,9 +108,7 @@ public class Player : NetworkBehaviour {
     // Is called on the server when a player presses a symbol.
 	[Command]
 	public void CmdCheckMatch(int[] card, int symbol, uint networkIdentity) {
-        Debug.Log("Symbol:"+symbol);
 		if (deck.ContainsSymbol (symbol)) {
-            Debug.Log("Right!");
             deck.SetTopCard(card);
             RpcUpdate(networkIdentity);
         } else {
@@ -187,7 +183,6 @@ public class Player : NetworkBehaviour {
                     cardStack[i][j] = cards[symbolsPerCard* i + j];
                 }
             }
-            Debug.Log("cardcount:" + cardcount);
             LoadStack(cardStack);
 		}
 	}
