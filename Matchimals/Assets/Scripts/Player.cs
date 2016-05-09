@@ -131,6 +131,7 @@ public class Player : NetworkBehaviour {
 					int symbol = 0;
 					if (int.TryParse (hit.transform.gameObject.name, out symbol) &&	!this.isPenalized) {
 						CmdCheckMatch(GetTopCard().ToCardArray(), symbol, this.netId.Value);
+                        hit.transform.gameObject.GetComponent<ZoomInOut>().Initialize(2, 1);
 					}
 				}
 			}
