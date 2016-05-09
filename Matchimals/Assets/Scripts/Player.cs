@@ -52,7 +52,7 @@ public class Player : NetworkBehaviour {
 
     // Adds a visual lobby member for the lobby.
     private void AddLobbyMember() {
-        LobbyMember lobbyMember = (LobbyMember) Instantiate(lobbyMemberPrefab);
+        LobbyMember lobbyMember = (LobbyMember) Instantiate(lobbyMemberPrefab, new Vector3(100,0,0), new Quaternion());
         lobbyMember.BindPlayer(this);
     }
 
