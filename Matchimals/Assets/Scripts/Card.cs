@@ -67,7 +67,7 @@ public class Card : MonoBehaviour {
 	}
 
 	// Translates this card into its abstract representative.
-	public int[] GetCard() {
+	public int[] ToCardArray() {
 		int[] c = new int[symbolsPerCard];
 		int i = 0;
 		foreach (Symbol s in this.containedSymbols) {

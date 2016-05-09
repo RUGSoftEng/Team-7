@@ -194,7 +194,7 @@ public class Deck : MonoBehaviour {
 	}
 	
 	public int[] GetTopCard() {
-		return this.topCard.GetCard ();
+		return this.topCard.ToCardArray ();
 	}
 	
 	public bool IsGameOver() {
