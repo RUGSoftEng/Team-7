@@ -44,8 +44,6 @@ public class Player : NetworkBehaviour {
 
 	void Start () {
 		if (isLocalPlayer) {			
-			(this.card = (Card)Instantiate (cardPrefab)).Constructor (symbolsPerCard);
-			this.card.transform.SetParent(this.transform);
 
 			if (isServer) {
 				(this.deck = (Deck)Instantiate (deckPrefab)).Constructor(this.transform,symbolsPerCard);
@@ -114,6 +112,9 @@ public class Player : NetworkBehaviour {
 		StartCoroutine(AnimateWait(card, networkIdentity));
 		correctSymbol = false;
 		selectSymbol = symbol;
+        Debug.Log("Symbol:"+symbol);
+        GameObject shit = deck.gameObject;
+        Debug.Log("Deck is Null:"+deck==null);
 		if (deck.ContainsSymbol (symbol)) {
 			correctSymbol = true;
 		} else {
@@ -125,7 +126,7 @@ public class Player : NetworkBehaviour {
 	void Update () {
 		if (isLocalPlayer && (SceneManager.GetActiveScene().name == "GameScene")) {
 			if (!WaitingForAnimation){
-				card.gameObject.SetActive (cardcount != 0);
+				//card.gameObject.SetActive (cardcount != 0);
 				GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
 				if (Input.GetMouseButtonDown (0)) {
 					Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -171,6 +172,12 @@ public class Player : NetworkBehaviour {
         WaitingForAnimation = false;
     }
 	public void PassCards (int[][] cardBlock, int symbolsPerCard, int cardsPerPlayer) {
+        // Get the deck if server.
+        if (isServer)
+        {
+            this.deck = GameObject.FindObjectOfType<Deck>();
+            Debug.Assert(deck != null);
+        }
         // Convert it to a single array.
         int[] cards = new int[cardsPerPlayer*symbolsPerCard];
         for (int i=0; i<cardsPerPlayer; i++)
@@ -186,6 +193,8 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcPassAllCards (int [] cards, int symbolsPerCard, int cardsPerPlayer, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {
+            (this.card = (Card)Instantiate(cardPrefab)).Constructor(symbolsPerCard);
+            this.card.transform.SetParent(this.transform);
             this.cardcount = cardsPerPlayer;
             cardStack = new int[cardsPerPlayer][];
             for (int i = 0; i < cardsPerPlayer; i++)
