@@ -24,11 +24,7 @@ public class Player : NetworkBehaviour {
 	int[][] cardStack;
 	
 	[SyncVar]
-	int cardcount;
-	public int cardCount {
-		get {return cardcount;}
-		set {cardcount = value;}
-	}
+	public int cardcount;
 
 	Card[] bgStack;
 	private AudioClip voiceSound;
@@ -91,7 +87,7 @@ public class Player : NetworkBehaviour {
 				Card thrown = Instantiate (this.card);
 				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
 				this.card.SetCard (cardStack[cardcount-1]);
-				Destroy(bgStack [cardCount - 1].gameObject);
+				Destroy(bgStack [cardcount - 1].gameObject);
 			} 
 		}
 	}
@@ -183,10 +179,9 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer && netId == this.netId.Value) {
             Debug.Log("Jo, ik krijg al deze shit:"+cardBlock.Length);
             Debug.Log("Cardcount:"+this.cardcount);
-            Debug.Log("CardCount:" + this.cardCount);
             this.cardStack = cardBlock;
-			this.card.SetCard (cardStack [this.cardCount - 1]);
-			drawBGStack (this.cardCount - 1);
+			this.card.SetCard (cardStack [this.cardcount - 1]);
+			drawBGStack (this.cardcount - 1);
 		}
 	}
 
