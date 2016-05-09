@@ -58,6 +58,7 @@ public class Deck : MonoBehaviour {
             int winner = checkWinner();
             if (isGameOver)
             {
+				GameObject.Find ("WinningText").GetComponent<Text>().color = Color.black;
                 GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].name + " WINS!";
                 topCard.gameObject.SetActive(false);
             }
@@ -71,7 +72,7 @@ public class Deck : MonoBehaviour {
 	
 	// Devide the cards among players.
 	void divideCards() {
-		Player[] players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
+		players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
 		int cardsPerPlayer = maxAmount;
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
 		
