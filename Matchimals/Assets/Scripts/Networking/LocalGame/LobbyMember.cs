@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Google.Cast.RemoteDisplay;
 
 public class LobbyMember : MonoBehaviour {
     private Player myPlayer;
@@ -25,7 +26,9 @@ public class LobbyMember : MonoBehaviour {
 
     // When it touches something.
     public void OnCollisionEnter2D(Collision2D collision) {
-        AudioSource.PlayClipAtPoint(bounceSound, Vector3.zero, 0.3f);
+        if (CastRemoteDisplayManager.GetInstance().IsCasting()) {
+            AudioSource.PlayClipAtPoint(bounceSound, Vector3.zero, 0.3f);
+        }
     }
 
     // Binds a player to visualise with this LobbyMember.

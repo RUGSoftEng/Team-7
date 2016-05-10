@@ -5,8 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Google.Cast.RemoteDisplay;
 
 public class Deck : MonoBehaviour {
+    private static float WAIT_GAMEOVER = 5f;
 
 	public Card cardPrefab;
 	
@@ -61,6 +63,7 @@ public class Deck : MonoBehaviour {
 				GameObject.Find ("WinningText").GetComponent<Text>().color = Color.black;
                 GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].playerName + " WINS!";
                 topCard.gameObject.SetActive(false);
+                Invoke("CloseGame", WAIT_GAMEOVER);
             }
             else
             {
@@ -140,6 +143,17 @@ public class Deck : MonoBehaviour {
 		for (int i = 0; i <= minFactor; ++i) cards[row][i] = prime * prime + i;
 		this.cards = cards;
 	}
+
+    // Ends the current game being played.
+    private void CloseGame() {
+        Debug.Log("Closing game.");
+        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
+        networkManager.StopHost();
+        if (!networkManager.isNetworkActive) {
+            SceneManager.LoadScene("MainMenuScene");
+            CastRemoteDisplayManager.GetInstance().StopRemoteDisplaySession();
+        }
+    }
 
 	// Shuffles cards.
 	static void RandomizeArray(int[][] array) {

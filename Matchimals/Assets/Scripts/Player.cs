@@ -110,7 +110,7 @@ public class Player : NetworkBehaviour {
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingPlayer.animalName), new Vector3(0, 0, 0));
             deck.SetTopCard(card);
             RpcUpdate(networkIdentity);
-            if (matchingPlayer != this) {
+            if (!matchingPlayer.isLocalPlayer) {
                 // Make the cardcount of non-server players match our server side.
                 matchingPlayer.cardcount = Mathf.Max(0, matchingPlayer.cardcount - 1);
             }
