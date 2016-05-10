@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using Google.Cast.RemoteDisplay;
 
 public class Deck : MonoBehaviour {
-    private static float WAIT_GAMEOVER = 5f;
+    private static float WAIT_GAMEOVER = 10f;
 
 	public Card cardPrefab;
 	
@@ -30,6 +30,7 @@ public class Deck : MonoBehaviour {
 	// Players in the game.
 	Player[] players;
 
+    private bool isGameOverHandled = false;
 	private bool isGameOver = false;
 
 	// New deck is created.
@@ -57,21 +58,25 @@ public class Deck : MonoBehaviour {
     // Every frame, check if somebody won, divide cards for new players.
     public void Update() {
         if (SceneManager.GetActiveScene().name == "GameScene") {
-            int winner = checkWinner();
-            if (isGameOver)
-            {
-				GameObject.Find ("WinningText").GetComponent<Text>().color = Color.black;
-                GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].playerName + " WINS!";
-                topCard.gameObject.SetActive(false);
-                Invoke("CloseGame", WAIT_GAMEOVER);
-            }
-            else
-            {
+            CheckWinner();
+            if (isGameOver) {
+                HandleGameOver();
+            } else {
                 GameObject.Find("WinningText").GetComponent<Text>().text = "";
-                topCard.gameObject.SetActive(true);
             }
         }
 	}
+
+    // Triggered only once to handle the gameover state.
+    private void HandleGameOver() {
+        if (!isGameOverHandled){
+            GameObject.Find("WinningText").GetComponent<Text>().color = Color.black;
+            GameObject.Find("WinningText").GetComponent<Text>().text = players[CheckWinner()].playerName + " WINS!";
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("GameSounds/CrowdGoesWild"), new Vector3(0, 0, -10), 30f);
+            Invoke("CloseGame", WAIT_GAMEOVER);
+            this.isGameOverHandled = true;
+        }
+    }
 	
 	// Devide the cards among players.
 	void divideCards() {
@@ -90,7 +95,7 @@ public class Deck : MonoBehaviour {
 	}
 	
 	// Checks if somebody won, if so: it's gameover.
-	int checkWinner() {
+	private int CheckWinner() {
 		if (players != null) {
 			for (int i=0; i<players.Length; i++) {
 				if (players[i].cardcount == 0) {
@@ -149,10 +154,8 @@ public class Deck : MonoBehaviour {
         Debug.Log("Closing game.");
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
         networkManager.StopHost();
-        if (!networkManager.isNetworkActive) {
-            SceneManager.LoadScene("MainMenuScene");
-            CastRemoteDisplayManager.GetInstance().StopRemoteDisplaySession();
-        }
+        CastRemoteDisplayManager.GetInstance().StopRemoteDisplaySession();
+        SceneManager.LoadScene("MainMenuScene");
     }
 
 	// Shuffles cards.

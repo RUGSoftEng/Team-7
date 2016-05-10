@@ -130,7 +130,7 @@ public class Player : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isLocalPlayer && (SceneManager.GetActiveScene().name == "GameScene")) {
+		if (isLocalPlayer && (SceneManager.GetActiveScene().name == "GameScene") && (cardcount > 0)) {
 			GameObject.Find ("UsernameText").GetComponent<Text> ().text = playerName;
 			if (Input.GetMouseButtonDown (0)) {
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
