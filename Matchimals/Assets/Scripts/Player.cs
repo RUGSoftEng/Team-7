@@ -89,7 +89,7 @@ public class Player : NetworkBehaviour {
 	public void RpcPenalty(uint networkIdentity) {
 		if (isLocalPlayer) {
 			if (this.netId.Value == networkIdentity) {
-				AudioSource.PlayClipAtPoint (errorSound, new Vector3 (0, 0, 0));
+				AudioSource.PlayClipAtPoint (errorSound, new Vector3 (0, 0, -10));
 				StartCoroutine (StartCountDownPenalty ());
 			}
 		}
@@ -107,7 +107,7 @@ public class Player : NetworkBehaviour {
 	public void CmdCheckMatch(int[] card, int symbol, uint networkIdentity) {
 		if (deck.ContainsSymbol (symbol)) {
             Player matchingPlayer = FindPlayer(networkIdentity);
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingPlayer.animalName), new Vector3(0, 0, 0));
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingPlayer.animalName), new Vector3(0, 0, -10),30f);
             deck.SetTopCard(card);
             RpcUpdate(networkIdentity);
             if (!matchingPlayer.isLocalPlayer) {
