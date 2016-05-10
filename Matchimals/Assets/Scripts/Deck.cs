@@ -59,7 +59,7 @@ public class Deck : MonoBehaviour {
             if (isGameOver)
             {
 				GameObject.Find ("WinningText").GetComponent<Text>().color = Color.black;
-                GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].name + " WINS!";
+                GameObject.Find("WinningText").GetComponent<Text>().text = players[winner].playerName + " WINS!";
                 topCard.gameObject.SetActive(false);
             }
             else

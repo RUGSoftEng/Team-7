@@ -33,7 +33,7 @@ public class LobbyMember : MonoBehaviour {
         this.myPlayer = player;
         SetAnimal(player.animalName);
         SetBounceSound(player.animalName);
-        SetName(player.name);
+        SetName(player.playerName);
         this.isBound = true;
     }
 

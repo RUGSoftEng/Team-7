@@ -22,7 +22,7 @@ public class Player : NetworkBehaviour {
 
     // Player data that should be synced and shared.
     [SyncVar]
-	public string name;
+	public string playerName;
     [SyncVar]
     public string animalName;
 	[SyncVar]
@@ -31,7 +31,6 @@ public class Player : NetworkBehaviour {
     // Player specific data, used locally.
     private Deck deck;
     private Card[] stack;
-	private AudioClip voiceSound;
 	private AudioClip errorSound;
 	private bool isPenalized = false;
 
@@ -45,10 +44,9 @@ public class Player : NetworkBehaviour {
 			int curAnimal = PlayerPrefs.GetInt("animal");
             CmdInitPlayer(this.netId.Value, LoadName(), Resources.LoadAll<Texture>("Animals")[curAnimal].name);
 
-            this.voiceSound = Resources.Load<AudioClip>("AnimalSounds/"+animalName);
-			this.errorSound = Resources.Load<AudioClip>(ERROR_SOUND_PATH);
-		}
-	}
+            this.errorSound = Resources.Load<AudioClip>(ERROR_SOUND_PATH);
+        }
+    }
 
     // Adds a visual lobby member for the lobby.
     private void AddLobbyMember() {
@@ -58,9 +56,9 @@ public class Player : NetworkBehaviour {
 
     // Store and sync all network important player attributes.
     [Command]
-    public void CmdInitPlayer(uint networkIdentity, string name, string animalName) {
+    public void CmdInitPlayer(uint networkIdentity, string playerName, string animalName) {
         if (this.netId.Value == networkIdentity) {
-            this.name = name;
+            this.playerName = playerName;
             this.animalName = animalName;
             AddLobbyMember();
         }
@@ -80,7 +78,6 @@ public class Player : NetworkBehaviour {
 	public void RpcUpdate(uint networkIdentity) {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity && this.cardcount > 0) {
-                //AudioSource.PlayClipAtPoint(voiceSound, new Vector3(0,0,0));
 				Card thrown = GetTopCard();
 				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
                 this.cardcount = Mathf.Max(0, cardcount - 1);
@@ -109,17 +106,28 @@ public class Player : NetworkBehaviour {
 	[Command]
 	public void CmdCheckMatch(int[] card, int symbol, uint networkIdentity) {
 		if (deck.ContainsSymbol (symbol)) {
+            string matchingAnimal = FindPlayer(networkIdentity).animalName;
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingAnimal), new Vector3(0, 0, 0));
             deck.SetTopCard(card);
             RpcUpdate(networkIdentity);
         } else {
 			RpcPenalty(networkIdentity);
 		}
 	}
+
+    // Returns the player with a matching networkIdentity.
+    private Player FindPlayer(uint networkIdentity)
+    {
+        foreach (Player p in GameObject.FindObjectsOfType<Player>()) {
+            if (p.netId.Value == networkIdentity) { return p; }
+        }
+        return null;
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		if (isLocalPlayer && (SceneManager.GetActiveScene().name == "GameScene")) {
-			GameObject.Find ("UsernameText").GetComponent<Text> ().text = name;
+			GameObject.Find ("UsernameText").GetComponent<Text> ().text = playerName;
 			if (Input.GetMouseButtonDown (0)) {
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				RaycastHit hit;
@@ -133,7 +141,6 @@ public class Player : NetworkBehaviour {
 			}
 		}
 	}
-
 
     // Creates the player stack of cards.
 	private void LoadStack (int[][] cardStack) {

@@ -5,14 +5,14 @@ public class MusicManager : MonoBehaviour {
 	
 	public AudioClip relaxedMusic, panicMusic, endMusic;
 	public int panicThreshold = 5;
-	private AudioSource audio;
+	private AudioSource audioSource;
 	private Deck deck;
 
 	// Use this for initialization
 	public void Start () {
-		this.audio = GetComponent<AudioSource>();
-		audio.clip = relaxedMusic;
-		audio.Play();
+		this.audioSource = GetComponent<AudioSource>();
+		audioSource.clip = relaxedMusic;
+		audioSource.Play();
 	}
 	
 	private bool IsBelowThreshold() {
@@ -27,9 +27,9 @@ public class MusicManager : MonoBehaviour {
 	}
 	
 	private void SwitchMusic(AudioClip music) {
-		if (audio.clip != music) {
-			audio.clip = music;
-			audio.Play();
+		if (audioSource.clip != music) {
+			audioSource.clip = music;
+			audioSource.Play();
 		}
 	}
 	
