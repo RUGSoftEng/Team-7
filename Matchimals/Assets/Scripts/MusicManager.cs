@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Google.Cast.RemoteDisplay;
 using System.Collections;
 
 public class MusicManager : MonoBehaviour {
@@ -8,11 +9,14 @@ public class MusicManager : MonoBehaviour {
 	private AudioSource audioSource;
 	private Deck deck;
 
-	// Use this for initialization
 	public void Start () {
-		this.audioSource = GetComponent<AudioSource>();
+        this.audioSource = GetComponent<AudioSource>();
 		audioSource.clip = relaxedMusic;
-		audioSource.Play();
+        if (CastRemoteDisplayManager.GetInstance().IsCasting()) { // Only play music if casting.
+            audioSource.Play();
+        } else {
+            this.gameObject.SetActive(false);
+        }
 	}
 	
 	private bool IsBelowThreshold() {

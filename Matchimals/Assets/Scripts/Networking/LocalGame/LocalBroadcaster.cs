@@ -3,6 +3,7 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using UnityEngine.SceneManagement;
 
 public class LocalBroadcaster : MonoBehaviour {
     public string message = "Matchimals";
@@ -23,7 +24,7 @@ public class LocalBroadcaster : MonoBehaviour {
     }
 
     private void Broadcast() {
-        if (IsBroadcasting()) {
+        if (IsBroadcasting() && SceneManager.GetActiveScene().name == "MainMenuScene") {
             UdpClient client = new UdpClient();
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, port);
             byte[] data = Encoding.ASCII.GetBytes(message);

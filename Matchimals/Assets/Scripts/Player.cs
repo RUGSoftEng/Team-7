@@ -19,14 +19,14 @@ public class Player : NetworkBehaviour {
 
     //Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enough symbols
     public int symbolsPerCard = 4;
+    // The number of cards of the player.
+    public int cardcount;
 
     // Player data that should be synced and shared.
     [SyncVar]
 	public string playerName;
     [SyncVar]
     public string animalName;
-	[SyncVar]
-	public int cardcount;
 
     // Player specific data, used locally.
     private Deck deck;
@@ -106,10 +106,14 @@ public class Player : NetworkBehaviour {
 	[Command]
 	public void CmdCheckMatch(int[] card, int symbol, uint networkIdentity) {
 		if (deck.ContainsSymbol (symbol)) {
-            string matchingAnimal = FindPlayer(networkIdentity).animalName;
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingAnimal), new Vector3(0, 0, 0));
+            Player matchingPlayer = FindPlayer(networkIdentity);
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingPlayer.animalName), new Vector3(0, 0, 0));
             deck.SetTopCard(card);
             RpcUpdate(networkIdentity);
+            if (matchingPlayer != this) {
+                // Make the cardcount of non-server players match our server side.
+                matchingPlayer.cardcount = Mathf.Max(0, matchingPlayer.cardcount - 1);
+            }
         } else {
 			RpcPenalty(networkIdentity);
 		}
