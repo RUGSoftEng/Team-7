@@ -7,6 +7,8 @@ using System.Text;
 using UnityEngine.SceneManagement;
 
 public class LocalListener : MonoBehaviour {
+    private static float LISTEN_INTERVAL = 0.1f;
+
     public int port = 5000;
     public bool listen = false;
     private UdpClient udp;
@@ -17,7 +19,7 @@ public class LocalListener : MonoBehaviour {
         Debug.Assert(menu != null);
         this.udp = new UdpClient(port);
         this.listen = true;
-        Listen();
+        StartCoroutine("Listen");
     }
 
     public void StopListening()
@@ -30,10 +32,14 @@ public class LocalListener : MonoBehaviour {
         return listen;
     }
 
-    private void Listen() {
-        if (IsListening()) {
-            this.udp.BeginReceive(PacketHandler, null);
+    private IEnumerator Listen() {
+        while (IsListening()) {
+            if (SceneManager.GetActiveScene().name == "MainMenuScene") {
+                this.udp.BeginReceive(PacketHandler, null);
+            }
+            yield return new WaitForSeconds(LISTEN_INTERVAL);
         }
+        yield return null;
     }
 
     private void PacketHandler(IAsyncResult ar) {
@@ -44,7 +50,6 @@ public class LocalListener : MonoBehaviour {
         if (message.Equals("Matchimals") && !hostIP.Equals(GetMyIP())) {
             menu.hostIP = ip.Address.ToString();
         }
-        Listen();
     }
 
     private string GetMyIP() {

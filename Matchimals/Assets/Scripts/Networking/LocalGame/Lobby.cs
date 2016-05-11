@@ -13,6 +13,23 @@ public class Lobby : Returnable {
     public new void Start() {
         base.Start();
         InvokeRepeating("CheckConnection", connectionTestDelay, connectionTestRepeat);
+        CastRemoteDisplayManager castDisplayManager = CastRemoteDisplayManager.GetInstance();
+        if (castDisplayManager.IsCasting())
+        {
+            castDisplayManager.RemoteDisplayErrorEvent.AddListener(OnRemoteDisplayError);
+            castDisplayManager.RemoteDisplaySessionEndEvent.AddListener(OnRemoteDisplaySessionEnd);
+        }
+    }
+
+    public void OnRemoteDisplayError(CastRemoteDisplayManager manager)
+    {
+        Debug.LogError("Casting failed: " + manager.GetLastError());
+        manager.StopRemoteDisplaySession();
+    }
+
+    public void OnRemoteDisplaySessionEnd(CastRemoteDisplayManager manager)
+    {
+        GoBack();
     }
 
     // Draws the GUI.

@@ -276,7 +276,8 @@ namespace Google.Cast.RemoteDisplay {
           " errorMessage: " + error.Message);
 
       // Always disable the manager in case of an error.
-      gameObject.SetActive(false);
+      //gameObject.SetActive(false); // I removed this, because we do not want that. Please don't hate me. - Luc.
+      Debug.LogError("This is just here to notify you that Luc removed the cast disable after error notification. He did that because of reasons, and he's very sorry.");
 
       if (RemoteDisplayErrorEvent != null) {
         RemoteDisplayErrorEvent.Invoke(this);

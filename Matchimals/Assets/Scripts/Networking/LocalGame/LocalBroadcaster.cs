@@ -6,13 +6,14 @@ using System.Text;
 using UnityEngine.SceneManagement;
 
 public class LocalBroadcaster : MonoBehaviour {
+    private static float BROADCAST_INTERVAL = 0.1f;
+
     public string message = "Matchimals";
     public int port = 5000;
-    public float broadcastInterval = 0.1f;
     public bool broadcast = false;
 
     public void Start() {
-        InvokeRepeating("Broadcast", 0, broadcastInterval);
+        InvokeRepeating("Broadcast", 0, BROADCAST_INTERVAL);
     }
 
     public void SetBroadcasting(bool broadcast) {

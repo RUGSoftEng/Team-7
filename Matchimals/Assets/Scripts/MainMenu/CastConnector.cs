@@ -49,12 +49,13 @@ public class CastConnector : Returnable {
         GotoMenu<Lobby>();
     }
 
-    public void OnRemoteDisplaySessionEnd(CastRemoteDisplayManager manager) {
-        GoBack();
+    public void OnRemoteDisplayError(CastRemoteDisplayManager manager)
+    {
+        Debug.LogError("Casting failed: " + manager.GetLastError());
+        manager.StopRemoteDisplaySession();
     }
 
-    public void OnRemoteDisplayError(CastRemoteDisplayManager manager) {
-        Debug.LogError("Casting failed: " + manager.GetLastError());
+    public void OnRemoteDisplaySessionEnd(CastRemoteDisplayManager manager) {
         GoBack();
     }
 
