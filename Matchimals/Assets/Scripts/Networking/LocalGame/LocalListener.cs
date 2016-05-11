@@ -10,12 +10,9 @@ public class LocalListener : MonoBehaviour {
     public int port = 5000;
     public bool listen = false;
     private UdpClient udp = null;
-    private MainMenu menu;
 
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
-        this.menu = GameObject.FindObjectOfType<MainMenu>();
-        Debug.Assert(menu != null);
         if (udp == null) this.udp = new UdpClient(port);
         this.listen = true;
         if (IsListening() && SceneManager.GetActiveScene().name == "MainMenuScene") {
@@ -46,6 +43,8 @@ public class LocalListener : MonoBehaviour {
         string message = Encoding.ASCII.GetString(data);
         string hostIP = ip.Address.ToString();
         if (message.Equals("Matchimals") && !hostIP.Equals(GetMyIP())) {
+            MainMenu menu = GameObject.FindObjectOfType<MainMenu>();
+            Debug.Assert(menu != null);
             menu.hostIP = ip.Address.ToString();
         }
         Listen();
