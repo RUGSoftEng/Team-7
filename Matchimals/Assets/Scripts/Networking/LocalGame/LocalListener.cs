@@ -11,6 +11,7 @@ public class LocalListener : MonoBehaviour {
     public bool listen = false;
     private UdpClient udp;
     private MainMenu menu;
+    private bool udpInitialized = false;
 
     public void StartListening() {
         this.menu = GameObject.FindObjectOfType<MainMenu>();
@@ -21,9 +22,12 @@ public class LocalListener : MonoBehaviour {
     }
 
     // When the game scene is loaded, this is triggered.
+    
     public void OnLevelWasLoaded(int level) {
-        Debug.Log("HUH?");
-        if (IsListening() && (SceneManager.GetActiveScene().name == "MainMenuScene")) {
+        if (!udpInitialized) {
+            udpInitialized = true;
+        } else if (IsListening() && (SceneManager.GetActiveScene().name == "MainMenuScene")) {
+            Debug.Log("LUISTER!");
             Listen();
         }
     }
