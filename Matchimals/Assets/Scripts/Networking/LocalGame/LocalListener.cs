@@ -22,7 +22,6 @@ public class LocalListener : MonoBehaviour {
     }
 
     // When the game scene is loaded, this is triggered.
-    
     public void OnLevelWasLoaded(int level) {
         if (!udpInitialized) {
             udpInitialized = true;
@@ -44,7 +43,6 @@ public class LocalListener : MonoBehaviour {
 
     private void Listen() {
         if (IsListening()) {
-            //Debug.Log("Listening...");
             this.udp.BeginReceive(PacketHandler, null);
         }
     }
