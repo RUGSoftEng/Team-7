@@ -186,6 +186,10 @@ public class Deck : MonoBehaviour {
 	public bool ContainsSymbol(int symbol) {
 		return topCard.ContainsSymbol (symbol);
 	}
+
+	public Symbol GetSymbol(int symbol) {
+		return topCard.GetSymbol (symbol);
+	}
 	
 	// returns the next card
 	public int[] NextCard() {

@@ -40,8 +40,8 @@ public class Card : MonoBehaviour {
 		
 		this.containedSymbols = new Symbol[symbolsPerCard];
 		for (int i = 0; i < symbolsPerCard; ++i) {
-			(this.containedSymbols [i] = (Symbol)Instantiate (symbolPrefab))
-										.Constructor (this.transform, coordinates [i], sprites, scales);
+			this.containedSymbols [i] = (Symbol)Instantiate (symbolPrefab);
+			this.containedSymbols [i].Constructor (this.transform, coordinates [i], sprites, scales);
 			this.containedSymbols[i].transform.SetParent(this.transform);		
 		}
 	}
@@ -50,6 +50,11 @@ public class Card : MonoBehaviour {
 	public bool ContainsSymbol(int symbol) {
 		foreach (Symbol s in this.containedSymbols) if (s.getSymbol() == symbol) return true;
 		return false;
+	}
+
+	public Symbol GetSymbol(int symbol) {
+		foreach (Symbol s in this.containedSymbols) if (s.getSymbol() == symbol) return s;
+		return null;
 	}
 
 	//Makes the given symbol zoom in and out

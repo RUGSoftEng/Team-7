@@ -106,6 +106,8 @@ public class Player : NetworkBehaviour {
 	[Command]
 	public void CmdCheckMatch(int[] card, int symbol, uint networkIdentity) {
 		if (deck.ContainsSymbol (symbol)) {
+			Symbol s = deck.GetSymbol (symbol);
+			s.GetComponent<ZoomInOut> ().Initialize (2, 1);
             Player matchingPlayer = FindPlayer(networkIdentity);
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingPlayer.animalName), new Vector3(0, 0, -10),30f);
             deck.SetTopCard(card);
@@ -184,7 +186,6 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcPassAllCards (int [] cards, int symbolsPerCard, int cardsPerPlayer, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {
-            this.symbolsPerCard = symbolsPerCard;
             this.cardcount = cardsPerPlayer;
             int[][] cardStack = new int[cardsPerPlayer][];
             for (int i = 0; i < cardsPerPlayer; i++)
