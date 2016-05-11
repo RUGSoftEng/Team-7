@@ -42,7 +42,7 @@ public class LocalListener : MonoBehaviour {
         byte[] data = udp.EndReceive(ar, ref ip);
         string message = Encoding.ASCII.GetString(data);
         string hostIP = ip.Address.ToString();
-        if (message.Equals("Matchimals") && !hostIP.Equals(GetMyIP())) {
+        if (/*message.Equals("Matchimals") &&*/ !hostIP.Equals(GetMyIP())) {
             menu.hostIP = ip.Address.ToString();
         }
         Listen();
