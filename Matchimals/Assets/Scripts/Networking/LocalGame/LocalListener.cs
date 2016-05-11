@@ -9,16 +9,15 @@ using UnityEngine.SceneManagement;
 public class LocalListener : MonoBehaviour {
     public int port = 5000;
     public bool listen = false;
-    private UdpClient udp = null;
+    private UdpClient udp;
+    private MainMenu menu;
 
-    // When the game scene is loaded, this is triggered.
-    public void OnLevelWasLoaded(int level) {
-        if (udp == null) this.udp = new UdpClient(port);
+    public void StartListening() {
+        this.menu = GameObject.FindObjectOfType<MainMenu>();
+        Debug.Assert(menu != null);
+        this.udp = new UdpClient(port);
         this.listen = true;
-        if (IsListening() && SceneManager.GetActiveScene().name == "MainMenuScene") {
-            Debug.Log("LUISTER!");
-            Listen();
-        }
+        Listen();
     }
 
     public void StopListening()
@@ -33,6 +32,7 @@ public class LocalListener : MonoBehaviour {
 
     private void Listen() {
         if (IsListening()) {
+            //Debug.Log("Listening...");
             this.udp.BeginReceive(PacketHandler, null);
         }
     }
@@ -43,8 +43,6 @@ public class LocalListener : MonoBehaviour {
         string message = Encoding.ASCII.GetString(data);
         string hostIP = ip.Address.ToString();
         if (message.Equals("Matchimals") && !hostIP.Equals(GetMyIP())) {
-            MainMenu menu = GameObject.FindObjectOfType<MainMenu>();
-            Debug.Assert(menu != null);
             menu.hostIP = ip.Address.ToString();
         }
         Listen();
