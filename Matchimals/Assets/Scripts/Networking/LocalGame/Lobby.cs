@@ -9,6 +9,7 @@ using Google.Cast.RemoteDisplay;
 public class Lobby : Returnable {
     public float connectionTestDelay = 1f, connectionTestRepeat = 0.5f;
     private bool connected = false;
+	private bool hosting = true;
 
     public new void Start() {
         base.Start();
@@ -20,6 +21,10 @@ public class Lobby : Returnable {
             castDisplayManager.RemoteDisplaySessionEndEvent.AddListener(OnRemoteDisplaySessionEnd);
         }
     }
+
+	public void setHosting (bool hosting) {
+		this.hosting = hosting;
+	}
 
     public void OnRemoteDisplayError(CastRemoteDisplayManager manager)
     {
@@ -41,7 +46,8 @@ public class Lobby : Returnable {
         int height = Screen.height - 2*padding;
 
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
-        if (GUILayout.Button("Start Party!", GUILayout.Height(height / 2)))
+
+		if (hosting && GUILayout.Button("Start Party!", GUILayout.Height(height / 2)))
         {
             ThrowPlayersInGame();
         }
