@@ -15,7 +15,7 @@ public class LocalListener : MonoBehaviour {
     public void StartListening() {
         this.menu = GameObject.FindObjectOfType<MainMenu>();
         Debug.Assert(menu != null);
-        this.udp = new UdpClient(port);
+        if (this.udp == null) this.udp = new UdpClient(port);
         this.listen = true;
         Listen();
     }

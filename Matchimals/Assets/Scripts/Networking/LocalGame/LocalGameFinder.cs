@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class LocalGameFinder : MonoBehaviour {
     private LocalBroadcaster broadcaster = null;
     private LocalListener listener = null;
-    private bool initialized = false;
 
     public void Start() {
         this.broadcaster = gameObject.AddComponent<LocalBroadcaster>();
@@ -14,9 +13,8 @@ public class LocalGameFinder : MonoBehaviour {
 
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
-        if (!initialized && SceneManager.GetActiveScene().name == "MainMenuScene") {
+        if (SceneManager.GetActiveScene().name == "MainMenuScene") {
             StartListening();
-            initialized = true;
         }
     }
 
