@@ -9,23 +9,16 @@ using UnityEngine.SceneManagement;
 public class LocalListener : MonoBehaviour {
     public int port = 5000;
     public bool listen = false;
-    private UdpClient udp;
+    private UdpClient udp = null;
     private MainMenu menu;
-    private bool udpInitialized = false;
-
-    public void StartListening() {
-        this.menu = GameObject.FindObjectOfType<MainMenu>();
-        Debug.Assert(menu != null);
-        this.udp = new UdpClient(port);
-        this.listen = true;
-        Listen();
-    }
 
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
-        if (!udpInitialized) {
-            udpInitialized = true;
-        } else if (IsListening() && (SceneManager.GetActiveScene().name == "MainMenuScene")) {
+        this.menu = GameObject.FindObjectOfType<MainMenu>();
+        Debug.Assert(menu != null);
+        if (udp == null) this.udp = new UdpClient(port);
+        this.listen = true;
+        if (IsListening() && SceneManager.GetActiveScene().name == "MainMenuScene") {
             Debug.Log("LUISTER!");
             Listen();
         }

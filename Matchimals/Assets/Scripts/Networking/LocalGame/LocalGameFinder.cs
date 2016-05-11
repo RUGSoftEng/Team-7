@@ -15,18 +15,12 @@ public class LocalGameFinder : MonoBehaviour {
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
         if (!initialized && SceneManager.GetActiveScene().name == "MainMenuScene") {
-            StartListening();
             initialized = true;
         }
     }
 
     public void StartBroadCasting() {
         this.broadcaster.SetBroadcasting(true);
-    }
-
-    public void StartListening()
-    {
-        this.listener.StartListening();
     }
 
     public void StopBroadCasting() {
