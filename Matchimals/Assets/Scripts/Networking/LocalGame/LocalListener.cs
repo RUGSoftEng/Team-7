@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class LocalListener : MonoBehaviour {
     public int port = 5000;
     public bool listen = false;
-    private UdpClient udp;
+    private UdpClient udp = null;
     private MainMenu menu;
 
     public void StartListening() {
@@ -32,7 +32,7 @@ public class LocalListener : MonoBehaviour {
 
     private void Listen() {
         if (IsListening()) {
-            //Debug.Log("Listening...");
+            Debug.Log("Listening...");
             this.udp.BeginReceive(PacketHandler, null);
         }
     }
