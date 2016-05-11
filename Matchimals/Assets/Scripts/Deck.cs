@@ -8,11 +8,11 @@ using UnityEngine.SceneManagement;
 using Google.Cast.RemoteDisplay;
 
 public class Deck : MonoBehaviour {
-    private static float WAIT_GAMEOVER = 15f;
+    private static float WAIT_GAMEOVER = 10f;
 
 	public Card cardPrefab;
 	
-	public Vector3 topcardloc;
+	//public Vector3 topcardloc;
 	public int maxAmount;
 
 	private int symbolsPerCard;
@@ -197,11 +197,12 @@ public class Deck : MonoBehaviour {
 	}
 	
 	public void SetTopCard(int[] card) {
-		Card copy = Instantiate (topCard);
-		copy.GetComponent<Transform> ().transform.position += Vector3.forward;
-		topCard.SetCard (card);
-		topCard.GetComponent<Move> ().Initialize (topCard.GetComponent<Transform> ().transform.position + Vector3.down * 5.0f + Vector3.back, new Vector3(100f, 0, topCard.GetComponent<Transform> ().transform.position.z) + Vector3.back, 1.0f);
-		Destroy (copy, 1.0f);
+		Card newTopCard = (Card) Instantiate (cardPrefab);
+		newTopCard.Constructor(symbolsPerCard);
+		newTopCard.SetCard (card);
+		Vector2 distortion = UnityEngine.Random.insideUnitCircle * 0.2f;
+		newTopCard.GetComponent<Move> ().Initialize (topCard.GetComponent<Transform> ().transform.position + Vector3.down * 5.0f + Vector3.back, new Vector3(100f + distortion.x, 0 + distortion.y, topCard.GetComponent<Transform> ().transform.position.z) + Vector3.back, 1.0f);
+		topCard = newTopCard;
 	}
 	
 	public int[] GetTopCard() {
