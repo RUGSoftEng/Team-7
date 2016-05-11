@@ -32,6 +32,8 @@ public class MainMenu : Menu {
         networkManager.networkAddress = hostIP;
         networkManager.StartClient();
         GotoMenu<Lobby>();
+		Menu m = GameObject.FindObjectOfType<Menu> ();
+		m.GetComponent<Lobby> ().setHosting (false);
     }
 
     private void Host() {
