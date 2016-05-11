@@ -23,7 +23,7 @@ public class Symbol : MonoBehaviour {
 
 
 		this.transform.SetParent (parent);
-		this.transform.position = position;
+		this.transform.localPosition = position;
 		this.transform.localPosition -= new Vector3 (0, 0, 0.00001f);
 		this.sprites = sprites;
 		this.scales = scales;

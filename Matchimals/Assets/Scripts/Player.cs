@@ -18,7 +18,7 @@ public class Player : NetworkBehaviour {
     public LobbyMember lobbyMemberPrefab;
 
     //Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enough symbols
-    public int symbolsPerCard = 4;
+    public int symbolsPerCard = 8;
     // The number of cards of the player.
     public int cardcount;
 
@@ -79,7 +79,7 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity && this.cardcount > 0) {
 				Card thrown = GetTopCard();
-				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position + Vector3.back, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f + Vector3.back, 1.0f);
+				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f, 1.0f);
                 this.cardcount = Mathf.Max(0, cardcount - 1);
 			} 
 		}

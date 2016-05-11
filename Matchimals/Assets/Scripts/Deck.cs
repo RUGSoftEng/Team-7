@@ -197,7 +197,7 @@ public class Deck : MonoBehaviour {
 	}
 	
 	public void SetTopCard(int[] card) {
-		Card newTopCard = (Card) Instantiate (cardPrefab);
+		Card newTopCard = (Card) Instantiate (cardPrefab, topCard.GetComponent<Transform> ().transform.position + Vector3.down * 5.0f + Vector3.back, Quaternion.identity);
 		newTopCard.Constructor(symbolsPerCard);
 		newTopCard.SetCard (card);
 		Vector2 distortion = UnityEngine.Random.insideUnitCircle * 0.2f;
