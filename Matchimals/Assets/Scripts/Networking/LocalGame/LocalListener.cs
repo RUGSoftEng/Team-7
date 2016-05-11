@@ -22,7 +22,6 @@ public class LocalListener : MonoBehaviour {
 
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
-        Debug.Log("HUH?");
         if (IsListening() && (SceneManager.GetActiveScene().name == "MainMenuScene")) {
             Listen();
         }
@@ -40,7 +39,6 @@ public class LocalListener : MonoBehaviour {
 
     private void Listen() {
         if (IsListening()) {
-            //Debug.Log("Listening...");
             this.udp.BeginReceive(PacketHandler, null);
         }
     }
