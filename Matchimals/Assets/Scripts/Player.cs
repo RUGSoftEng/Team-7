@@ -184,6 +184,7 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcPassAllCards (int [] cards, int symbolsPerCard, int cardsPerPlayer, uint netId) {
 		if (isLocalPlayer && netId == this.netId.Value) {
+            this.symbolsPerCard = symbolsPerCard;
             this.cardcount = cardsPerPlayer;
             int[][] cardStack = new int[cardsPerPlayer][];
             for (int i = 0; i < cardsPerPlayer; i++)

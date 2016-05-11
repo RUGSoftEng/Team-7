@@ -32,7 +32,6 @@ public class LocalListener : MonoBehaviour {
 
     private void Listen() {
         if (IsListening()) {
-            Debug.Log("Listening...");
             this.udp.BeginReceive(PacketHandler, null);
         }
     }
