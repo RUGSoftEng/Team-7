@@ -79,7 +79,7 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer ) {
 			if (this.netId.Value == networkIdentity && this.cardcount > 0) {
 				Card thrown = GetTopCard();
-				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 5.0f, 1.0f);
+				thrown.GetComponent<Move> ().Initialize (thrown.GetComponent<Transform> ().transform.position, thrown.GetComponent<Transform> ().transform.position + Vector3.up * 3.0f, 0.5f);
                 this.cardcount = Mathf.Max(0, cardcount - 1);
 			} 
 		}
@@ -107,7 +107,7 @@ public class Player : NetworkBehaviour {
 	public void CmdCheckMatch(int[] card, int symbol, uint networkIdentity) {
 		if (deck.ContainsSymbol (symbol)) {
 			Symbol s = deck.GetSymbol (symbol);
-			s.GetComponent<ZoomInOut> ().Initialize (2, 1);
+			s.GetComponent<ZoomInOut> ().Initialize ();
             Player matchingPlayer = FindPlayer(networkIdentity);
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingPlayer.animalName), new Vector3(0, 0, -10),30f);
             deck.SetTopCard(card);
@@ -141,7 +141,7 @@ public class Player : NetworkBehaviour {
 					int symbol = 0;
 					if (int.TryParse (hit.transform.gameObject.name, out symbol) &&	!this.isPenalized) {
 						CmdCheckMatch(GetTopCard().ToCardArray(), symbol, this.netId.Value);
-                        hit.transform.gameObject.GetComponent<ZoomInOut>().Initialize(2, 1);
+                        hit.transform.gameObject.GetComponent<ZoomInOut>().Initialize();
 					}
 				}
 			}

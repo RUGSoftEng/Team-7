@@ -205,7 +205,7 @@ public class Deck : MonoBehaviour {
 		newTopCard.Constructor(symbolsPerCard);
 		newTopCard.SetCard (card);
 		Vector2 distortion = UnityEngine.Random.insideUnitCircle * 0.2f;
-		newTopCard.GetComponent<Move> ().Initialize (topCard.GetComponent<Transform> ().transform.position + Vector3.down * 5.0f + Vector3.back, new Vector3(100f + distortion.x, 0 + distortion.y, topCard.GetComponent<Transform> ().transform.position.z) + Vector3.back, 1.0f);
+		newTopCard.GetComponent<Move> ().Initialize (topCard.GetComponent<Transform> ().transform.position + Vector3.down * 3.0f + Vector3.back, new Vector3(100f + distortion.x, 0 + distortion.y, topCard.GetComponent<Transform> ().transform.position.z) + Vector3.back, 0.5f);
 		topCard = newTopCard;
 	}
 	

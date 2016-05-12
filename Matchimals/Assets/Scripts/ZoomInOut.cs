@@ -3,15 +3,15 @@ using System.Collections;
 
 public class ZoomInOut : MonoBehaviour {
 
-	private float factorZoom, startTime, duration;
+	public float factorZoom, duration;
+
+	private float startTime;
 	private Vector3 startScale;
 	private bool initialized = false;
 
-	public void Initialize(float factorZoom, float duration) {
+	public void Initialize() {
 		this.startScale = GetComponent<Transform> ().transform.localScale;
-		this.factorZoom = factorZoom;
 		this.startTime = Time.time;
-		this.duration = duration;
 		initialized = true;
 	}
 
