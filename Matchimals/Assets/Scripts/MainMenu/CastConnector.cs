@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Google.Cast.RemoteDisplay;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class CastConnector : Returnable {
     public float castConnectDelay = 0f, castConnectRepeat = 1f;
@@ -46,7 +47,7 @@ public class CastConnector : Returnable {
         localGameFinder.StartBroadCasting();
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
         networkManager.StartHost();
-        GotoMenu<Lobby>();
+        SceneManager.LoadScene("LobbyScene");
     }
 
     public void OnRemoteDisplayError(CastRemoteDisplayManager manager)
@@ -81,16 +82,5 @@ public class CastConnector : Returnable {
         LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
         localGameFinder.StopBroadCasting();
         base.GoBack();
-    }
-
-    // Go to a returnable menu, but pass our parent menu.
-    protected new void GotoMenu<E>() where E : Returnable
-    {
-        Destroy(castSearchAnimation);
-        this.enabled = false;
-        E menu = this.gameObject.AddComponent<E>();
-        menu.SetPrevious(previous);
-        menu.PassMenuEffects(menuEffects);
-        Destroy(this);
     }
 }

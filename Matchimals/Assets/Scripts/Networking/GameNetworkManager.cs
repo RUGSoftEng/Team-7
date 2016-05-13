@@ -4,25 +4,22 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class GameNetworkManager : NetworkManager {
+    public bool connected = false;
+    public bool isHosting = false;
 
-    public override void OnClientConnect(NetworkConnection conn)
-    {
-        GetLobby().SetConnected(true);
+    public override void OnStartHost() {
+        this.isHosting = true;
+    }
+
+    public override void OnClientConnect(NetworkConnection conn) {
+        this.connected = true;
         base.OnClientConnect(conn);
     }
 
     public override void OnClientDisconnect(NetworkConnection conn) {
-        if (SceneManager.GetActiveScene().name == "MainMenuScene") {
-            GetLobby().SetConnected(false);
-        } else {
-            SceneManager.LoadScene("MainMenuScene");
+        if (SceneManager.GetActiveScene().name == "LobbyScene") {
+            this.connected = false;
         }
         base.OnClientDisconnect(conn);
-    }
-
-    private Lobby GetLobby() {
-        Lobby lobby = FindObjectOfType<Lobby>() as Lobby;
-        Debug.Assert(lobby != null);
-        return lobby;
     }
 }

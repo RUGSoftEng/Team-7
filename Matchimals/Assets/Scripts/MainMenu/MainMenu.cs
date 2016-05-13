@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : Menu {
 
@@ -31,9 +32,7 @@ public class MainMenu : Menu {
         GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
         networkManager.networkAddress = hostIP;
         networkManager.StartClient();
-        GotoMenu<Lobby>();
-		Menu m = GameObject.FindObjectOfType<Menu> ();
-		m.GetComponent<Lobby> ().setHosting (false);
+        SceneManager.LoadScene("LobbyScene");
     }
 
     private void Host() {

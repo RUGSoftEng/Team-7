@@ -18,7 +18,7 @@ public class LocalBroadcaster : MonoBehaviour {
 
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
-        if (SceneManager.GetActiveScene().name != "MainMenuScene") {
+        if (SceneManager.GetActiveScene().name != "LobbyScene") {
             SetBroadcasting(false);
         }
     }

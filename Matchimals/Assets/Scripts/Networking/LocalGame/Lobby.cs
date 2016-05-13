@@ -6,25 +6,27 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using Google.Cast.RemoteDisplay;
 
-public class Lobby : Returnable {
-    public float connectionTestDelay = 1f, connectionTestRepeat = 0.5f;
-    private bool connected = false;
-	private bool hosting = true;
+public class Lobby : Menu {
+    private static float CONNECTION_CHECK_INTERVAL = 0.5f;
+    private GameNetworkManager gameNetworkManager;
 
     public new void Start() {
         base.Start();
-        InvokeRepeating("CheckConnection", connectionTestDelay, connectionTestRepeat);
         CastRemoteDisplayManager castDisplayManager = CastRemoteDisplayManager.GetInstance();
         if (castDisplayManager.IsCasting())
         {
             castDisplayManager.RemoteDisplayErrorEvent.AddListener(OnRemoteDisplayError);
             castDisplayManager.RemoteDisplaySessionEndEvent.AddListener(OnRemoteDisplaySessionEnd);
         }
+        this.gameNetworkManager = GameObject.FindObjectOfType<GameNetworkManager>();
+        InvokeRepeating("CheckConnection", CONNECTION_CHECK_INTERVAL, CONNECTION_CHECK_INTERVAL);
     }
 
-	public void setHosting (bool hosting) {
-		this.hosting = hosting;
-	}
+    public void CheckConnection()
+    {
+        if (!gameNetworkManager.connected)
+            CloseLobby();
+    }
 
     public void OnRemoteDisplayError(CastRemoteDisplayManager manager)
     {
@@ -34,7 +36,7 @@ public class Lobby : Returnable {
 
     public void OnRemoteDisplaySessionEnd(CastRemoteDisplayManager manager)
     {
-        GoBack();
+        CloseLobby();
     }
 
     // Draws the GUI.
@@ -47,13 +49,13 @@ public class Lobby : Returnable {
 
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
 
-		if (hosting && GUILayout.Button("Start Party!", GUILayout.Height(height / 2)))
+		if (gameNetworkManager.isHosting && GUILayout.Button("Start Party!", GUILayout.Height(height / 2)))
         {
             ThrowPlayersInGame();
         }
         
         if (GUILayout.Button("Cancel Party...", GUILayout.Height(height/2))) {
-            GoBack();
+            CloseLobby();
         }
         GUILayout.EndArea();
     }
@@ -64,30 +66,14 @@ public class Lobby : Returnable {
         }
 	}
 
-    // Checks if the clients/server is still connected, otherwise close the lobby.
-    private void CheckConnection() {
-        if (!IsConnected()) {
-            GoBack();
-        }
-    }
-
-    protected new void GoBack() {
+    public void CloseLobby() {
         CastRemoteDisplayManager castDisplayManager = CastRemoteDisplayManager.GetInstance();
         if (castDisplayManager.IsCasting()) {
             castDisplayManager.StopRemoteDisplaySession();
         }
-        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>() as GameNetworkManager;
-        networkManager.StopHost();
+        gameNetworkManager.StopHost();
         LocalGameFinder localGameFinder = GameObject.FindObjectOfType<LocalGameFinder>();
         localGameFinder.StopBroadCasting();
-        base.GoBack();
-    }
-
-    public bool IsConnected() {
-        return this.connected;
-    }
-
-    public void SetConnected(bool connected) {
-        this.connected = connected;
+        SceneManager.LoadScene("MainMenuScene");
     }
 }
