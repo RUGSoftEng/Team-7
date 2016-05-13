@@ -66,12 +66,17 @@ public class SettingsMenu : Returnable {
 		}
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
-		GUI.backgroundColor = Color.white;
+
 		Texture icon = animalSprites[curAnimal].texture;
 		int iconSize   =  (int)((animSelWidth-2*arrowSize)*0.5f);
-		GUI.DrawTexture(new Rect(Screen.width/2-iconSize/2, animSelOffTop+(arrowSize-iconSize)/2, iconSize, iconSize), icon);
+		GUILayout.BeginArea(new Rect(Screen.width/2-iconSize/2, animSelOffTop+(arrowSize-iconSize)/2, iconSize, iconSize));
+		if (GUILayout.Button(icon, GUILayout.Height(iconSize), GUILayout.Width(iconSize))){
+			ChangeAnimal(0);
+		}
+		GUILayout.EndArea();
 
 		// Back button.
+		GUI.backgroundColor = Color.white;
 		GUILayout.BeginArea(new Rect(Screen.width/2-width/2, Screen.height/2-height/2+offTop, width, height));
 		GUILayout.FlexibleSpace();
 		string animalName = animalSprites[curAnimal].name;
