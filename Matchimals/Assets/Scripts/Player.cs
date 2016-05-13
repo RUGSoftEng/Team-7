@@ -48,6 +48,13 @@ public class Player : NetworkBehaviour {
         }
     }
 
+    // When the game scene is loaded, this is triggered.
+    public void OnLevelWasLoaded(int level) {
+        if (SceneManager.GetActiveScene().name == "LobbyScene" && isServer) {
+            AddLobbyMember();
+        }
+    }
+
     // Adds a visual lobby member for the lobby.
     private void AddLobbyMember() {
         LobbyMember lobbyMember = (LobbyMember) Instantiate(lobbyMemberPrefab, new Vector3(100,0,0), new Quaternion());
