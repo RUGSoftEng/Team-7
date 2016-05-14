@@ -3,14 +3,20 @@ using System.Collections;
 
 public class SettingsMenu : Returnable {
 
-	// Menu size in percentage (1=100%).
-	public float menuWidth = 0.55f, menuHeight=0.67f, offsetTop=0.15f, iconScale=0.4f;
+    // Menu size in percentage (1=100%).
+    public float menuWidth = 0.55f, menuHeight = 0.67f, offsetTop = 0.15f;
+    private float iconScale=1f;
 
 	private Sprite[] animalSprites;
 	private AudioClip[] cries;
 	private Texture arrowIcon, arrowFlippedIcon;
 	private int curAnimal;
 	private string playerName;
+
+    // For animating the icon.
+    private bool animateIcon = false;
+    private float animateSpeed = 0.5f;
+    private float angle = 0f;
 	
 	public new void Start() {
 		animalSprites = Resources.LoadAll<Sprite>("Animals");
@@ -21,6 +27,10 @@ public class SettingsMenu : Returnable {
 		this.playerName = PlayerPrefs.GetString("name");
         base.Start();
 	}
+
+    public void Update() {
+        AnimateIcon();
+    }
 	
 	private void SafeSettings() {
 		PlayerPrefs.SetInt("animal", curAnimal);
@@ -31,9 +41,23 @@ public class SettingsMenu : Returnable {
 	private int ChangeAnimal(int step){
 		this.curAnimal += step;
 		this.curAnimal = (int) Mathf.Repeat(curAnimal, animalSprites.Length);
-		AudioSource.PlayClipAtPoint(cries[curAnimal], new Vector3(0,0,0));
+        this.animateIcon = true;
+        AudioSource.PlayClipAtPoint(cries[curAnimal], new Vector3(0,0,0));
 		return curAnimal;
 	}
+
+    private void AnimateIcon() {
+        if (animateIcon) {
+            angle += animateSpeed;
+            iconScale = 1f+ 0.2f*Mathf.Sin(angle);
+        }
+
+        if (angle > 2*Mathf.PI) {
+            angle = 0f;
+            iconScale = 1.0f;
+            animateIcon = false;
+        }
+    }
 	
 	public void OnGUI () {
         GUI.skin = menuSkin;
@@ -54,25 +78,40 @@ public class SettingsMenu : Returnable {
 		int animSelWidth = (int)(Screen.width*0.9f);
 		int animSelOffTop = setNameOffTop+(int)(Screen.height*0.32f);
 		int arrowSize = animSelHeight/2;
-		GUI.backgroundColor = Color.clear;
+        Texture icon = animalSprites[curAnimal].texture;
+        int iconSize = (int)(animSelHeight * iconScale);
+        GUI.backgroundColor = Color.clear;
+
+        // Draw the arrows.
 		GUILayout.BeginArea(new Rect(Screen.width/2-animSelWidth/2, animSelOffTop, animSelWidth, animSelHeight));
 		GUILayout.BeginHorizontal();
 		if (GUILayout.Button(arrowFlippedIcon, GUILayout.Height(arrowSize), GUILayout.Width(arrowSize))) {
 			ChangeAnimal(1);
 		}
-		GUILayout.FlexibleSpace();
-		if (GUILayout.Button(arrowIcon, GUILayout.Height(arrowSize), GUILayout.Width(arrowSize))) {
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button(arrowIcon, GUILayout.Height(arrowSize), GUILayout.Width(arrowSize))) {
 			ChangeAnimal(-1);
 		}
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
-		GUI.backgroundColor = Color.white;
-		Texture icon = animalSprites[curAnimal].texture;
-		int iconSize   =  (int)((animSelWidth-2*arrowSize)*0.5f);
-		GUI.DrawTexture(new Rect(Screen.width/2-iconSize/2, animSelOffTop+(arrowSize-iconSize)/2, iconSize, iconSize), icon);
 
-		// Back button.
-		GUILayout.BeginArea(new Rect(Screen.width/2-width/2, Screen.height/2-height/2+offTop, width, height));
+        // Draw the animal icon.
+        GUILayout.BeginArea(new Rect(Screen.width/2-animSelWidth/2, animSelOffTop - iconSize/4, animSelWidth, iconSize));
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button(icon, GUILayout.Height(iconSize), GUILayout.Width(iconSize)))
+        {
+            this.animateIcon = true;
+            AudioSource.PlayClipAtPoint(cries[curAnimal], new Vector3(0, 0, 0));
+        }
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        GUILayout.EndArea();
+
+        GUI.backgroundColor = Color.white;
+
+        // Back button.
+        GUILayout.BeginArea(new Rect(Screen.width/2-width/2, Screen.height/2-height/2+offTop, width, height));
 		GUILayout.FlexibleSpace();
 		string animalName = animalSprites[curAnimal].name;
 		if (GUILayout.Button("Yeah! "+animalName+"s!", GUILayout.Height(buttonHeight))) {
