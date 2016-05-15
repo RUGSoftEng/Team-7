@@ -6,6 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : Menu {
 
+	enum menuView_t {MENU, CREDITS, RULE};
+
+	private struct windowPosition_t {
+		public int windowWidth;
+		public int windowHeight;
+		public int windowOffTop;
+		public int windowOffLeft;
+
+		public windowPosition_t (int p_windowWidth, int p_windowHeight, int p_windowOffTop, int p_windowOffLeft){
+			windowWidth = p_windowWidth;
+			windowHeight = p_windowHeight; 
+			windowOffTop = p_windowOffTop; 
+			windowOffLeft = p_windowOffLeft; 
+		}
+	}
+
 	// Menu size in percentage (1=100%).
 	public float menuWidth = 1f, menuHeight=1f, logoScale=1f, offsetTop=0f;
 	private Texture logo;
@@ -14,19 +30,25 @@ public class MainMenu : Menu {
 	private int curAnimal;
     public string hostIP;
 	private IconAnimator anim;
-	private bool showCredits = false;
-	private bool showRules = false;
+	private int indexInstructionPage = 0;
+	private const int NUMBER_INSTRUCTION_PAGES = 4;
+	private string[] instructionPages = new string[NUMBER_INSTRUCTION_PAGES];
+
+	private menuView_t menuView = menuView_t.MENU;
+
 
 	public new void Start() {
 		this.logo = Resources.Load<Texture>("Menu/logo");
 		anim = new IconAnimator ();
 
-		this.icons = new Texture[2];
+		this.icons = new Texture[3];
 		Sprite[] animalSprites = Resources.LoadAll<Sprite>("Animals");
 		this.curAnimal = PlayerPrefs.GetInt("animal");
 		this.icons [0] = animalSprites [curAnimal].texture;
 		this.icons [1] = Resources.Load<Texture> ("Menu/credits");
-		//this.icons [2] = Resources.Load<Texture> ("Menu/rules");
+		this.icons [2] = Resources.Load<Texture> ("Menu/rules");
+
+		this.loadInstructionPages ();
 
         this.hostIP = null;
         base.Start();
@@ -63,6 +85,7 @@ public class MainMenu : Menu {
 	
 	public void OnGUI () {
         GUI.skin = menuSkin;
+
 		int width = (int)(Screen.width*menuWidth);
 		int height = (int)(Screen.height*menuHeight);
 		int offTop = (int)(Screen.height*offsetTop);
@@ -72,65 +95,131 @@ public class MainMenu : Menu {
 
 		int buttonHeight = height/4;
 
-		int iconAnimalSize = (int)((Screen.height / 8) * anim.getIconScale());
-		int iconSize = Screen.height / 8;
-		int offBottomIcon = Screen.height - Screen.height / 7;
-		int iconAreaHeight = Screen.height / 7;
-
-		GUI.DrawTexture(new Rect(Screen.width/2-logoWidth/2,15,logoWidth, logoHeight), logo);
-
-		if (!this.showCredits && !this.showRules) {
-			/*Menu Area*/
-			GUILayout.BeginArea (new Rect (Screen.width / 2 - width / 2, Screen.height / 2 - height / 2 + offTop, width, height));
-			GUILayout.FlexibleSpace ();
-			if (isGameHosted ()) {
-				if (GUILayout.Button ("Visit Party", GUILayout.Height (buttonHeight))) {
-					Join ();
+		switch (this.menuView) 
+		{
+			/*Menu buttons*/
+			case menuView_t.MENU:
+			{
+				menuSkin.button.padding.bottom = 0;
+				GUI.DrawTexture(new Rect(Screen.width/2-logoWidth/2,15,logoWidth, logoHeight), logo);
+				GUILayout.BeginArea (new Rect (Screen.width / 2 - width / 2, Screen.height / 2 - height / 2 + offTop, width, height));
+				GUILayout.FlexibleSpace ();
+				if (isGameHosted ()) {
+					if (GUILayout.Button ("Visit Party", GUILayout.Height (buttonHeight))) {
+						Join ();
+					}
+				} else {
+					if (GUILayout.Button ("Host Party", GUILayout.Height (buttonHeight))) {
+						Host ();
+					}
 				}
-			} else {
-				if (GUILayout.Button ("Host Party", GUILayout.Height (buttonHeight))) {
-					Host ();
+				if (GUILayout.Button ("Customize", GUILayout.Height (buttonHeight))) {
+					GotoMenu<SettingsMenu> ();
 				}
+				if (GUILayout.Button ("Exit", GUILayout.Height (buttonHeight))) {
+					Application.Quit ();
+				}
+				GUILayout.EndArea ();
+
+				break;
 			}
-			if (GUILayout.Button ("Customize", GUILayout.Height (buttonHeight))) {
-				GotoMenu<SettingsMenu> ();
+
+			/*Credits Window*/
+			case menuView_t.CREDITS:
+			{
+				windowPosition_t windowCredits = new windowPosition_t (2*Screen.width/3, 2*Screen.height/3, Screen.height / 6, Screen.width / 6);
+				menuSkin.box.alignment = TextAnchor.MiddleCenter;
+				//menuSkin.box.fontSize = 30;
+				string creditsText = "Matchminimals, 2016\n\n\n" +
+					"Developed by RuggedStudio \n(ruggedgamesstudios@gmail.com)\n\n" +
+					"Rijksuniversiteit Groningen \n(University of Groningen, NL)\n\n " +
+					"Authors: Sietze Houwink, Matteo Corradini, \n" +
+					"Victor Matei Preda, Luc van den Brand, \n" +
+					"Twan Schoonen and Dan Chirtoaca";
+
+				GUILayout.BeginArea(new Rect(windowCredits.windowOffLeft, windowCredits.windowOffTop, Screen.width, Screen.height));
+				GUI.Box(new Rect (0, 0, windowCredits.windowWidth, windowCredits.windowHeight), creditsText);
+				GUILayout.EndArea();
+
+				break;
 			}
-			if (GUILayout.Button ("Exit", GUILayout.Height (buttonHeight))) {
-				Application.Quit ();
+
+			/*Rules window*/
+			case menuView_t.RULE:
+			{
+				windowPosition_t windowRules = new windowPosition_t (2*Screen.width/3, 2*Screen.height/3, Screen.height / 6, Screen.width / 6);
+				menuSkin.box.alignment = TextAnchor.UpperCenter;
+				int tmpPaddingTop = menuSkin.box.padding.top;
+				Texture2D tmpNormalBackgroudButton = menuSkin.button.normal.background;
+				Texture2D tmpActiveBackgroudButton = menuSkin.button.active.background;
+				menuSkin.box.padding.top = Screen.height/20;
+				windowPosition_t windowIstrutionText = new windowPosition_t (windowRules.windowWidth, windowRules.windowHeight - Screen.height/6, 
+					menuSkin.box.fontSize, 0);
+				string instructionText = this.instructionPages [this.indexInstructionPage];
+
+				GUILayout.BeginArea(new Rect(windowRules.windowOffLeft, windowRules.windowOffTop, 
+					windowRules.windowWidth, windowRules.windowHeight));
+				GUI.Box(new Rect (0, 0, windowRules.windowWidth, windowRules.windowHeight), 
+					"Instructions ("+(this.indexInstructionPage+1)+"/"+NUMBER_INSTRUCTION_PAGES+")");
+				GUI.Label(new Rect(windowIstrutionText.windowOffLeft, windowIstrutionText.windowOffTop, 
+					windowIstrutionText.windowWidth, windowIstrutionText.windowHeight), instructionText);
+				GUILayout.EndArea();
+
+				/*Arrow Area*/
+				windowPosition_t windowArrow = new windowPosition_t (windowRules.windowWidth, Screen.height / 6, 
+					Screen.height - windowRules.windowOffTop - Screen.height / 6, windowRules.windowOffLeft);
+				
+				Texture arrowIcon, arrowFlippedIcon;
+				arrowIcon = Resources.Load<Texture>("Menu/arrow");
+				arrowFlippedIcon = Resources.Load<Texture>("Menu/arrow-flipped");
+				int arrowSize = windowArrow.windowHeight / 2;
+				menuSkin.button.normal.background = null;
+				menuSkin.button.active.background = null;
+
+				GUILayout.BeginArea(new Rect(windowArrow.windowOffLeft, windowArrow.windowOffTop, windowArrow.windowWidth, windowArrow.windowHeight));
+				GUILayout.BeginHorizontal();
+				if (this.indexInstructionPage != 0)
+					if (GUILayout.Button(arrowFlippedIcon, GUILayout.Height(arrowSize), GUILayout.Width(arrowSize))) {
+					this.indexInstructionPage--;
+					}
+				GUILayout.FlexibleSpace();
+				if (this.indexInstructionPage != NUMBER_INSTRUCTION_PAGES - 1) 
+					if (GUILayout.Button(arrowIcon, GUILayout.Height(arrowSize), GUILayout.Width(arrowSize))) {
+						this.indexInstructionPage++;
+					}
+				GUILayout.EndHorizontal();
+				GUILayout.EndArea();
+
+				menuSkin.box.padding.top = tmpPaddingTop;
+				menuSkin.button.normal.background = tmpNormalBackgroudButton;
+				menuSkin.button.active.background = tmpActiveBackgroudButton;
+				break;
 			}
-			GUILayout.EndArea ();
-		} else {
-			/*Credits window*/
-			int creditsWindowWidth = 2*Screen.width/3;
-			int creditsWindowHeight = 2*Screen.height/3;
-			int creditsWindowOffTop = Screen.height / 6;
-			int creditsWindowOffLeft =  Screen.width / 6;
-			string creditsText = "Matchminimals, 2016\n\n\n" +
-				"Developed by RuggedStudio \n(ruggedgamesstudios@gmail.com)\n\n" +
-				"Rijksuniversiteit Groningen \n(University of Groningen, NL)\n\n " +
-				"Authors: Sietze Houwink, Matteo Corradini, \n" +
-				"Victor Matei Preda, Luc van den Brand, \n" +
-				"Twan Schoonen and Dan Chirtoaca";
-			
-			GUILayout.BeginArea(new Rect(creditsWindowOffLeft, creditsWindowOffTop, Screen.width, Screen.height));
-			GUI.Box(new Rect (0, 0, creditsWindowWidth, creditsWindowHeight), creditsText);
-			GUILayout.EndArea();
 		}
 
+		menuSkin.button.padding.bottom = 10;
+		windowPosition_t windowRuleCredit = new windowPosition_t (Screen.width / 3, Screen.height / 7,
+				Screen.height - Screen.height / 7, Screen.width / 10 );
+
+		int iconAnimalSize = (int)((Screen.height / 8) * anim.getIconScale());
+		int iconSize = Screen.height / 8;
+
 		/*Credits and info area*/
-		GUILayout.BeginArea(new Rect(Screen.width/10, offBottomIcon, Screen.width/3, iconAreaHeight));
+		GUILayout.BeginArea(new Rect(windowRuleCredit.windowOffLeft, windowRuleCredit.windowOffTop, windowRuleCredit.windowWidth, windowRuleCredit.windowHeight));
 		GUILayout.BeginHorizontal();
-		int blankSpaceAmongIcons = Screen.height / 10;
+		int blankSpaceAmongIcons = Screen.width / 20;
 		for (int i = 1; i < icons.Length; i++) {
 			if (GUILayout.Button (this.icons [i], GUILayout.Height (iconSize), GUILayout.Width (iconSize))) {
 				switch (i) {
 				case 1:
-					if (!this.showRules)
-						this.showCredits = !this.showCredits ;
+					if (this.menuView != menuView_t.RULE)
+						this.menuView = this.menuView == menuView_t.CREDITS ? menuView_t.MENU : menuView_t.CREDITS;
 					break;
 				case 2:
-					if (!this.showCredits)
-						this.showRules = !this.showRules;
+					if (this.menuView != menuView_t.CREDITS) {
+						this.indexInstructionPage = 0;
+						this.menuView = this.menuView == menuView_t.RULE ? menuView_t.MENU : menuView_t.RULE;
+					}
 					break;
 				}
 			}
@@ -139,8 +228,11 @@ public class MainMenu : Menu {
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
 
+		windowPosition_t windowIconAnimal = new windowPosition_t (windowRuleCredit.windowWidth, windowRuleCredit.windowHeight, 
+				windowRuleCredit.windowOffTop, 4 * Screen.width / 5);
+
 		/*Animal area*/
-		GUILayout.BeginArea(new Rect(4*Screen.width/5, offBottomIcon, Screen.width/3, iconAreaHeight));
+		GUILayout.BeginArea(new Rect(windowIconAnimal.windowOffLeft, windowIconAnimal.windowOffTop, windowIconAnimal.windowWidth, windowIconAnimal.windowHeight));
 		GUILayout.BeginHorizontal();
 		GUI.backgroundColor = Color.clear;
 		if (GUILayout.Button (this.icons [0], GUILayout.Height (iconAnimalSize), GUILayout.Width (iconAnimalSize))) {
@@ -158,4 +250,23 @@ public class MainMenu : Menu {
     {
         this.hostIP = ip;
     }
+
+	private void loadInstructionPages(){
+		instructionPages[0] = "\nWelcome to Matchanimals\n\n\n" +
+			"Your goal will be \n " +
+			"to find the matching symbol\n" +
+			"on your card with \n" +
+			"one on your TV,\n" +
+			"before the other players.";
+		instructionPages[1] = "\nThere is always a matching symbol\n" +
+			"in each card of the game,\n" +
+			"so be quickly to press it!\n" +
+			"The card of the fisrt one\n" +
+			"will appear on the TV.";
+		instructionPages[2] = "\nBe carefull! You'll get\n" +
+			"a time penalty if you press\n" +
+			"the wrong symbol!";
+		instructionPages[3] = "\nDoes it seem easy?\n" +
+			"Let's play!";
+	}
 }

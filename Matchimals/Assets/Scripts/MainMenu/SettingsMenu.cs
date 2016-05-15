@@ -5,7 +5,6 @@ public class SettingsMenu : Returnable {
 
     // Menu size in percentage (1=100%).
     public float menuWidth = 0.55f, menuHeight = 0.67f, offsetTop = 0.15f;
-    private float iconScale=1f;
 
 	private Sprite[] animalSprites;
 	private AudioClip[] cries;
