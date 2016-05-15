@@ -12,13 +12,10 @@ public class SettingsMenu : Returnable {
 	private Texture arrowIcon, arrowFlippedIcon;
 	private int curAnimal;
 	private string playerName;
-
-    // For animating the icon.
-    private bool animateIcon = false;
-    private float animateSpeed = 0.5f;
-    private float angle = 0f;
+	private IconAnimator anim;
 	
 	public new void Start() {
+		anim = new IconAnimator ();
 		animalSprites = Resources.LoadAll<Sprite>("Animals");
 		cries = Resources.LoadAll<AudioClip>("AnimalSounds");
 		arrowIcon = Resources.Load<Texture>("Menu/arrow");
@@ -29,7 +26,7 @@ public class SettingsMenu : Returnable {
 	}
 
     public void Update() {
-        AnimateIcon();
+		anim.AnimateIcon ();
     }
 	
 	private void SafeSettings() {
@@ -41,23 +38,10 @@ public class SettingsMenu : Returnable {
 	private int ChangeAnimal(int step){
 		this.curAnimal += step;
 		this.curAnimal = (int) Mathf.Repeat(curAnimal, animalSprites.Length);
-        this.animateIcon = true;
+		anim.setAnimation (true);
         AudioSource.PlayClipAtPoint(cries[curAnimal], new Vector3(0,0,0));
 		return curAnimal;
 	}
-
-    private void AnimateIcon() {
-        if (animateIcon) {
-            angle += animateSpeed;
-            iconScale = 1f+ 0.2f*Mathf.Sin(angle);
-        }
-
-        if (angle > 2*Mathf.PI) {
-            angle = 0f;
-            iconScale = 1.0f;
-            animateIcon = false;
-        }
-    }
 	
 	public void OnGUI () {
         GUI.skin = menuSkin;
@@ -79,7 +63,7 @@ public class SettingsMenu : Returnable {
 		int animSelOffTop = setNameOffTop+(int)(Screen.height*0.32f);
 		int arrowSize = animSelHeight/2;
         Texture icon = animalSprites[curAnimal].texture;
-        int iconSize = (int)(animSelHeight * iconScale);
+		int iconSize = (int)(animSelHeight * anim.getIconScale());
         GUI.backgroundColor = Color.clear;
 
         // Draw the arrows.
@@ -88,7 +72,7 @@ public class SettingsMenu : Returnable {
 		if (GUILayout.Button(arrowFlippedIcon, GUILayout.Height(arrowSize), GUILayout.Width(arrowSize))) {
 			ChangeAnimal(1);
 		}
-        GUILayout.FlexibleSpace();
+	        GUILayout.FlexibleSpace();
         if (GUILayout.Button(arrowIcon, GUILayout.Height(arrowSize), GUILayout.Width(arrowSize))) {
 			ChangeAnimal(-1);
 		}
@@ -101,7 +85,7 @@ public class SettingsMenu : Returnable {
         GUILayout.FlexibleSpace();
         if (GUILayout.Button(icon, GUILayout.Height(iconSize), GUILayout.Width(iconSize)))
         {
-            this.animateIcon = true;
+			anim.setAnimation (true);
             AudioSource.PlayClipAtPoint(cries[curAnimal], new Vector3(0, 0, 0));
         }
         GUILayout.FlexibleSpace();
