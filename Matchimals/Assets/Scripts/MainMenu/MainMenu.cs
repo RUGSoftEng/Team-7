@@ -31,7 +31,7 @@ public class MainMenu : Menu {
     public string hostIP;
 	private IconAnimator anim;
 	private int indexInstructionPage = 0;
-	private const int NUMBER_INSTRUCTION_PAGES = 4;
+	private const int NUMBER_INSTRUCTION_PAGES = 5;
 	private string[] instructionPages = new string[NUMBER_INSTRUCTION_PAGES];
 
 	private menuView_t menuView = menuView_t.MENU;
@@ -64,6 +64,9 @@ public class MainMenu : Menu {
     // Called when the object is enabled.
     public void OnEnable() {
         this.hostIP = null;
+        Sprite[] animalSprites = Resources.LoadAll<Sprite>("Animals");
+        this.curAnimal = PlayerPrefs.GetInt("animal");
+        this.icons[0] = animalSprites[curAnimal].texture;
     }
 
 	// Join a local game, go to lobby.
@@ -130,11 +133,11 @@ public class MainMenu : Menu {
 				windowPosition_t windowCredits = new windowPosition_t (2*Screen.width/3, 2*Screen.height/3, Screen.height / 6, Screen.width / 6);
 				menuSkin.box.alignment = TextAnchor.MiddleCenter;
 				//menuSkin.box.fontSize = 30;
-				string creditsText = "Matchminimals, 2016\n\n\n" +
+				string creditsText = "Matchimals, 2016 (public alpha)\n\n\n" +
 					"Developed by RuggedStudio \n(ruggedgamesstudios@gmail.com)\n\n" +
 					"Rijksuniversiteit Groningen \n(University of Groningen, NL)\n\n " +
-					"Authors: Sietze Houwink, Matteo Corradini, \n" +
-					"Victor Matei Preda, Luc van den Brand, \n" +
+					"Authors:\n Sietze Houwink, Matteo Corradini, \n" +
+                    "the impeccable Luc van den Brand, \n" +
 					"Twan Schoonen and Dan Chirtoaca";
 
 				GUILayout.BeginArea(new Rect(windowCredits.windowOffLeft, windowCredits.windowOffTop, Screen.width, Screen.height));
@@ -199,13 +202,14 @@ public class MainMenu : Menu {
 
 		menuSkin.button.padding.bottom = 10;
 		windowPosition_t windowRuleCredit = new windowPosition_t (Screen.width / 3, Screen.height / 7,
-				Screen.height - Screen.height / 7, Screen.width / 10 );
+				Screen.height - Screen.height / 7, Screen.width / 20 );
 
 		int iconAnimalSize = (int)((Screen.height / 8) * anim.getIconScale());
 		int iconSize = Screen.height / 8;
 
-		/*Credits and info area*/
-		GUILayout.BeginArea(new Rect(windowRuleCredit.windowOffLeft, windowRuleCredit.windowOffTop, windowRuleCredit.windowWidth, windowRuleCredit.windowHeight));
+        /*Credits and info area*/
+        GUI.backgroundColor = Color.clear;
+        GUILayout.BeginArea(new Rect(windowRuleCredit.windowOffLeft, windowRuleCredit.windowOffTop, windowRuleCredit.windowWidth, windowRuleCredit.windowHeight));
 		GUILayout.BeginHorizontal();
 		int blankSpaceAmongIcons = Screen.width / 20;
 		for (int i = 1; i < icons.Length; i++) {
@@ -227,9 +231,10 @@ public class MainMenu : Menu {
 		}
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
+        GUI.backgroundColor = Color.white;
 
-		windowPosition_t windowIconAnimal = new windowPosition_t (windowRuleCredit.windowWidth, windowRuleCredit.windowHeight, 
-				windowRuleCredit.windowOffTop, 4 * Screen.width / 5);
+        windowPosition_t windowIconAnimal = new windowPosition_t (windowRuleCredit.windowWidth, windowRuleCredit.windowHeight, 
+				windowRuleCredit.windowOffTop, 5 * Screen.width / 6);
 
 		/*Animal area*/
 		GUILayout.BeginArea(new Rect(windowIconAnimal.windowOffLeft, windowIconAnimal.windowOffTop, windowIconAnimal.windowWidth, windowIconAnimal.windowHeight));
@@ -252,21 +257,32 @@ public class MainMenu : Menu {
     }
 
 	private void loadInstructionPages(){
-		instructionPages[0] = "\nWelcome to Matchanimals\n\n\n" +
-			"Your goal will be \n " +
+        instructionPages[0] = "\n\nHey pal! Welcome to Matchimals!\n\n\n" +
+            "My name is Ben, but people call me\n"+ 
+            "the Matchimal Professor!\n\n"+
+            "I'll be showing you how to become\n"+  
+            "a butter smooth Matchimal Master.\n\n"+
+            "Tap the arrow to read instructions\n"+
+            "on how to play!\n";
+        instructionPages[1] =
+            "Matchimals is a card game\n with ALLOT of symbolism!\n"+
+            "That is, we have allot of symbols.\n"+
+            "On cards.\n\n"+
+			"Now, your goal here will be \n " +
 			"to find the matching symbol\n" +
-			"on your card with \n" +
+			"on your card with the \n" +
 			"one on your TV,\n" +
-			"before the other players.";
-		instructionPages[1] = "\nThere is always a matching symbol\n" +
+			"before the other players!";
+		instructionPages[2] = "\nThere is always a matching symbol\n" +
 			"in each card of the game,\n" +
-			"so be quickly to press it!\n" +
-			"The card of the fisrt one\n" +
-			"will appear on the TV.";
-		instructionPages[2] = "\nBe carefull! You'll get\n" +
+			"so be quick to press it!\n" +
+			"The card of the first player to\n" +
+			"match will appear on the TV.";
+		instructionPages[3] = "\nBe carefull! You'll get\n" +
 			"a time penalty if you press\n" +
 			"the wrong symbol!";
-		instructionPages[3] = "\nDoes it seem easy?\n" +
-			"Let's play!";
+		instructionPages[4] = "\nSeems easy?\n\n" +
+            "Oh, the innocence...\n" +
+			"Okay buddy, Let's play!";
 	}
 }
