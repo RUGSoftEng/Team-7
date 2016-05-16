@@ -70,8 +70,9 @@ public class Deck : MonoBehaviour {
     // Triggered only once to handle the gameover state.
     private void HandleGameOver() {
         if (!isGameOverHandled){
-            GameObject.Find("WinningText").GetComponent<Text>().color = Color.black;
-            GameObject.Find("WinningText").GetComponent<Text>().text = players[CheckWinner()].playerName + " WINS!";
+			Text winningText = GameObject.Find("WinningText").GetComponent<Text>();
+            winningText.color = Color.black;
+			winningText.text = players[CheckWinner()].playerName + " WINS!";
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("GameSounds/CrowdGoesWild"), new Vector3(0, 0, -10), 30f);
             Invoke("CloseGame", WAIT_GAMEOVER);
             this.isGameOverHandled = true;

@@ -53,7 +53,7 @@ public class SettingsMenu : Returnable {
 		int setNameHeight = (int)(Screen.height*0.12f);
 		int setNameOffTop = (int)(Screen.height*0.01f);
 		GUILayout.BeginArea(new Rect(Screen.width/2-width/2, setNameOffTop, width, setNameHeight));
-		playerName = GUILayout.TextField(playerName, 25, GUILayout.Height(setNameHeight));
+		playerName = GUILayout.TextField(playerName, 35, GUILayout.Height(setNameHeight));
 		GUILayout.EndArea();
 		
 		// Animal selection.
