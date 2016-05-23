@@ -218,7 +218,7 @@ public class Player : NetworkBehaviour {
     public void RpcGameover(uint netId) {
         if (isLocalPlayer && this.netId.Value == netId) {
             Debug.Log("YOU WIN!");
-        } else {
+        } else if (isLocalPlayer) {
             Debug.Log("YOU SUCK!");
         }
         Invoke("GotoLobby", 2f);

@@ -51,6 +51,8 @@ public class Deck : MonoBehaviour {
     public void OnLevelWasLoaded(int level) {
         if (SceneManager.GetActiveScene().name == "GameScene") {
             CleanUp();
+            isGameOverHandled = false;
+            isGameOver = false;
             InitializeCards();
             RandomizeArray(this.cards);
 
