@@ -70,18 +70,24 @@ public class Deck : MonoBehaviour {
     // Triggered only once to handle the gameover state.
     private void HandleGameOver() {
         if (!isGameOverHandled){
+            Player winningPlayer = players[CheckWinner()];
 			Text winningText = GameObject.Find("WinningText").GetComponent<Text>();
             winningText.color = Color.black;
-			winningText.text = players[CheckWinner()].playerName + " WINS!";
+			winningText.text = winningPlayer.playerName + " WINS!";
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("GameSounds/CrowdGoesWild"), new Vector3(0, 0, -10), 30f);
-            Invoke("CloseGame", WAIT_GAMEOVER);
+            
+            // Tell all players the game is over and who won.
+            foreach (Player p in GameObject.FindObjectsOfType<Player>()) {
+                p.RpcGameover(winningPlayer.netId.Value);
+            }
+
             this.isGameOverHandled = true;
         }
     }
 	
 	// Devide the cards among players.
 	void divideCards() {
-		players = GameObject.FindObjectsOfType(typeof(Player)) as Player[];
+		players = GameObject.FindObjectsOfType<Player>();
 		int cardsPerPlayer = maxAmount;
 		while (cardsPerPlayer * players.Length > numberOfCards) {cardsPerPlayer--;}
 		
@@ -149,15 +155,6 @@ public class Deck : MonoBehaviour {
 		for (int i = 0; i <= minFactor; ++i) cards[row][i] = prime * prime + i;
 		this.cards = cards;
 	}
-
-    // Ends the current game being played.
-    private void CloseGame() {
-        Debug.Log("Closing game.");
-        GameNetworkManager networkManager = GameObject.FindObjectOfType<GameNetworkManager>();
-        networkManager.StopHost();
-        CastRemoteDisplayManager.GetInstance().StopRemoteDisplaySession();
-        SceneManager.LoadScene("MainMenuScene");
-    }
 
 	// Shuffles cards.
 	static void RandomizeArray(int[][] array) {
