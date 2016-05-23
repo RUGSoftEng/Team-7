@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 using Google.Cast.RemoteDisplay;
 
 public class Deck : MonoBehaviour {
-    private static float WAIT_GAMEOVER = 10f;
-
 	public Card cardPrefab;
 	
 	//public Vector3 topcardloc;
