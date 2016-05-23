@@ -38,19 +38,26 @@ public class Deck : MonoBehaviour {
 		this.symbolsPerCard = symbolsPerCard;
 		this.transform.SetParent (parent);
 		if (!IsLegalSymbolsPerCard ()) Debug.LogError ("Invalid symbols per card.");
-
-		InitializeCards ();
-		RandomizeArray (this.cards);
-
-		(this.topCard = (Card)Instantiate (cardPrefab)).Constructor(symbolsPerCard);
-		this.topCard.transform.SetParent (this.transform);
-		this.topCard.SetCard (NextCard ());
-		this.topCard.transform.localPosition = new Vector3 (100, 0, 0);
 	}
+
+    // Clear all remaining data.
+    private void CleanUp() {
+        foreach (Card card in GameObject.FindObjectsOfType<Card>()) {
+            Destroy(card.gameObject);
+        }
+    }
 
     // When the game scene is loaded, this is triggered.
     public void OnLevelWasLoaded(int level) {
         if (SceneManager.GetActiveScene().name == "GameScene") {
+            CleanUp();
+            InitializeCards();
+            RandomizeArray(this.cards);
+
+            (this.topCard = (Card)Instantiate(cardPrefab)).Constructor(symbolsPerCard);
+            this.topCard.transform.SetParent(this.transform);
+            this.topCard.SetCard(NextCard());
+            this.topCard.transform.localPosition = new Vector3(100, 0, 0);
             divideCards();
         }
     }
