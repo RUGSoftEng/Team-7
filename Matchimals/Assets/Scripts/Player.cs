@@ -216,7 +216,7 @@ public class Player : NetworkBehaviour {
 
     [ClientRpc]
     public void RpcGameover(uint netId) {
-        if (this.netId.Value == netId) {
+        if (isLocalPlayer && this.netId.Value == netId) {
             Debug.Log("YOU WIN!");
         } else {
             Debug.Log("YOU SUCK!");
@@ -225,6 +225,11 @@ public class Player : NetworkBehaviour {
     }
 
     private void GotoLobby() {
+        // Clear the stack.
+        foreach (Card c in stack) {
+            Destroy(c.gameObject);
+        }
+        stack = new Card[0];
         SceneManager.LoadScene("LobbyScene");
     }
 
