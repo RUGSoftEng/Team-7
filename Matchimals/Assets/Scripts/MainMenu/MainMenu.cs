@@ -26,7 +26,7 @@ public class MainMenu : Menu {
 	public float menuWidth = 1f, menuHeight=1f, logoScale=1f, offsetTop=0f;
 	private Texture logo;
 	//From left to right: creditsIcon, animalIcon, rulesIcon;
-	private Texture[] icons; 
+	private Texture[] icons = new Texture[3]; 
 	private int curAnimal;
     public string hostIP;
 	private IconAnimator anim;
@@ -41,7 +41,6 @@ public class MainMenu : Menu {
 		this.logo = Resources.Load<Texture>("Menu/logo");
 		anim = new IconAnimator ();
 
-		this.icons = new Texture[3];
 		Sprite[] animalSprites = Resources.LoadAll<Sprite>("Animals");
 		this.curAnimal = PlayerPrefs.GetInt("animal");
 		this.icons [0] = animalSprites [curAnimal].texture;
