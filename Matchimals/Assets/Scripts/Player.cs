@@ -216,12 +216,14 @@ public class Player : NetworkBehaviour {
 
     [ClientRpc]
     public void RpcGameover(uint netId) {
-        if (isLocalPlayer && this.netId.Value == netId) {
-            Debug.Log("YOU WIN!");
-        } else if (isLocalPlayer) {
-            Debug.Log("YOU SUCK!");
+        if (isLocalPlayer) {
+            if (this.netId.Value == netId) {
+                Debug.Log("YOU WIN!");
+            } else {
+                Debug.Log("YOU SUCK!");
+            }
+            Invoke("GotoLobby", 2f);
         }
-        Invoke("GotoLobby", 2f);
     }
 
     private void GotoLobby() {
