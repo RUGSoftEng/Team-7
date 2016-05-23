@@ -43,18 +43,18 @@ public class Lobby : Menu {
     public void OnGUI () {
 		GUI.skin = menuSkin;
 
-        int padding = 120;
-        int width = Screen.width - 2*padding;
-        int height = Screen.height - 2*padding;
+		int width = Screen.width/3;
+		int height = Screen.height/4;
+		int buttonHeight = height / 2;
 
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
 
-		if (gameNetworkManager.isHosting && GUILayout.Button("Start Party!", GUILayout.Height(height / 2)))
+		if (gameNetworkManager.isHosting && GUILayout.Button("Start Party!", GUILayout.Height(buttonHeight)))
         {
             ThrowPlayersInGame();
         }
         
-        if (GUILayout.Button("Cancel Party...", GUILayout.Height(height/2))) {
+		if (GUILayout.Button("Cancel Party...", GUILayout.Height(buttonHeight))) {
             CloseLobby();
         }
         GUILayout.EndArea();

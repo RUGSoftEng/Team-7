@@ -64,12 +64,12 @@ public class CastConnector : Returnable {
     public void OnGUI () {
 		GUI.skin = menuSkin;
 
-        int padding = 10;
-        int width = Screen.width - 2*padding;
-        int height = Screen.height - 2*padding;
-        int buttonHeight = (int)(0.2*height);
+		int width = Screen.width/3;
+		int height = Screen.height/4;
+		int buttonHeight = height / 2;
 
-        GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
+
+		GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2+2.5f*buttonHeight, width, height));
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Cancel Party...", GUILayout.Height(buttonHeight))) {
             GoBack();
