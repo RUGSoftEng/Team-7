@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class IconAnimator : MonoBehaviour {
+public class IconAnimator {
 
 	// For animating the icon.
 	private bool animateIcon = false;

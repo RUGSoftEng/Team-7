@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -26,7 +25,7 @@ public class MainMenu : Menu {
 	public float menuWidth = 1f, menuHeight=1f, logoScale=1f, offsetTop=0f;
 	private Texture logo;
 	//From left to right: creditsIcon, animalIcon, rulesIcon;
-	private Texture[] icons; 
+	private Texture[] icons = new Texture[3];
 	private int curAnimal;
     public string hostIP;
 	private IconAnimator anim;
