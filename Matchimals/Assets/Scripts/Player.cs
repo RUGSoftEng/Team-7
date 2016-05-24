@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class Player : NetworkBehaviour {
     // Game constants.
+    private const float RETURN_TIME = 6f;
     private const int TIME_PENALTY = 2;
     private const string ERROR_SOUND_PATH = "GameSounds/errorSound";
     private const int ANIMATION_TIME = 1;
@@ -222,7 +223,7 @@ public class Player : NetworkBehaviour {
             } else {
                 Debug.Log("YOU SUCK!");
             }
-            Invoke("GotoLobby", 2f);
+            Invoke("GotoLobby", RETURN_TIME);
         }
     }
 
