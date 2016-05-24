@@ -17,8 +17,9 @@ public class GameNetworkManager : NetworkManager {
     }
 
     public override void OnClientDisconnect(NetworkConnection conn) {
-        if (SceneManager.GetActiveScene().name == "LobbyScene") {
-            this.connected = false;
+        this.connected = false;
+        if (SceneManager.GetActiveScene().name == "GameScene") {
+            SceneManager.LoadScene("MainMenuScene");
         }
         base.OnClientDisconnect(conn);
     }

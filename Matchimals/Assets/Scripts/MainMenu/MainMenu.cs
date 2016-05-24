@@ -40,7 +40,6 @@ public class MainMenu : Menu {
 		this.logo = Resources.Load<Texture>("Menu/logo");
 		anim = new IconAnimator ();
 
-		this.icons = new Texture[3];
 		Sprite[] animalSprites = Resources.LoadAll<Sprite>("Animals");
 		this.curAnimal = PlayerPrefs.GetInt("animal");
 		this.icons [0] = animalSprites [curAnimal].texture;
