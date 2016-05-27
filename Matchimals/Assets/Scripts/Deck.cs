@@ -82,6 +82,7 @@ public class Deck : MonoBehaviour {
             winningText.color = Color.black;
 			winningText.text = winningPlayer.playerName + " WINS!";
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("GameSounds/CrowdGoesWild"), new Vector3(0, 0, -10), 30f);
+            GameObject.FindObjectOfType<Obfuscator>().Obfuscate(0.6f);
             
             // Tell all players the game is over and who won.
             foreach (Player p in GameObject.FindObjectsOfType<Player>()) {
