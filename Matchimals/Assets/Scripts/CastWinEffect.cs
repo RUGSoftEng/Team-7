@@ -2,12 +2,13 @@
 using System.Collections;
 
 public class CastWinEffect : MonoBehaviour {
+    private const float EFFECT_TIME = 12f;
     public GameObject winText, nameText, matchimal;
     public Obfuscator obfuscator;
 	
     // By default, the effect is hidden.
 	public void OnEnable() {
-        HideWin();
+        Show(false);
 	}
 	
 	public void ShowWin(string name, string animalName) {
@@ -20,15 +21,16 @@ public class CastWinEffect : MonoBehaviour {
         nameText.GetComponent<Move>().Initialize(new Vector3(100, -2, -26), new Vector3(100, -1f, -26), 1f);
         matchimal.GetComponent<Move>().Initialize(new Vector3(96.5f, 0.05f, -26), new Vector3(100, 0.05f, -26), 1f);
         Show(true);
+        Invoke("HideWin", EFFECT_TIME);
     }
 
-    public void HideWin() {
-        obfuscator.Obfuscate(0f);
-        Show(false);
+    private void HideWin() {
+        winText.GetComponent<Move>().Initialize(new Vector3(100, 1f, -26), new Vector3(100, 2, -26), 1f);
+        nameText.GetComponent<Move>().Initialize(new Vector3(100, -1f, -26), new Vector3(100, -2, -26), 1f);
+        matchimal.GetComponent<Move>().Initialize(new Vector3(100, 0.05f, -26), new Vector3(103.5f, 0.05f, -26), 1f);
     }
 
-    private void Show(bool hideWin)
-    {
+    private void Show(bool hideWin) {
         winText.SetActive(hideWin);
         nameText.SetActive(hideWin);
         matchimal.SetActive(hideWin);
