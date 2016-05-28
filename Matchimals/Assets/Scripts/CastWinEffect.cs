@@ -25,6 +25,7 @@ public class CastWinEffect : MonoBehaviour {
     }
 
     private void HideWin() {
+        obfuscator.Obfuscate(1f);
         winText.GetComponent<Move>().Initialize(new Vector3(100, 1f, -26), new Vector3(100, 2, -26), 1f);
         nameText.GetComponent<Move>().Initialize(new Vector3(100, -1f, -26), new Vector3(100, -2, -26), 1f);
         matchimal.GetComponent<Move>().Initialize(new Vector3(100, 0.05f, -26), new Vector3(103.5f, 0.05f, -26), 1f);
