@@ -68,8 +68,6 @@ public class Deck : MonoBehaviour {
             CheckWinner();
             if (isGameOver) {
                 HandleGameOver();
-            } else {
-                GameObject.Find("WinningText").GetComponent<Text>().text = "";
             }
         }
 	}
@@ -78,11 +76,8 @@ public class Deck : MonoBehaviour {
     private void HandleGameOver() {
         if (!isGameOverHandled){
             Player winningPlayer = players[CheckWinner()];
-			Text winningText = GameObject.Find("WinningText").GetComponent<Text>();
-            winningText.color = Color.black;
-			winningText.text = winningPlayer.playerName + " WINS!";
+            GameObject.FindObjectOfType<CastWinEffect>().ShowWin(winningPlayer.playerName, winningPlayer.animalName); ;
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("GameSounds/CrowdGoesWild"), new Vector3(0, 0, -10), 30f);
-            GameObject.FindObjectOfType<Obfuscator>().Obfuscate(0.6f);
             
             // Tell all players the game is over and who won.
             foreach (Player p in GameObject.FindObjectsOfType<Player>()) {
