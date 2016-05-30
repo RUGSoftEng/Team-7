@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-[RequireComponent (typeof(AudioSource))]
+	[RequireComponent (typeof(AudioSource))]
 
 public class Playvideo : MonoBehaviour {
 	private float timer = 5f;
@@ -13,12 +13,18 @@ public class Playvideo : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GetComponent<RawImage>().texture = movie as MovieTexture;
-		audio = GetComponent<AudioSource>();
-		audio.clip = movie.audioClip;
-		movie.Play();
-		audio.Play();
-		StartCoroutine("DispScene");
+		#if (UNITY_ANDROID)
+			Handheld.PlayFullScreenMovie("splash.mov", Color.blue, FullScreenMovieControlMode.Hidden);
+			Application.LoadLevel(levelToLoad);
+		#else 
+			GetComponent<RawImage>().texture = movie as MovieTexture;
+			audio = GetComponent<AudioSource>();
+			audio.clip = movie.audioClip;
+			movie.Play();
+			audio.Play();
+			StartCoroutine("DispScene");
+		#endif
+		
 	}
 
 	IEnumerator DispScene(){
