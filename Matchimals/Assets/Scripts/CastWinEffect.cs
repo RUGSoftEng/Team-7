@@ -34,6 +34,6 @@ public class CastWinEffect : MonoBehaviour {
     private void Show(bool hideWin) {
         winText.SetActive(hideWin);
         nameText.SetActive(hideWin);
-        matchimal.SetActive(hideWin);
+        //matchimal.SetActive(hideWin);
     }
 }

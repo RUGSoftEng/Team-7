@@ -117,6 +117,7 @@ public class Player : NetworkBehaviour {
 			Symbol s = deck.GetSymbol (symbol);
 			s.GetComponent<ZoomInOut> ().Initialize ();
             Player matchingPlayer = FindPlayer(networkIdentity);
+			deck.ShowAnimal(matchingPlayer.name, matchingPlayer.animalName);
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("AnimalSounds/" + matchingPlayer.animalName), new Vector3(0, 0, -10),30f);
             deck.SetTopCard(card);
             RpcUpdate(networkIdentity);
