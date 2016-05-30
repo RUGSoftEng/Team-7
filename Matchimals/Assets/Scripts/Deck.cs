@@ -123,8 +123,8 @@ public class Deck : MonoBehaviour {
 		GameObject matchimal = GameObject.Find("Matchimal");
 		SpriteRenderer spriteRenderer = matchimal.GetComponent<SpriteRenderer>();
 		spriteRenderer.sprite = Resources.Load<Sprite>("Animals/" + animalName);
-		matchimal.GetComponent<Move> ().Initialize (new Vector3 (96.5f, 0.05f, -26), new Vector3 (98.2f, 0.05f, -26), 0.3f);	
-		Invoke ("moveAnimalOut", 0.3f);
+		matchimal.GetComponent<Move> ().Initialize (new Vector3 (96.5f, 0.05f, -26), new Vector3 (98.2f, 0.05f, -26), 0.4f);
+		Invoke ("moveAnimalOut", 0.4f);
 	}
 
 	private void moveAnimalOut(){

@@ -17,12 +17,16 @@ public class CastWinEffect : MonoBehaviour {
         spriteRenderer.sprite = Resources.Load<Sprite>("Animals/" + animalName);
         TextMesh textMesh = nameText.GetComponent<TextMesh>();
         textMesh.text = name + " won!";
-        winText.GetComponent<Move>().Initialize(new Vector3(100, 2, -26), new Vector3(100, 1f, -26), 1f);
-        nameText.GetComponent<Move>().Initialize(new Vector3(100, -2, -26), new Vector3(100, -1f, -26), 1f);
-        matchimal.GetComponent<Move>().Initialize(new Vector3(96.5f, 0.05f, -26), new Vector3(100, 0.05f, -26), 1f);
-        Show(true);
-        Invoke("HideWin", EFFECT_TIME);
+		Invoke ("ShowWinComponents", 1.1f);
     }
+
+	private void ShowWinComponents(){
+		winText.GetComponent<Move>().Initialize(new Vector3(100, 2, -26), new Vector3(100, 1f, -26), 1f);
+		nameText.GetComponent<Move>().Initialize(new Vector3(100, -2, -26), new Vector3(100, -1f, -26), 1f);
+		matchimal.GetComponent<Move>().Initialize(new Vector3(96.5f, 0.05f, -26), new Vector3(100, 0.05f, -26), 1f);
+		Show(true);
+		Invoke("HideWin", EFFECT_TIME);
+	}
 
     private void HideWin() {
         obfuscator.Obfuscate(1f);
