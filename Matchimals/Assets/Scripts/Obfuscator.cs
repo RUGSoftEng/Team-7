@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent (typeof(Renderer))]
 public class Obfuscator : MonoBehaviour {
-    public float speed = 0.01f;
+    public float speed = 0.6f;
     private float opacity;
     private Material material;
 
@@ -20,11 +20,11 @@ public class Obfuscator : MonoBehaviour {
         Color c = material.color;
         if (c.a != opacity) {
             float diff = c.a - opacity;
-            if (Mathf.Abs(diff) > speed) {
+            if (Mathf.Abs(diff) > timedSpeed) {
                 if (diff < 0)
-                    c.a += speed;
+                    c.a += timedSpeed;
                 else
-                    c.a -= speed;
+                    c.a -= timedSpeed;
             } else {
                 c.a = this.opacity;
             }
