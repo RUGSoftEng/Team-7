@@ -8,7 +8,11 @@ using Google.Cast.RemoteDisplay;
 
 public class Lobby : Menu {
     private static float CONNECTION_CHECK_INTERVAL = 0.5f;
+    private static int DIFFICULTIES = 3;
+    private int difficulty = 0;
     private GameNetworkManager gameNetworkManager;
+    private Texture arrowIcon, arrowFlippedIcon;
+    private Texture[] difficultyIcons;
 
     public new void Start() {
         base.Start();
@@ -20,6 +24,11 @@ public class Lobby : Menu {
         }
         this.gameNetworkManager = GameObject.FindObjectOfType<GameNetworkManager>();
         InvokeRepeating("CheckConnection", CONNECTION_CHECK_INTERVAL, CONNECTION_CHECK_INTERVAL);
+
+        // Load menu assets.
+        arrowIcon = Resources.Load<Texture>("Menu/arrow");
+        arrowFlippedIcon = Resources.Load<Texture>("Menu/arrow-flipped");
+        difficultyIcons = Resources.LoadAll<Texture>("Menu/Difficulties");
     }
 
     public void CheckConnection()
@@ -43,20 +52,50 @@ public class Lobby : Menu {
     public void OnGUI () {
 		GUI.skin = menuSkin;
 
-		int width = Screen.width/3;
+        int width = (int)(Screen.width*0.8);
 		int height = Screen.height/4;
 		int buttonHeight = height / 2;
+        int iconSize = height;
 
-        GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2, width, height));
-
-		if (gameNetworkManager.isHosting && GUILayout.Button("Start Party!", GUILayout.Height(buttonHeight)))
+        int offCentre = -(int)(Screen.height * 0.08);
+        if (gameNetworkManager.isHosting)
         {
-            ThrowPlayersInGame();
+            // Draw difficulty;
+            float iconWidth = Screen.width * 0.4f;
+            float iconHeight = Screen.height * 0.4f;
+            Texture diffIcon = difficultyIcons[difficulty];
+            GUI.DrawTexture(new Rect((Screen.width - iconWidth) / 2f, (Screen.height - iconHeight) / 2 + offCentre, iconWidth, iconHeight), diffIcon);
+
+            // Difficulty select menu.
+            GUI.backgroundColor = Color.clear;
+            GUILayout.BeginArea(new Rect((Screen.width - width) / 2, (Screen.height - height) / 2 + offCentre, width, height));
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(arrowFlippedIcon, GUILayout.Height(iconSize), GUILayout.Width(iconSize)))
+            {
+                ChangeDifficulty(-1);
+            }
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(arrowIcon, GUILayout.Height(iconSize), GUILayout.Width(iconSize)))
+            {
+                ChangeDifficulty(1);
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndArea();
+            GUI.backgroundColor = Color.white;
         }
-        
+
+        // Game start/close buttons.
+        offCentre = (int)(Screen.height * 0.35);
+
+        GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2+offCentre, width, height));
+        GUILayout.BeginHorizontal();
+		if (gameNetworkManager.isHosting && GUILayout.Button("Start Party!", GUILayout.Height(buttonHeight)))
+            ThrowPlayersInGame();
+        GUILayout.FlexibleSpace();
 		if (GUILayout.Button("Cancel Party...", GUILayout.Height(buttonHeight))) {
             CloseLobby();
         }
+        GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }
 	
@@ -65,6 +104,11 @@ public class Lobby : Menu {
             p.RpcGotoGame();
         }
 	}
+
+    private void ChangeDifficulty(int step) {
+        difficulty += step;
+        difficulty = (int) Mathf.Repeat(difficulty, DIFFICULTIES);
+    }
 
     public void CloseLobby() {
         CastRemoteDisplayManager castDisplayManager = CastRemoteDisplayManager.GetInstance();
