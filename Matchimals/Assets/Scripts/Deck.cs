@@ -31,6 +31,7 @@ public class Deck : MonoBehaviour {
     private bool isGameOverHandled = false;
 	private bool isGameOver = false;
 
+
 	// New deck is created.
 	public void Constructor(Transform parent, int symbolsPerCard) {
 		this.symbolsPerCard = symbolsPerCard;
@@ -115,6 +116,20 @@ public class Deck : MonoBehaviour {
 			}
 		}
 		return -1;
+	}
+
+	// Show animal that matched a symbol.
+	public void ShowAnimal(String playerName, String animalName) {
+		GameObject matchimal = GameObject.Find("Matchimal");
+		SpriteRenderer spriteRenderer = matchimal.GetComponent<SpriteRenderer>();
+		spriteRenderer.sprite = Resources.Load<Sprite>("Animals/" + animalName);
+		matchimal.GetComponent<Move> ().Initialize (new Vector3 (96.5f, 0.05f, -26), new Vector3 (98.2f, 0.05f, -26), 0.3f);	
+		Invoke ("moveAnimalOut", 0.3f);
+	}
+
+	private void moveAnimalOut(){
+		GameObject matchimal = GameObject.Find("Matchimal");
+		matchimal.GetComponent<Move>().Initialize(new Vector3(98.2f, 0.05f, -26), new Vector3(96.5f, 0.05f, -26), 0.6f);
 	}
 
 	// symbols per card should be 0, 1, 2 or (prime + 1)
