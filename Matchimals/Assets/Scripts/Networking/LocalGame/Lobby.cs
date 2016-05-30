@@ -89,12 +89,12 @@ public class Lobby : Menu {
 
         GUILayout.BeginArea(new Rect((Screen.width-width)/2, (Screen.height-height)/2+offCentre, width, height));
         GUILayout.BeginHorizontal();
-		if (gameNetworkManager.isHosting && GUILayout.Button("Start Party!", GUILayout.Height(buttonHeight)))
-            ThrowPlayersInGame();
-        GUILayout.FlexibleSpace();
-		if (GUILayout.Button("Cancel Party...", GUILayout.Height(buttonHeight))) {
+        if (GUILayout.Button("Cancel Party...", GUILayout.Height(buttonHeight))) {
             CloseLobby();
         }
+        GUILayout.FlexibleSpace();
+        if (gameNetworkManager.isHosting && GUILayout.Button("Start Party!", GUILayout.Height(buttonHeight)))
+            ThrowPlayersInGame();
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }
