@@ -108,6 +108,19 @@ public class Lobby : Menu {
     private void ChangeDifficulty(int step) {
         difficulty += step;
         difficulty = (int) Mathf.Repeat(difficulty, DIFFICULTIES);
+        Deck deck = GameObject.FindObjectOfType<Deck>();
+        switch (difficulty)
+        {
+            case 0:
+                deck.symbolsPerCard = 4;
+                break;
+            case 1:
+                deck.symbolsPerCard = 6;
+                break;
+            case 2:
+                deck.symbolsPerCard = 8;
+                break;
+        }
     }
 
     public void CloseLobby() {
