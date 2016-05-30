@@ -12,8 +12,7 @@ public class Deck : MonoBehaviour {
 	
 	//public Vector3 topcardloc;
 	public int maxAmount;
-
-	private int symbolsPerCard;
+	public int symbolsPerCard;
 
 	// indicates the total number of cards according to the number of symbols per card
 	int numberOfCards;
