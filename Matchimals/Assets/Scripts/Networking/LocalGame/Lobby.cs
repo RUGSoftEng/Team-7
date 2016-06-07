@@ -29,7 +29,6 @@ public class Lobby : Menu {
         arrowIcon = Resources.Load<Texture>("Menu/arrow");
         arrowFlippedIcon = Resources.Load<Texture>("Menu/arrow-flipped");
         difficultyIcons = Resources.LoadAll<Texture>("Menu/Difficulties");
-        //ChangeDifficulty(0);
     }
 
     public void CheckConnection()

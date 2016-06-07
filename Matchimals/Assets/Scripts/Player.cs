@@ -19,7 +19,7 @@ public class Player : NetworkBehaviour {
     public LobbyMember lobbyMemberPrefab;
 
     //Set the number of symbols per card legal options are 4,6,8,12 where 12 does not have enough symbols
-    public int symbolsPerCard = 8;
+    public int symbolsPerCard = 4;
     // The number of cards of the player.
     public int cardcount;
 
