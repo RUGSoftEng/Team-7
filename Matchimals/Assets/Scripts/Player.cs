@@ -98,7 +98,10 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer) {
 			if (this.netId.Value == networkIdentity) {
 				AudioSource.PlayClipAtPoint (errorSound, new Vector3 (0, 0, -10));
-				StartCoroutine (StartCountDownPenalty ());
+#if UNITY_ANDROID
+                Handheld.Vibrate();
+#endif
+                StartCoroutine (StartCountDownPenalty ());
 			}
 		}
 	}
